@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FemFit Diary 360 — инструкции: клиентка, тренер, врач</title>
+<meta name="description" content="Как пользоваться дневником FemFit Diary 360: пошаговые инструкции для клиентки, тренера и врача, как читать зоны готовности и отчёт." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --porcelain:#faf6f4; --cream:#f3eae5; --panel:#fffdfc; --panel2:#f6efeb;
+    --ink:#2f2830; --muted:#8d8088; --line:#ece1dc;
+    --plum:#9d5e78; --plum2:#b87e94; --plum-soft:#efdde4;
+    --sage:#6f938a; --sage-soft:#e0ede9;
+    --green:#5f9072; --amber:#bb8f3f; --coral:#c47c4e; --rose:#c25e66;
+    --shadow-sm:0 4px 16px rgba(95,60,70,.06);
+    --shadow:0 22px 54px rgba(95,55,70,.12);
+    --maxw:1080px;
+    --font-ui:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font-ui);color:var(--ink);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(circle at 4% -2%,rgba(157,94,120,.08),transparent 26%),linear-gradient(180deg,#faf6f4,#fffdfc 55%);}
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;letter-spacing:-.015em;line-height:1.12;margin:0}
+  p{margin:0}
+  a{color:var(--plum);text-decoration:none}
+  a:hover{text-decoration:underline}
+  ::selection{background:var(--plum-soft)}
+  :focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(250,246,244,.85);border-bottom:1px solid var(--line)}
+  .nav .row{display:flex;align-items:center;gap:16px;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--font-display);font-size:18px;color:var(--ink)}
+  .brand .mk{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:#fff;font-weight:600;background:linear-gradient(140deg,var(--plum),var(--sage))}
+  .nav .links{margin-left:auto;display:flex;gap:18px;font-size:14.5px;color:var(--muted)}
+  .nav .links a:hover{color:var(--ink);text-decoration:none}
+
+  header.head{padding:46px 0 8px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--plum)}
+  header.head h1{font-size:clamp(30px,4.4vw,46px);margin:14px 0 0}
+  header.head p{color:var(--muted);margin-top:14px;max-width:680px}
+
+  .tabs{display:flex;gap:10px;flex-wrap:wrap;margin:28px 0 22px}
+  .tab{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:12px 18px;font-size:15px;font-weight:600;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:10px;transition:.16s;box-shadow:var(--shadow-sm)}
+  .tab .e{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--plum-soft);color:var(--plum);font-size:14px}
+  .tab[aria-selected="true"]{color:#fff;background:linear-gradient(140deg,var(--plum),#ad6e86);border-color:transparent}
+  .tab[aria-selected="true"] .e{background:rgba(255,255,255,.22);color:#fff}
+
+  .panel{display:none}
+  .panel.show{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .intro{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 20px;margin-bottom:18px;color:#403842}
+  .intro b{color:var(--ink)}
+
+  .steps{display:grid;gap:12px;counter-reset:s}
+  .stepc{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:18px 20px;box-shadow:var(--shadow-sm)}
+  .stepc .n{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:600;background:var(--plum-soft);color:var(--plum);flex:none}
+  .stepc h3{font-size:17px;margin-bottom:5px}
+  .stepc p{color:var(--muted);font-size:14.5px}
+  .stepc .where{display:inline-block;font-size:12px;color:#6f5f67;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin-top:8px}
+
+  .callout{display:grid;grid-template-columns:auto 1fr;gap:14px;border-radius:16px;padding:16px 18px;margin-top:16px}
+  .callout.sage{background:var(--sage-soft);border:1px solid #cfe2db}
+  .callout.rose{background:#fdf4f4;border:1px solid #eccacd}
+  .callout .m{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;font-size:15px}
+  .callout.sage .m{background:#cfe2db;color:#3f6f53}
+  .callout.rose .m{background:#f7dadc;color:#9c3f47}
+  .callout h4{font-size:15px;margin-bottom:3px}
+  .callout.sage h4{color:#3f6f53}.callout.rose h4{color:#9c3f47}
+  .callout p{font-size:14px}
+  .callout.sage p{color:#3f6f53}.callout.rose p{color:#7a5258}
+
+  section.ref{margin-top:42px}
+  .ref h2{font-size:clamp(24px,3.2vw,32px)}
+  .ref .sub{color:var(--muted);margin:10px 0 20px;max-width:680px}
+
+  .zones{display:grid;gap:12px}
+  .zr{display:grid;grid-template-columns:150px 1fr;gap:16px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .zbadge{display:inline-flex;align-items:center;gap:9px;font-weight:600;font-size:14.5px;padding:8px 14px;border-radius:999px;white-space:nowrap}
+  .zbadge::before{content:"";width:10px;height:10px;border-radius:50%;background:currentColor}
+  .zg{background:var(--sage-soft);color:#3f6f53}.zy{background:#fbf1dd;color:#856221}.zo{background:#fbe9dd;color:#9a5a31}.zrr{background:#fbe2e3;color:#9c3f47}
+  .zr p{font-size:14.5px;color:#403842}
+  .zr p b{color:var(--ink)}
+
+  .gloss{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .gi{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px}
+  .gi h4{font-size:16px;margin-bottom:4px}
+  .gi p{font-size:14px;color:var(--muted)}
+
+  .report{display:grid;gap:10px}
+  .rrow{display:grid;grid-template-columns:200px 1fr;gap:16px;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px 16px;font-size:14.5px}
+  .rrow b{color:var(--ink)}
+  .rrow span{color:var(--muted)}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;margin-top:48px;color:var(--muted);font-size:13.5px}
+  footer .row{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+
+  @media(max-width:760px){
+    .gloss{grid-template-columns:1fr}
+    .zr{grid-template-columns:1fr;gap:8px}
+    .rrow{grid-template-columns:1fr;gap:3px}
+    .nav .links a:not(:last-child){display:none}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.panel.show{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap row">
+    <a class="brand" href="index.html"><span class="mk">F</span> FemFit Diary 360</a>
+    <nav class="links">
+      <a href="index.html">Главная</a>
+      <a href="legal.html">Документы</a>
+      <a href="app.html">Открыть дневник</a>
+    </nav>
+  </div>
+</header>
+
+<header class="head">
+  <div class="wrap">
+    <span class="eyebrow">Инструкции</span>
+    <h1>Как пользоваться дневником</h1>
+    <p>Короткие пошаговые сценарии для трёх ролей и общая справка: как читать зоны готовности, что означают термины и как разобрать отчёт. Выберите свою роль.</p>
+
+    <div class="tabs" role="tablist" aria-label="Роль">
+      <button class="tab" role="tab" id="tab-client" aria-controls="p-client" aria-selected="true"><span class="e">◔</span> Клиентка</button>
+      <button class="tab" role="tab" id="tab-coach" aria-controls="p-coach" aria-selected="false"><span class="e">❤</span> Тренер</button>
+      <button class="tab" role="tab" id="tab-doc" aria-controls="p-doc" aria-selected="false"><span class="e">✦</span> Врач</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- CLIENT -->
+  <div class="panel show" id="p-client" role="tabpanel" aria-labelledby="tab-client">
+    <div class="intro">Дневник ведёт силовые тренировки с учётом самочувствия и женской физиологии. Главный принцип: <b>каждый день начинается с готовности</b> — она подсказывает, тренироваться по плану или мягче. Цикл при этом — контекст, а не команда.</div>
+    <div class="steps">
+      <div class="stepc"><div class="n">1</div><div><h3>Заполните профиль и анкету</h3><p>Имя, цель, уровень подготовки, при желании — антропометрия и замеры. Внесите медицинские ограничения, если они есть.</p><span class="where">Профиль · Медицинские ограничения</span></div></div>
+      <div class="stepc"><div class="n">2</div><div><h3>Настройте женский модуль</h3><p>Выберите режим: регулярный цикл, перименопауза или постменопауза. Для цикла укажите дату первого дня последней менструации и среднюю длину — дневник рассчитает условный день и фазу.</p><span class="where">Женский модуль</span></div></div>
+      <div class="stepc"><div class="n">3</div><div><h3>Начните день с готовности</h3><p>Короткий чек-ин: сон, энергия, стресс, настроение, мышечная болезненность, боль, симптомы цикла или менопаузы, желание тренироваться. На выходе — индекс и цветовая зона.</p><span class="where">Готовность</span></div></div>
+      <div class="stepc"><div class="n">4</div><div><h3>Откройте «Сегодня»</h3><p>Тренировка дня с поправкой на вашу зону. Здесь же — четыре понятных шага: готовность, тренировка, подходы, итог. Добавьте сессию в дневник.</p><span class="where">Сегодня</span></div></div>
+      <div class="stepc"><div class="n">5</div><div><h3>Вводите подходы по ходу</h3><p>Карточками: вес, повторы, RPE/RIR и боль. Это удобно с телефона, а ориентировочный максимум (e1RM) считается сам.</p><span class="where">Дневник · ввод подходов</span></div></div>
+      <div class="stepc"><div class="n">6</div><div><h3>Зафиксируйте итог</h3><p>В конце отметьте: выполнено, частично или пропущено; самочувствие, боль и усталость после; короткий комментарий. Из этого формируется рекомендация на следующую тренировку.</p><span class="where">Итог тренировки</span></div></div>
+      <div class="stepc"><div class="n">7</div><div><h3>Следите за прогрессом</h3><p>Тоннаж, динамика RPE, выполнение плана и замеры. Прогресс — про силу и стабильность, а не только про вес тела.</p><span class="where">Прогресс</span></div></div>
+      <div class="stepc"><div class="n">8</div><div><h3>Делайте резервную копию</h3><p>Данные хранятся локально в вашем браузере. Периодически выгружайте их (экспорт JSON), чтобы не потерять при очистке браузера или смене устройства.</p><span class="where">Данные · экспорт</span></div></div>
+    </div>
+    <div class="callout sage"><div class="m">✓</div><div><h4>Если день тяжёлый — это нормально</h4><p>Плохой сон, ПМС или приливы — повод сделать мягче, а не корить себя. Жёлтая и оранжевая зоны существуют именно для этого.</p></div></div>
+    <div class="callout rose"><div class="m">!</div><div><h4>Когда остановиться</h4><p>Боль в груди, одышка, обморок, боль выше 6/10, аномальное кровотечение — прекратите тренировку и обратитесь к врачу. Полный список — в <a href="legal.html#flags">разделе «Красные флаги»</a>.</p></div></div>
+  </div>
+
+  <!-- COACH -->
+  <div class="panel" id="p-coach" role="tabpanel" aria-labelledby="tab-coach">
+    <div class="intro">В режиме специалиста вы видите клиенток, их готовность и выполнение плана, ведёте программы и используете отчёт для разбора. Дневник помогает принимать решения о нагрузке, но <b>не заменяет очную оценку техники и состояния.</b></div>
+    <div class="steps">
+      <div class="stepc"><div class="n">1</div><div><h3>Переключитесь в режим «Специалист»</h3><p>Сверху слева — переключатель «Клиентка / Специалист». В режиме специалиста открывается кабинет.</p><span class="where">Специалист</span></div></div>
+      <div class="stepc"><div class="n">2</div><div><h3>Откройте список клиенток</h3><p>По каждой — готовность на сегодня, выполнение 12-недельного плана и средний RPE. Быстрый обзор, кому нужна корректировка.</p><span class="where">Клиентки</span></div></div>
+      <div class="stepc"><div class="n">3</div><div><h3>Изучите карточку клиентки</h3><p>Динамика тоннажа и RPE, последние тренировки с итогами, женский статус и сигналы боли. Это контекст для решения по нагрузке.</p><span class="where">Карточка клиентки</span></div></div>
+      <div class="stepc"><div class="n">4</div><div><h3>Подберите программу</h3><p>Готовые 12-недельные шаблоны под уровень: фуллбоди, upper/lower, push/pull/legs с разгрузочными неделями. Опирайтесь на двигательные паттерны, а не только на отдельные мышцы.</p><span class="where">Программы</span></div></div>
+      <div class="stepc"><div class="n">5</div><div><h3>Используйте зоны готовности для коррекции</h3><p>Зелёная — план; жёлтая — снизить вес или убрать подход; оранжевая — техническая сессия; красная — восстановление. Подробнее — в справке ниже.</p><span class="where">Готовность клиентки</span></div></div>
+      <div class="stepc"><div class="n">6</div><div><h3>Контролируйте итоги и прогрессию</h3><p>Смотрите статусы тренировок (выполнено / частично / пропущено), боль и усталость после. Прогрессию ведите по совокупности: RPE/RIR, рабочий вес, восстановление, стаж.</p><span class="where">Дневник · Итоги</span></div></div>
+      <div class="stepc"><div class="n">7</div><div><h3>Разберите автоматический отчёт</h3><p>Сводка по нагрузке, симптомам, боли, RPE и рекомендациям. Используйте её для встречи с клиенткой. Как читать — в справке ниже.</p><span class="where">Отчёт</span></div></div>
+    </div>
+    <div class="callout sage"><div class="m">♀</div><div><h4>Цикл — контекст, не план</h4><p>Не стройте периодизацию строго по фазе цикла: данные это не подтверждают. Опирайтесь на готовность и симптомы конкретной клиентки.</p></div></div>
+    <div class="callout rose"><div class="m">→</div><div><h4>Когда направить к врачу</h4><p>Стойкая боль, красные флаги, аномальное кровотечение, неконтролируемое давление — это зона врача. Дневник не диагностирует; при таких сигналах рекомендуйте очную консультацию.</p></div></div>
+  </div>
+
+  <!-- DOCTOR -->
+  <div class="panel" id="p-doc" role="tabpanel" aria-labelledby="tab-doc">
+    <div class="intro">Для врача спортивной медицины или интегративного сопровождения дневник — источник структурированных данных о нагрузке, боли, симптомах и восстановлении. <b>Решение о допуске, ограничениях и обследовании принимает врач</b>, дневник лишь собирает наблюдения.</div>
+    <div class="steps">
+      <div class="stepc"><div class="n">1</div><div><h3>Работайте в режиме «Специалист»</h3><p>Фокус — на безопасности и динамике. Внесите медицинские ограничения клиентки в её профиль, чтобы они учитывались в сопровождении.</p><span class="where">Специалист · Ограничения</span></div></div>
+      <div class="stepc"><div class="n">2</div><div><h3>Смотрите сигналы безопасности первыми</h3><p>Красные флаги, динамика боли 0–10 от тренировки к тренировке, неконтролируемые симптомы. Нарастающая боль или флаг — повод остановить нагрузку и оценить очно.</p><span class="where">Красные флаги · Боль</span></div></div>
+      <div class="stepc"><div class="n">3</div><div><h3>Оцените готовность и симптомы</h3><p>Индекс готовности, сон, стресс, симптомы ОМЦ или менопаузы (приливы, ночная потливость) в связке с переносимостью нагрузки.</p><span class="where">Готовность · Женский модуль</span></div></div>
+      <div class="stepc"><div class="n">4</div><div><h3>Используйте отчёт на приёме</h3><p>Сводка по нагрузке, симптомам, боли, RPE и рекомендациям даёт быстрый срез между визитами. Расшифровка полей — в справке ниже.</p><span class="where">Отчёт</span></div></div>
+      <div class="stepc"><div class="n">5</div><div><h3>Задайте рамки сопровождения</h3><p>Дневник — инструмент самонаблюдения рядом с врачебным ведением, а не его замена. Обозначьте клиентке, какие показатели для вас важны и когда связываться вне графика.</p><span class="where">Рекомендации</span></div></div>
+    </div>
+    <div class="callout sage"><div class="m">⚷</div><div><h4>Чувствительные данные</h4><p>Цикл, симптомы и заметки — особая категория персональных данных. Доступ — только с согласия клиентки и в необходимом объёме. Подробнее — в <a href="legal.html#privacy">политике конфиденциальности</a>.</p></div></div>
+    <div class="callout rose"><div class="m">i</div><div><h4>Границы инструмента</h4><p>Дневник не ставит диагнозы, не оценивает тяжесть состояний и не назначает лечение. Любые клинические выводы — за врачом.</p></div></div>
+  </div>
+
+  <!-- SHARED: ZONES -->
+  <section class="ref">
+    <h2>Как читать зоны готовности</h2>
+    <p class="sub">Индекс готовности считается из чек-ина (сон, энергия, стресс, настроение, болезненность, боль, симптомы, мотивация) и переводится в одну из четырёх зон. Это ориентир для коррекции нагрузки, а не предписание.</p>
+    <div class="zones">
+      <div class="zr"><span class="zbadge zg">Зелёная</span><p><b>Тренироваться по плану.</b> Самочувствие в норме, можно работать с запланированными весами и объёмом, при необходимости — аккуратно прогрессировать.</p></div>
+      <div class="zr"><span class="zbadge zy">Жёлтая</span><p><b>Слегка снизить.</b> Уменьшите рабочий вес примерно на 5–10% или уберите один подход. Цель — провести тренировку без перегруза.</p></div>
+      <div class="zr"><span class="zbadge zo">Оранжевая</span><p><b>Лёгкая техническая сессия.</b> Снизьте объём на 20–40%, поработайте над техникой и мобильностью, без тяжёлых подходов.</p></div>
+      <div class="zr"><span class="zbadge zrr">Красная</span><p><b>Восстановление.</b> Прогулка, сон, мягкая активность. При боли ≥6/10, красных флагах или плохом самочувствии — консультация специалиста.</p></div>
+    </div>
+    <div class="callout rose" style="margin-top:14px"><div class="m">!</div><div><h4>Боль выше приоритета зоны</h4><p>Если боль 6/10 и выше — тренировку не проводят независимо от индекса. Сначала причина боли, потом нагрузка.</p></div></div>
+  </section>
+
+  <!-- SHARED: GLOSSARY -->
+  <section class="ref">
+    <h2>Словарь</h2>
+    <p class="sub">Минимум терминов, которые встречаются в дневнике.</p>
+    <div class="gloss">
+      <div class="gi"><h4>RPE (0–10)</h4><p>Субъективное усилие подхода. RPE 8 — остались примерно 2 повтора в запасе. Помогает дозировать нагрузку без «отказа».</p></div>
+      <div class="gi"><h4>RIR</h4><p>Повторы в запасе: сколько ещё могли бы сделать. RIR 2 примерно равен RPE 8. Чем выше RIR, тем легче подход.</p></div>
+      <div class="gi"><h4>Рабочий вес</h4><p>Вес, с которым выполняется подход. Основной параметр прогрессии вместе с повторами и подходами.</p></div>
+      <div class="gi"><h4>e1RM</h4><p>Ориентировочный одноповторный максимум, рассчитанный по весу и повторам. Удобно отслеживать рост силы без тестов на максимум.</p></div>
+      <div class="gi"><h4>Тоннаж</h4><p>Суммарный объём: вес × повторы × подходы. Показывает общую проделанную работу за тренировку или период.</p></div>
+      <div class="gi"><h4>Deload (разгрузка)</h4><p>Неделя со сниженной нагрузкой для восстановления. Помогает закрепить прогресс и снизить накопленную усталость.</p></div>
+      <div class="gi"><h4>Двигательные паттерны</h4><p>Базовые движения: коленно- и тазово-доминантные, жимы и тяги, кор, перенос, баланс. Программа строится по ним, а не только по мышцам.</p></div>
+      <div class="gi"><h4>Условная фаза цикла</h4><p>Ориентировочный расчёт фазы по дате менструации и длине цикла. Даёт контекст самочувствию, но не диктует нагрузку.</p></div>
+    </div>
+  </section>
+
+  <!-- SHARED: REPORT -->
+  <section class="ref">
+    <h2>Как читать отчёт</h2>
+    <p class="sub">Автоматический отчёт собирает ключевые поля для разбора тренером или врачом. Вот что означает каждое.</p>
+    <div class="report">
+      <div class="rrow"><b>Готовность и зоны</b><span>Как распределялись зелёные/жёлтые/оранжевые/красные дни — общий фон восстановления за период.</span></div>
+      <div class="rrow"><b>Выполнение плана</b><span>Доля проведённых сессий из 12-недельной программы и статусы итогов (выполнено / частично / пропущено).</span></div>
+      <div class="rrow"><b>Нагрузка</b><span>Тоннаж, динамика рабочих весов и e1RM по ключевым упражнениям — рост силы и объёма.</span></div>
+      <div class="rrow"><b>RPE / RIR</b><span>Средние усилия: устойчиво высокий RPE при стагнации — сигнал к разгрузке.</span></div>
+      <div class="rrow"><b>Боль 0–10</b><span>Динамика боли по тренировкам. Нарастание — повод пересмотреть нагрузку или направить к врачу.</span></div>
+      <div class="rrow"><b>Симптомы</b><span>ОМЦ/ПМС или менопаузальные симптомы (приливы, сон) в связке с переносимостью нагрузки.</span></div>
+      <div class="rrow"><b>Рекомендации</b><span>Подсказки по коррекции на следующий период. Это ориентир, окончательное решение — за специалистом.</span></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap row">
+    <div>© 2026 FemFit Diary 360 · инструкции к прототипу v1.4</div>
+    <div><a href="index.html">Главная</a> · <a href="legal.html">Документы</a> · <a href="app.html">Открыть дневник</a></div>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var tabs=[].slice.call(document.querySelectorAll('.tab'));
+    function activate(tab){
+      tabs.forEach(function(t){
+        var on=t===tab;
+        t.setAttribute('aria-selected',on?'true':'false');
+        var panel=document.getElementById(t.getAttribute('aria-controls'));
+        if(panel)panel.classList.toggle('show',on);
+      });
+    }
+    tabs.forEach(function(t){
+      t.addEventListener('click',function(){activate(t);});
+      t.addEventListener('keydown',function(e){
+        var i=tabs.indexOf(t);
+        if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();tabs[(i+1)%tabs.length].focus();activate(tabs[(i+1)%tabs.length]);}
+        if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();tabs[(i-1+tabs.length)%tabs.length].focus();activate(tabs[(i-1+tabs.length)%tabs.length]);}
+      });
+    });
+  })();
+</script>
+</body>
+</html>
