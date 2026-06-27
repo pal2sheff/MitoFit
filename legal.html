@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FemFit Diary 360 — документы, приватность и дисклеймер</title>
+<meta name="description" content="Медицинский дисклеймер, красные флаги, политика конфиденциальности, согласие на обработку данных и ограничение ответственности FemFit Diary 360." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --porcelain:#faf6f4; --cream:#f3eae5; --panel:#fffdfc; --panel2:#f6efeb;
+    --ink:#2f2830; --muted:#8d8088; --line:#ece1dc;
+    --plum:#9d5e78; --plum2:#b87e94; --plum-soft:#efdde4;
+    --sage:#6f938a; --sage-soft:#e0ede9;
+    --rose:#c25e66;
+    --shadow-sm:0 4px 16px rgba(95,60,70,.06);
+    --shadow:0 22px 54px rgba(95,55,70,.12);
+    --maxw:1080px;
+    --font-ui:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font-ui);color:var(--ink);font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(circle at 4% -2%,rgba(157,94,120,.08),transparent 26%),linear-gradient(180deg,#faf6f4,#fffdfc 55%);}
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;letter-spacing:-.015em;line-height:1.12;margin:0}
+  p{margin:0}
+  a{color:var(--plum);text-decoration:none}
+  a:hover{text-decoration:underline}
+  ::selection{background:var(--plum-soft)}
+  :focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(250,246,244,.85);border-bottom:1px solid var(--line)}
+  .nav .row{display:flex;align-items:center;gap:16px;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--font-display);font-size:18px;color:var(--ink)}
+  .brand .mk{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:#fff;font-weight:600;background:linear-gradient(140deg,var(--plum),var(--sage))}
+  .nav .back{margin-left:auto;font-size:14.5px;font-weight:600}
+
+  header.head{padding:48px 0 26px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--plum)}
+  header.head h1{font-size:clamp(30px,4.4vw,46px);margin:14px 0 0}
+  header.head p{color:var(--muted);margin-top:14px;max-width:680px}
+  .updated{margin-top:16px;font-size:13px;color:var(--muted)}
+
+  .note{display:grid;grid-template-columns:auto 1fr;gap:14px;background:#fbf6ef;border:1px solid #ecdcc2;border-radius:18px;padding:18px 20px;margin:22px 0 0}
+  .note .m{width:34px;height:34px;border-radius:10px;background:#f1e2c6;color:#8a6a2a;display:grid;place-items:center;font-size:17px;flex:none}
+  .note h3{font-size:15px;margin-bottom:4px;color:#7d5f24}
+  .note p{font-size:14px;color:#7a6740}
+
+  .layout{display:grid;grid-template-columns:230px 1fr;gap:40px;align-items:start;padding:30px 0 50px}
+  .toc{position:sticky;top:84px;display:grid;gap:5px;font-size:14px}
+  .toc a{color:var(--muted);padding:7px 11px;border-radius:10px;border:1px solid transparent}
+  .toc a:hover{color:var(--ink);text-decoration:none;background:var(--panel);border-color:var(--line)}
+  .toc .lab{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#a695a0;padding:6px 11px;margin-top:8px}
+
+  .doc section{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:26px 28px;box-shadow:var(--shadow-sm);margin-bottom:18px;scroll-margin-top:84px}
+  .doc section h2{font-size:24px;display:flex;align-items:center;gap:12px}
+  .doc section h2 .ix{font-size:14px;color:var(--plum);font-family:var(--font-ui);font-weight:700;background:var(--plum-soft);border-radius:8px;padding:3px 9px}
+  .doc h3{font-size:17px;margin:20px 0 8px}
+  .doc p{margin:10px 0;color:#403842}
+  .doc ul{margin:10px 0;padding-left:0;list-style:none;display:grid;gap:8px}
+  .doc ul li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+  .doc ul li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--plum2);margin-top:9px}
+  .doc .muted{color:var(--muted);font-size:14px}
+  .tag{display:inline-block;font-size:12px;color:#6f5f67;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;margin:2px 4px 2px 0}
+
+  .flags{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+  .flag{display:grid;grid-template-columns:auto 1fr;gap:11px;align-items:start;background:#fdf4f4;border:1px solid #eccacd;border-radius:14px;padding:13px 15px}
+  .flag .d{width:24px;height:24px;border-radius:7px;background:#f7dadc;color:#9c3f47;display:grid;place-items:center;font-size:13px;font-weight:700;flex:none}
+  .flag span{font-size:14px;color:#6f5258}
+  .stop{margin-top:14px;background:#fbe2e3;border:1px solid #eccacd;border-radius:14px;padding:14px 16px;color:#9c3f47;font-weight:600;font-size:14.5px}
+
+  .kv{display:grid;grid-template-columns:200px 1fr;gap:8px 18px;margin-top:8px;font-size:14.5px}
+  .kv dt{color:var(--muted)}
+  .kv dd{margin:0;color:#403842}
+
+  .fill{background:var(--sage-soft);border-radius:6px;padding:1px 7px;font-size:13px;color:#3f6f53;font-weight:600}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;color:var(--muted);font-size:13.5px}
+  footer .row{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+
+  @media(max-width:880px){
+    .layout{grid-template-columns:1fr;gap:0}
+    .toc{position:static;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+    .toc .lab{display:none}
+    .flags{grid-template-columns:1fr}
+    .kv{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap row">
+    <a class="brand" href="index.html"><span class="mk">F</span> FemFit Diary 360</a>
+    <a class="back" href="index.html">← На главную</a>
+  </div>
+</header>
+
+<header class="head">
+  <div class="wrap">
+    <span class="eyebrow">Документы</span>
+    <h1>Приватность, дисклеймер и условия</h1>
+    <p>Здесь собрано всё, что важно знать до начала: что дневник делает и чего не делает, когда нужно остановиться и обратиться к врачу, как обращаются с данными и кто за что отвечает.</p>
+    <p class="updated">Редакция от <span class="fill">укажите дату</span> · версия прототипа v1.4</p>
+
+    <div class="note">
+      <div class="m">i</div>
+      <div>
+        <h3>Это рабочие шаблоны, а не финальные юридические документы</h3>
+        <p>Тексты подготовлены для пилота и нуждаются в проверке квалифицированным юристом до публичного запуска — особенно потому, что данные о цикле, симптомах и здоровье относятся к специальной категории персональных данных. Поля вида «<span class="fill">укажите …</span>» нужно заполнить вашими реквизитами.</p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc" aria-label="Содержание">
+    <div class="lab">Главное</div>
+    <a href="#tldr">Кратко</a>
+    <a href="#disclaimer">Медицинский дисклеймер</a>
+    <a href="#flags">Красные флаги</a>
+    <div class="lab">Данные</div>
+    <a href="#privacy">Конфиденциальность</a>
+    <a href="#consent">Согласие на обработку</a>
+    <div class="lab">Условия</div>
+    <a href="#liability">Ограничение ответственности</a>
+    <a href="#contacts">Контакты</a>
+  </nav>
+
+  <main class="doc">
+
+    <section id="tldr">
+      <h2><span class="ix">TL;DR</span> Кратко о главном</h2>
+      <ul>
+        <li>FemFit Diary 360 — дневник тренировок и самонаблюдения. Это <b>не медицинское изделие</b>, он не ставит диагнозы и не назначает лечение.</li>
+        <li>Рекомендации по нагрузке носят информационный характер и не заменяют очную консультацию врача, физиотерапевта или тренера.</li>
+        <li>В текущей версии данные хранятся <b>локально в вашем браузере</b> и не передаются на сервер.</li>
+        <li>При тревожных симптомах (раздел «Красные флаги») тренировку нужно прекратить и обратиться за медицинской помощью.</li>
+        <li>Перед началом тренировок проконсультируйтесь со специалистом, особенно при хронических состояниях, в перименопаузе и постменопаузе, после травм и операций.</li>
+      </ul>
+    </section>
+
+    <section id="disclaimer">
+      <h2><span class="ix">01</span> Медицинский дисклеймер</h2>
+      <p>FemFit Diary 360 (далее — «Дневник») предназначен для ведения тренировочного процесса и самонаблюдения: фиксации нагрузки, самочувствия, сна, симптомов и восстановления. Дневник <b>не является медицинским изделием</b> и не предназначен для диагностики, лечения, профилактики или мониторинга заболеваний.</p>
+      <p>Информация и рекомендации в Дневнике — общего характера. Они формируются по введённым вами данным и не учитывают всех индивидуальных особенностей здоровья. Дневник не заменяет консультацию врача, врача спортивной медицины, физиотерапевта, гинеколога или другого квалифицированного специалиста.</p>
+      <h3>Перед началом тренировок</h3>
+      <p>Проконсультируйтесь со специалистом, если у вас есть сердечно-сосудистые, эндокринные, опорно-двигательные или иные хронические заболевания; если вы недавно перенесли травму или операцию; во время беременности и в послеродовом периоде; при беспокоящих симптомах. Решение о допуске к нагрузке принимает врач, а не Дневник.</p>
+      <h3>Как работают рекомендации по нагрузке</h3>
+      <p>Дневник использует индекс готовности и цветовые зоны как ориентир. Это вспомогательная логика самонаблюдения, а не предписание. Окончательное решение всегда остаётся за вами и вашим специалистом. Часть пороговых значений (проценты снижения веса и объёма, разгрузочные недели) — практические экспертные допущения, что прямо обозначено в продукте.</p>
+    </section>
+
+    <section id="flags">
+      <h2><span class="ix">02</span> Красные флаги — когда остановиться</h2>
+      <p>Прекратите тренировку и обратитесь за медицинской помощью, если появилось что-либо из перечисленного. При острых симптомах со стороны сердца или дыхания — неотложно.</p>
+      <div class="flags">
+        <div class="flag"><div class="d">!</div><span>Боль или давление в груди</span></div>
+        <div class="flag"><div class="d">!</div><span>Выраженная одышка, несоразмерная нагрузке</span></div>
+        <div class="flag"><div class="d">!</div><span>Обморок или предобморочное состояние</span></div>
+        <div class="flag"><div class="d">!</div><span>Резкое или неровное сердцебиение</span></div>
+        <div class="flag"><div class="d">!</div><span>Внезапная слабость, особенно односторонняя</span></div>
+        <div class="flag"><div class="d">!</div><span>Неврологические симптомы: нарушение речи, зрения, онемение</span></div>
+        <div class="flag"><div class="d">!</div><span>Острая травма во время тренировки</span></div>
+        <div class="flag"><div class="d">!</div><span>Боль в суставе с отёком, покраснением, ограничением движения</span></div>
+        <div class="flag"><div class="d">!</div><span>Боль выше 6 из 10 или нарастающая от тренировки к тренировке</span></div>
+        <div class="flag"><div class="d">!</div><span>Подозрение на стрессовый перелом (локальная боль при нагрузке)</span></div>
+        <div class="flag"><div class="d">!</div><span>Выраженное головокружение</span></div>
+        <div class="flag"><div class="d">!</div><span>Неконтролируемое артериальное давление</span></div>
+        <div class="flag"><div class="d">!</div><span>Аномальное или очень обильное маточное кровотечение</span></div>
+        <div class="flag"><div class="d">!</div><span>Любое кровотечение после наступления менопаузы</span></div>
+        <div class="flag"><div class="d">!</div><span>Послеоперационный период без допуска врача</span></div>
+        <div class="flag"><div class="d">!</div><span>Беременность без согласованного со специалистом плана нагрузок</span></div>
+      </div>
+      <div class="stop">Дневник не диагностирует эти состояния и не оценивает их тяжесть. Его задача — напомнить снизить нагрузку или остановиться и обратиться к врачу. При угрозе жизни вызывайте скорую помощь.</div>
+    </section>
+
+    <section id="privacy">
+      <h2><span class="ix">03</span> Политика конфиденциальности</h2>
+      <p>Оператор данных: <span class="fill">укажите название / ИП / ФИО</span>, контакт: <span class="fill">укажите email</span>. Политика описывает, как обрабатываются данные при использовании Дневника.</p>
+
+      <h3>Как устроено хранение в текущей версии</h3>
+      <p>Прототип v1.4 — это статическая веб-страница. Введённые вами данные (профиль, тренировки, готовность, симптомы, заметки) сохраняются <b>локально в вашем браузере</b> (localStorage) на вашем устройстве. Они <b>не передаются</b> оператору и не размещаются на сервере. Оператор не имеет к ним доступа и не получает их копий.</p>
+      <p class="muted">Исключение — техническая инфраструктура хостинга (например, GitHub Pages), которая при загрузке страницы может обрабатывать технические данные соединения (IP-адрес, сведения о браузере) согласно политике соответствующего провайдера. Шрифты подгружаются с внешнего сервиса (Google Fonts), что также может затрагивать технические данные соединения.</p>
+
+      <h3>Какие данные вы вносите</h3>
+      <ul>
+        <li>Профиль и цели, уровень подготовки, антропометрия и замеры (по желанию).</li>
+        <li>Тренировки: упражнения, веса, повторы, RPE/RIR, боль.</li>
+        <li>Самочувствие, сон, стресс, восстановление.</li>
+        <li>Данные женского модуля: цикл, симптомы ПМС, менопаузальные симптомы.</li>
+      </ul>
+      <p>Данные о здоровье, в том числе о менструальном цикле и симптомах, относятся к <b>специальной категории персональных данных</b> и требуют повышенной защиты. В текущей версии они не покидают ваше устройство.</p>
+
+      <h3>Ваш контроль над данными</h3>
+      <ul>
+        <li>Вы в любой момент можете выгрузить данные (экспорт JSON) и удалить их (сброс в разделе «Данные» или очистка хранилища браузера).</li>
+        <li>Данные не синхронизируются между устройствами и браузерами, пока вы не перенесёте их вручную.</li>
+        <li>Очистка данных браузера или приватный режим могут удалить сохранённое.</li>
+      </ul>
+
+      <h3>Что изменится в облачной версии</h3>
+      <p>При переходе на онлайн-версию с регистрацией и базой данных появятся серверное хранение, авторизация и роли доступа. Тогда эта политика будет дополнена разделами о целях и сроках хранения, передаче третьим лицам, трансграничной передаче и порядке реализации прав субъекта данных. До этого момента положения о серверной обработке неприменимы.</p>
+    </section>
+
+    <section id="consent">
+      <h2><span class="ix">04</span> Согласие на обработку данных</h2>
+      <p>Этот блок понадобится, когда данные начнут обрабатываться оператором (облачная версия) или когда специалист (тренер, врач) ведёт вас через Дневник и получает доступ к вашим записям. В прототипе с локальным хранением обработки данных оператором не происходит, поэтому согласие носит ознакомительный характер.</p>
+      <h3>Шаблон согласия</h3>
+      <p class="muted">Я подтверждаю, что ознакомлен(а) с медицинским дисклеймером и политикой конфиденциальности. Я даю согласие <span class="fill">укажите оператора</span> на обработку вносимых мной данных, включая данные о здоровье и менструальном цикле (специальная категория), в целях ведения тренировочного дневника и сопровождения. Согласие добровольное, его можно отозвать, обратившись по адресу <span class="fill">укажите email</span>. Я понимаю, что Дневник не является медицинской помощью.</p>
+      <h3>Если дневник ведёт специалист</h3>
+      <ul>
+        <li>Доступ специалиста к вашим записям возможен только с вашего согласия и в объёме, необходимом для сопровождения.</li>
+        <li>Специалист обязан хранить данные конфиденциально и не передавать их третьим лицам без вашего согласия.</li>
+        <li>Вы можете в любой момент прекратить сопровождение и отозвать доступ.</li>
+      </ul>
+    </section>
+
+    <section id="liability">
+      <h2><span class="ix">05</span> Ограничение ответственности</h2>
+      <ul>
+        <li>Вы используете Дневник на собственный риск и отвечаете за решение тренироваться, выбор нагрузки и технику выполнения упражнений.</li>
+        <li>Оператор не несёт ответственности за травмы, ухудшение состояния или иные последствия, связанные с тренировками, проведёнными без учёта противопоказаний и без необходимой консультации специалиста.</li>
+        <li>Дневник предоставляется «как есть»; оператор не гарантирует, что рекомендации подойдут любой ситуации и приведут к конкретному результату.</li>
+        <li>Дневник не предназначен для использования в экстренных ситуациях. При неотложных симптомах обращайтесь в скорую помощь.</li>
+        <li>Содержимое не является медицинской, диетологической или иной профессиональной консультацией.</li>
+      </ul>
+      <p class="muted">Объём ответственности и применимое право определяются окончательной редакцией условий, согласованной с юристом, и законодательством вашей юрисдикции.</p>
+    </section>
+
+    <section id="contacts">
+      <h2><span class="ix">06</span> Контакты и реквизиты</h2>
+      <dl class="kv">
+        <dt>Оператор / правообладатель</dt><dd><span class="fill">укажите название или ФИО</span></dd>
+        <dt>Email для обращений</dt><dd><span class="fill">укажите email</span></dd>
+        <dt>Ответственный за данные</dt><dd><span class="fill">укажите контактное лицо</span></dd>
+        <dt>Юрисдикция</dt><dd><span class="fill">укажите страну / регион</span></dd>
+      </dl>
+      <p class="muted" style="margin-top:14px">По вопросам приватности, отзыва согласия и удаления данных пишите на указанный email. Мы ответим в разумный срок.</p>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap row">
+    <div>© 2026 FemFit Diary 360 · документы и приватность</div>
+    <div><a href="index.html">На главную</a> · <a href="app.html">Открыть дневник</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
