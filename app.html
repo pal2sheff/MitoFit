@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FemFit Diary 360 — v1.4</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --porcelain:#faf6f4; --cream:#f3eae5; --panel:#fffdfc; --panel2:#f6efeb;
+      --ink:#2f2830; --muted:#8d8088; --line:#ece1dc;
+      --plum:#9d5e78; --plum2:#b87e94; --plum-soft:#efdde4;
+      --sage:#6f938a; --sage2:#8fb1a8; --sage-soft:#e0ede9;
+      --gold:#c2a36b;
+      --green:#5f9072; --yellow:#bb8f3f; --orange:#c47c4e; --red:#c25e66; --blue:#6f89a7;
+      --accent:var(--plum); --accent2:var(--plum2);
+      --shadow-sm:0 4px 16px rgba(95,60,70,.06);
+      --shadow:0 22px 54px rgba(95,55,70,.11);
+      --radius:26px; --sidebar:312px;
+      --font-ui:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+      --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;font-family:var(--font-ui);color:var(--ink);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+      background:
+        radial-gradient(circle at 8% 2%,rgba(157,94,120,.10),transparent 34%),
+        radial-gradient(circle at 96% 4%,rgba(111,147,138,.12),transparent 32%),
+        linear-gradient(160deg,#faf6f4,#f4ece8 60%,#fffdfc);min-height:100vh}
+    button,input,select,textarea{font-family:inherit}
+    h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;letter-spacing:-.01em}
+    ::selection{background:var(--plum-soft)}
+    :focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+
+    .app{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+    .sidebar{position:sticky;top:0;height:100vh;padding:22px 16px;border-right:1px solid var(--line);background:rgba(255,253,252,.82);backdrop-filter:blur(18px);overflow:auto}
+    .brand{display:flex;gap:13px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(150deg,#fffdfc,#f6efeb);box-shadow:var(--shadow-sm);margin-bottom:6px}
+    .brand-mark{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(140deg,var(--plum),var(--sage));color:#fff;font-family:var(--font-display);font-weight:600;font-size:23px}
+    .brand h1{margin:0;font-size:19px;line-height:1.05}
+    .brand p{margin:3px 0 0;color:var(--muted);font-size:12px;letter-spacing:.02em}
+    .version{font-size:12px;color:#a08e96;margin:10px 0 14px 4px}
+    .role-switch{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+    .role-switch button{border:1px solid var(--line);border-radius:999px;padding:9px;background:var(--panel);color:var(--muted);cursor:pointer;font-size:14px;transition:.16s}
+    .role-switch button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+    .nav{display:grid;gap:5px}
+    .nav button{width:100%;text-align:left;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--ink);padding:11px 13px;font-size:14.5px;cursor:pointer;transition:.16s ease;display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .nav button:hover,.nav button.active{background:var(--panel);border-color:var(--line);box-shadow:var(--shadow-sm);color:var(--plum)}
+    .nav button.active{font-weight:600}
+    .badge{font-size:11px;color:var(--muted);padding:3px 8px;border-radius:999px;background:var(--panel2);white-space:nowrap}
+    .side-card{margin-top:14px;padding:15px;border-radius:18px;border:1px solid var(--line);background:rgba(255,253,252,.8)}
+    .side-card h3{margin:0 0 8px;font-size:15px}
+    .side-card p{margin:0;color:var(--muted);font-size:13px;line-height:1.45}
+    .mini-status{display:grid;gap:8px;margin-top:10px}
+    .mini-status span{display:flex;justify-content:space-between;gap:12px;font-size:13px;color:var(--muted)}
+    .mini-status em{font-style:normal;color:var(--ink);font-weight:600}
+
+    .content{padding:34px 40px 70px;max-width:1480px;width:100%;margin:0 auto}
+    .topbar{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:26px}
+    .kicker{color:var(--plum);text-transform:uppercase;letter-spacing:.16em;font-size:11.5px;font-weight:700;margin-bottom:9px;font-family:var(--font-ui)}
+    .page-title{font-size:clamp(30px,4vw,46px);line-height:1.04;margin:0;letter-spacing:-.02em}
+    .page-subtitle{color:var(--muted);margin:11px 0 0;max-width:860px;line-height:1.55;font-size:16px}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+    .section{display:none}
+    .section.active{display:block;animation:fade .22s ease}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+    .grid{display:grid;gap:18px}
+    .cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .cols-5{grid-template-columns:repeat(5,minmax(0,1fr))}
+    .card{border:1px solid var(--line);background:rgba(255,253,252,.92);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+    .card.soft{background:rgba(246,239,235,.7);box-shadow:none}
+    .card.hero{background:linear-gradient(150deg,#fffdfc,#f7f0ee);overflow:hidden}
+    .card h2,.card h3{margin:0 0 12px}
+    .card h2{font-size:23px}
+    .card h3{font-size:18px}
+    .card p{color:var(--muted);line-height:1.55}
+    .muted{color:var(--muted)}.small{font-size:13px}.tiny{font-size:12px}
+    .divider{height:1px;background:var(--line);margin:18px 0}
+    .zone{padding:7px 13px;border-radius:999px;font-weight:600;display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-family:var(--font-ui)}
+    .zone::before{content:"";width:9px;height:9px;border-radius:50%;background:currentColor;opacity:.85}
+    .zone.green{background:var(--sage-soft);color:#3f6f53}
+    .zone.yellow{background:#fbf1dd;color:#856221}
+    .zone.orange{background:#fbe9dd;color:#9a5a31}
+    .zone.red{background:#fbe2e3;color:#9c3f47}
+    .zone.blue{background:#eaf1f8;color:#4f6c8a}
+
+    .btn{border:1px solid var(--line);border-radius:13px;background:var(--panel);color:var(--ink);padding:10px 15px;font-size:14px;font-weight:500;cursor:pointer;transition:.16s ease;box-shadow:var(--shadow-sm);display:inline-flex;gap:8px;align-items:center;justify-content:center}
+    .btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(95,60,70,.12)}
+    .btn:active{transform:translateY(0)}
+    .btn.primary{background:linear-gradient(140deg,var(--plum),#ad6e86);color:#fff;border-color:transparent}
+    .btn.green{background:linear-gradient(140deg,var(--sage),#7da498);color:#fff;border-color:transparent}
+    .btn.gold{background:linear-gradient(140deg,var(--gold),#d2bb84);color:#fff;border-color:transparent}
+    .btn.danger{background:#fdf3f3;color:var(--red);border-color:#eccacd}
+    .btn.ghost{box-shadow:none;background:transparent}
+    .btn.smallbtn{padding:7px 11px;font-size:13px;border-radius:11px}
+
+    .input-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}
+    .field{display:grid;gap:6px}
+    .field label{font-size:13px;color:#7c6c74;display:flex;align-items:center;gap:6px}
+    .field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:var(--panel);border-radius:13px;padding:11px 13px;font-size:15px;color:var(--ink);outline:none;transition:.14s}
+    .field textarea{min-height:90px;resize:vertical}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--plum2);box-shadow:0 0 0 4px rgba(157,94,120,.13)}
+
+    .hint{display:inline-grid;place-items:center;width:17px;height:17px;border-radius:50%;background:var(--plum-soft);color:var(--plum);font-size:11px;font-weight:700;cursor:help;position:relative;font-family:var(--font-ui);flex:none}
+    .hint:hover,.hint:focus{outline:none}
+    .hint::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 9px);transform:translateX(-50%) translateY(4px);width:230px;background:var(--ink);color:#fff;font-size:12px;font-weight:400;line-height:1.45;padding:10px 12px;border-radius:12px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.16s;z-index:50}
+    .hint::before{content:"";position:absolute;left:50%;bottom:calc(100% + 3px);transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--ink);opacity:0;transition:.16s;z-index:50}
+    .hint:hover::after,.hint:focus::after,.hint:hover::before,.hint:focus::before{opacity:1;transform:translateX(-50%) translateY(0)}
+
+    .choice-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .choice{border:1px solid var(--line);border-radius:18px;padding:17px;background:var(--panel);cursor:pointer;transition:.16s ease}
+    .choice h3{margin:0 0 7px;font-size:17px}
+    .choice p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.45}
+    .choice:hover{border-color:var(--plum2)}
+    .choice.active{border-color:var(--plum);box-shadow:0 14px 34px rgba(157,94,120,.16);background:linear-gradient(150deg,#fffdfc,#fbeff3)}
+
+    .metric{padding:19px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(150deg,#fffdfc,#f7f0ec);box-shadow:var(--shadow-sm)}
+    .metric .label{color:var(--muted);font-size:12.5px;display:flex;align-items:center;gap:6px}
+    .metric .value{font-family:var(--font-display);font-size:30px;font-weight:500;margin-top:6px;line-height:1.1}
+    .metric .note{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.4}
+
+    .progressbar{height:11px;background:var(--cream);border-radius:999px;overflow:hidden}
+    .progressbar>span{display:block;height:100%;border-radius:999px;background:linear-gradient(90deg,var(--plum2),var(--plum));width:0;transition:width .6s ease}
+
+    /* ---- signature rings ---- */
+    .ringwrap{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+    .ring{position:relative;width:188px;height:188px;flex:none}
+    .ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+    .cycle-ring svg{transform:none}
+    .ring-track{fill:none;stroke:var(--cream);stroke-width:15}
+    .ring-arc{fill:none;stroke-width:15;stroke-linecap:round;animation:ringdraw 1.15s cubic-bezier(.22,1,.36,1) forwards}
+    @keyframes ringdraw{from{stroke-dashoffset:var(--circ)}to{stroke-dashoffset:var(--off)}}
+    .cycle-marker{fill:#fff;stroke:var(--ink);stroke-width:3}
+    .ring-center{position:absolute;inset:0;display:grid;place-content:center;text-align:center;gap:3px}
+    .ring-num{font-family:var(--font-display);font-size:46px;font-weight:500;line-height:1}
+    .ring-unit{font-size:12px;color:var(--muted)}
+    .phase-tag{font-size:13px;font-weight:600;color:var(--plum);margin-top:2px}
+    .ring-center .zone{margin-top:6px}
+    .cyclegend{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px}
+    .cyclegend span{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+    .cyclegend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+
+    /* ---- step flow (Сегодня) ---- */
+    .stepflow{display:grid;gap:14px}
+    .step{display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:start;border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:16px 18px}
+    .step .num{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--plum-soft);color:var(--plum);font-weight:700;font-family:var(--font-display);font-size:15px}
+    .step.done .num{background:var(--sage-soft);color:#3f6f53}
+    .step h3{margin:0 0 4px;font-size:16px}
+    .step p{margin:0;color:var(--muted);font-size:13.5px}
+
+    /* ---- set editor (mobile-first cards) ---- */
+    .seteditor{display:grid;gap:9px}
+    .setrow{display:grid;grid-template-columns:30px repeat(5,1fr) auto;gap:9px;align-items:end;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px}
+    .setrow .sn{font-family:var(--font-display);font-size:18px;color:var(--plum);align-self:center;text-align:center}
+    .setrow .minif{display:grid;gap:4px}
+    .setrow .minif label{font-size:11px;color:var(--muted)}
+    .setrow .minif input{width:100%;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px;font-size:14px;text-align:center}
+    .setrow .e1{align-self:center;text-align:center;font-size:12px;color:var(--muted);white-space:nowrap}
+    .setrow .e1 b{display:block;color:var(--ink);font-size:15px;font-family:var(--font-display)}
+
+    .summary-badge{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;padding:5px 11px;border-radius:999px}
+    .summary-badge.done{background:var(--sage-soft);color:#3f6f53}
+    .summary-badge.partial{background:#fbf1dd;color:#856221}
+    .summary-badge.skipped{background:#f0ebed;color:#796b72}
+    .summary-badge.none{background:var(--panel2);color:var(--muted)}
+
+    .client-list{display:grid;gap:12px}
+    .client-row{display:grid;grid-template-columns:1.4fr .75fr .75fr .75fr auto;gap:12px;align-items:center;padding:15px;border:1px solid var(--line);border-radius:18px;background:var(--panel);cursor:pointer;transition:.16s}
+    .client-row:hover{border-color:var(--plum2)}
+    .client-row.active{border-color:var(--plum);box-shadow:0 12px 28px rgba(157,94,120,.15)}
+
+    table{width:100%;border-collapse:separate;border-spacing:0;overflow:hidden;border-radius:16px;border:1px solid var(--line);background:var(--panel)}
+    th,td{padding:11px 12px;border-bottom:1px solid var(--line);border-right:1px solid var(--line);vertical-align:middle;font-size:13.5px}
+    th{background:var(--panel2);color:#6f5f67;font-weight:600;text-align:center;font-family:var(--font-ui)}
+    td{text-align:left;color:var(--ink)}
+    tr:last-child td{border-bottom:0}
+    td:last-child,th:last-child{border-right:0}
+    .table-wrap{overflow:auto;border-radius:16px}
+    .num{text-align:center;white-space:nowrap}.nowrap{white-space:nowrap}
+    .row-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .empty{padding:28px;border:1px dashed var(--line);border-radius:16px;color:var(--muted);background:rgba(255,253,252,.7);text-align:center}
+
+    .chart{height:210px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(180deg,#fffdfc,#f9f3ef);padding:12px;position:relative}
+    .chart svg{width:100%;height:100%;display:block}
+    .barlist{display:grid;gap:9px}
+    .barrow{display:grid;grid-template-columns:150px 1fr 64px;gap:10px;align-items:center;font-size:13px}
+    .bar{height:11px;background:var(--cream);border-radius:999px;overflow:hidden}
+    .bar span{display:block;height:100%;background:linear-gradient(90deg,var(--sage),var(--plum2));border-radius:999px}
+
+    .lib-card{border:1px solid var(--line);border-radius:18px;background:var(--panel);padding:16px;display:grid;gap:8px}
+    .lib-card h4{font-size:17px;margin:0}
+    .tagline{display:flex;gap:7px;flex-wrap:wrap}
+    .tag{font-size:12px;color:#6f5f67;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 9px}
+
+    .warning-list{display:grid;gap:10px}
+    .warning{border:1px solid #eccacd;background:#fdf4f4;border-radius:16px;padding:15px;display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start}
+    .warning .wm{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:#f7dadc;color:#9c3f47;flex:none;font-size:16px}
+    .warning h4{margin:0 0 4px;color:#9c3f47;font-size:14px}
+    .warning p{margin:0;color:#6f5258;font-size:13.5px}
+
+    .report-box{white-space:pre-wrap;line-height:1.55;color:#3a3138;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;font-size:13.5px}
+
+    .toast{position:fixed;right:22px;bottom:22px;background:var(--ink);color:#fff;border-radius:14px;padding:13px 17px;box-shadow:var(--shadow);opacity:0;transform:translateY(10px);transition:.2s ease;z-index:1000;font-size:14px}
+    .toast.show{opacity:1;transform:none}
+    .modal{position:fixed;inset:0;background:rgba(47,40,48,.4);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;padding:20px;z-index:100}
+    .modal.show{display:flex}
+    .modal-card{max-width:900px;width:100%;max-height:88vh;overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:24px;box-shadow:0 30px 90px rgba(45,30,40,.32);padding:26px}
+    .modal-card h2{margin-top:0}
+
+    /* ---- mobile chrome ---- */
+    .mobilebar{display:none}
+    .scrim{display:none}
+    .tabbar{display:none}
+
+    @media(max-width:1160px){
+      :root{--sidebar:264px}
+      .cols-4,.cols-5{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .input-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .choice-grid{grid-template-columns:1fr}
+      .client-row{grid-template-columns:1fr 1fr}
+      .content{padding:28px 24px 60px}
+      .barrow{grid-template-columns:130px 1fr 56px}
+    }
+    @media(max-width:860px){
+      .app{grid-template-columns:1fr}
+      .sidebar{position:fixed;top:0;left:0;width:280px;height:100vh;z-index:90;transform:translateX(-104%);transition:transform .26s cubic-bezier(.4,0,.2,1);border-right:1px solid var(--line);box-shadow:0 0 60px rgba(45,30,40,.18)}
+      .app.drawer-open .sidebar{transform:none}
+      .scrim{display:block;position:fixed;inset:0;background:rgba(47,40,48,.4);opacity:0;pointer-events:none;transition:.22s;z-index:80}
+      .app.drawer-open .scrim{opacity:1;pointer-events:auto}
+      .mobilebar{display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:60;margin:-22px -16px 18px;padding:12px 16px;background:rgba(250,246,244,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+      .mobilebar .menu{width:42px;height:42px;border-radius:13px;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;cursor:pointer}
+      .mobilebar .menu span{width:18px;height:2px;background:var(--ink);box-shadow:0 -5px 0 var(--ink),0 5px 0 var(--ink)}
+      .mobilebar .mb-title{font-family:var(--font-display);font-size:18px;flex:1}
+      .mobilebar .mb-role{font-size:12px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:5px 11px;background:var(--panel)}
+      .content{padding:22px 16px 96px}
+      .topbar{display:block}
+      .toolbar{justify-content:flex-start;margin-top:14px}
+      .cols-2,.cols-3,.cols-4,.cols-5,.input-grid{grid-template-columns:1fr}
+      .page-title{font-size:30px}
+      .client-row{grid-template-columns:1fr 1fr}
+      .metric .value{font-size:26px}
+      .card{padding:18px;border-radius:20px}
+      .ring{width:168px;height:168px}
+      .ringwrap{justify-content:center}
+      .setrow{grid-template-columns:repeat(3,1fr);gap:8px}
+      .setrow .sn{grid-column:1/-1;text-align:left}
+      .setrow .e1{grid-column:1/-1;text-align:left;display:flex;gap:8px;align-items:baseline}
+      .tabbar{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;position:fixed;bottom:0;left:0;right:0;z-index:70;background:rgba(255,253,252,.94);backdrop-filter:blur(16px);border-top:1px solid var(--line);padding:7px 6px max(7px,env(safe-area-inset-bottom))}
+      .tabbar button{border:0;background:transparent;display:grid;justify-items:center;gap:3px;padding:6px 2px;cursor:pointer;color:var(--muted);font-size:10.5px;font-weight:500}
+      .tabbar button .ic{width:23px;height:23px;display:grid;place-items:center;font-size:18px;line-height:1}
+      .tabbar button.active{color:var(--plum)}
+      .warning{grid-template-columns:1fr}
+      .modal-card{padding:20px;border-radius:20px}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .ring-arc{animation:none;stroke-dashoffset:var(--off)}
+      .section.active{animation:none}
+      *{scroll-behavior:auto}
+    }
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><div class="brand-mark">F</div><div><h1>FemFit Diary 360</h1><p>premium women&#39;s training diary</p></div></div>
+    <p class="version">Версия v1.4 • локальный прототип</p>
+    <div class="role-switch"><button id="roleClient" onclick="setRole('client')">Клиентка</button><button id="rolePro" onclick="setRole('pro')">Специалист</button></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-card"><h3>Активная клиентка</h3><p id="sideClient">—</p><div class="mini-status" id="sideMetrics"></div></div>
+    <div class="side-card"><h3>Безопасность</h3><p>Дневник не ставит диагнозы и не назначает лечение. Это инструмент самонаблюдения рядом с врачом и тренером.</p></div>
+  </aside>
+  <div class="scrim" id="scrim" onclick="closeDrawer()"></div>
+  <main class="content">
+    <header class="mobilebar"><button class="menu" onclick="toggleDrawer()" aria-label="Меню"><span></span></button><div class="mb-title">FemFit Diary 360</div><div class="mb-role" id="mbRole">Клиентка</div></header>
+    <section id="onboarding" class="section"></section>
+    <section id="dashboard" class="section"></section>
+    <section id="profile" class="section"></section>
+    <section id="female" class="section"></section>
+    <section id="readiness" class="section"></section>
+    <section id="programs" class="section"></section>
+    <section id="today" class="section"></section>
+    <section id="log" class="section"></section>
+    <section id="sets" class="section"></section>
+    <section id="progress" class="section"></section>
+    <section id="library" class="section"></section>
+    <section id="pro" class="section"></section>
+    <section id="report" class="section"></section>
+    <section id="redflags" class="section"></section>
+    <section id="data" class="section"></section>
+  </main>
+</div>
+<nav class="tabbar" id="tabbar"></nav>
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="modal-card" id="modalCard"></div></div>
+<script>
+(function(){
+const STORAGE_KEY='femfit_diary_360_v13';
+const $=id=>document.getElementById(id);
+const todayISO=()=>new Date().toISOString().slice(0,10);
+const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
+const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const fmt=(n,d=0)=>Number(n||0).toLocaleString('ru-RU',{maximumFractionDigits:d,minimumFractionDigits:d});
+const modes={cycle:'ОМЦ',peri:'Перименопауза',post:'Постменопауза'};
+const levels=['Новичок','Средний','Продвинутый'];
+const patterns=['Коленно-доминантный','Тазово-доминантный','Горизонтальный жим','Горизонтальная тяга','Вертикальный жим','Вертикальная тяга','Кор','ВПН/лопатка','Переноски','Баланс','Кардио'];
+const equipment=['Тренажёр','Блок','Свободные веса','Собственный вес','Резинки','Функциональное','Кардио'];
+const clientNav=[['onboarding','Onboarding','start'],['dashboard','Главная','dash'],['profile','Профиль','user'],['female','Женский модуль','♀'],['readiness','Готовность','RPE'],['programs','Программы','12w'],['today','Тренировка дня','today'],['log','Дневник','log'],['sets','Подходы','sets'],['progress','Прогресс','chart'],['library','Библиотека','lib'],['redflags','Флаги','safe'],['data','Данные','json']];
+const proNav=[['pro','Кабинет','clients'],['report','Отчёт','report'],['dashboard','Дашборд клиентки','dash'],['log','Дневник','log'],['progress','Прогресс','chart'],['library','Библиотека','lib'],['redflags','Флаги','safe'],['data','Данные','json']];
+const baseExercises=[
+{id:'leg_press',name:'Жим ногами',pattern:'Коленно-доминантный',equipment:'Тренажёр',level:'Новичок',muscles:'квадрицепсы, ягодичные',tech:'Таз прижат, колени по линии стоп, контролируемая амплитуда.',errors:'Отрыв таза, замыкание коленей, слишком глубокая амплитуда при боли.',reg:'Уменьшить амплитуду/вес',prog:'Увеличить вес или амплитуду',caution:'Боль в колене/пояснице.'},
+{id:'goblet_squat',name:'Гоблет-присед',pattern:'Коленно-доминантный',equipment:'Свободные веса',level:'Новичок',muscles:'квадрицепсы, ягодичные, кор',tech:'Гантель у груди, колени по стопам, корпус устойчив.',errors:'Завал коленей, потеря пятки, округление спины.',reg:'Присед на ящик',prog:'Фронтальный присед',caution:'Боль в колене/ТБС.'},
+{id:'box_squat',name:'Присед на ящик',pattern:'Коленно-доминантный',equipment:'Собственный вес',level:'Новичок',muscles:'квадрицепсы, ягодичные',tech:'Касание ящика без падения, контроль коленей.',errors:'Падение на опору, потеря корпуса.',reg:'Более высокий ящик',prog:'Гоблет-присед',caution:'Острая боль в колене.'},
+{id:'split_squat',name:'Сплит-присед',pattern:'Коленно-доминантный',equipment:'Свободные веса',level:'Средний',muscles:'квадрицепсы, ягодичные, средняя ягодичная',tech:'Таз ровный, колено по стопе, медленный темп.',errors:'Потеря баланса, завал таза.',reg:'С опорой рукой',prog:'Болгарский сплит-присед',caution:'Колено/ТБС.'},
+{id:'step_up',name:'Степ-ап',pattern:'Коленно-доминантный',equipment:'Собственный вес',level:'Средний',muscles:'ягодичные, квадрицепсы',tech:'Толчок верхней ногой, корпус стабилен.',errors:'Отталкивание нижней ногой, завал колена.',reg:'Низкая платформа',prog:'Гантели',caution:'Боль в колене.'},
+{id:'rdl_db',name:'Румынская тяга с гантелями',pattern:'Тазово-доминантный',equipment:'Свободные веса',level:'Средний',muscles:'задняя поверхность бедра, ягодичные, разгибатели спины',tech:'Таз назад, нейтральная спина, гантели близко.',errors:'Округление спины, превращение в присед.',reg:'Хиндж с палкой',prog:'Румынская тяга со штангой',caution:'Боль в пояснице.'},
+{id:'hip_thrust',name:'Хип-траст',pattern:'Тазово-доминантный',equipment:'Свободные веса',level:'Средний',muscles:'ягодичные, задняя поверхность бедра',tech:'Рёбра вниз, таз подкручен, пауза сверху.',errors:'Переразгибание поясницы.',reg:'Ягодичный мост',prog:'Штанга/тренажёр',caution:'Поясничный дискомфорт.'},
+{id:'glute_bridge',name:'Ягодичный мост',pattern:'Тазово-доминантный',equipment:'Собственный вес',level:'Новичок',muscles:'ягодичные',tech:'Подъём таза без прогиба поясницы.',errors:'Толчок поясницей, отсутствие паузы.',reg:'Меньшая амплитуда',prog:'Хип-траст',caution:'Боль в пояснице.'},
+{id:'back_extension',name:'Гиперэкстензия',pattern:'Тазово-доминантный',equipment:'Тренажёр',level:'Новичок',muscles:'ягодичные, разгибатели спины',tech:'Движение из таза, без переразгибания.',errors:'Рывки, чрезмерный прогиб.',reg:'Малая амплитуда',prog:'С диском',caution:'Поясница.'},
+{id:'leg_curl',name:'Сгибание ног',pattern:'Тазово-доминантный',equipment:'Тренажёр',level:'Новичок',muscles:'задняя поверхность бедра',tech:'Таз стабилен, медленный возврат.',errors:'Рывок, отрыв таза.',reg:'Меньший вес',prog:'Пауза в сокращении',caution:'Судороги/сухожилия.'},
+{id:'chest_press',name:'Жим от груди в тренажёре',pattern:'Горизонтальный жим',equipment:'Тренажёр',level:'Новичок',muscles:'грудные, трицепс, передняя дельта',tech:'Лопатки стабильны, локти не слишком высоко.',errors:'Плечи вперёд, резкий возврат.',reg:'Лёгкий вес',prog:'Жим гантелей',caution:'Боль в плече.'},
+{id:'db_bench',name:'Жим гантелей лёжа',pattern:'Горизонтальный жим',equipment:'Свободные веса',level:'Средний',muscles:'грудные, трицепс',tech:'Контроль амплитуды, нейтральная лопатка.',errors:'Избыточное разведение локтей.',reg:'Тренажёр',prog:'Штанга',caution:'Плечо.'},
+{id:'pushup',name:'Отжимания от опоры',pattern:'Горизонтальный жим',equipment:'Собственный вес',level:'Новичок',muscles:'грудные, трицепс, кор',tech:'Тело одной линией, локти контролируемо.',errors:'Провисание таза.',reg:'Выше опора',prog:'От пола',caution:'Запястье/плечо.'},
+{id:'shoulder_press_machine',name:'Жим плеч в тренажёре',pattern:'Вертикальный жим',equipment:'Тренажёр',level:'Новичок',muscles:'дельтовидные, трицепс',tech:'Корпус стабилен, движение без боли.',errors:'Плечи к ушам, прогиб.',reg:'Меньше амплитуда',prog:'Гантели',caution:'Плечо.'},
+{id:'landmine_press',name:'Landmine press',pattern:'Вертикальный жим',equipment:'Функциональное',level:'Средний',muscles:'передняя дельта, верх груди, трицепс',tech:'Диагональный жим вперёд-вверх, корпус стабилен.',errors:'Ротация корпуса, прогиб.',reg:'Двумя руками',prog:'Одной рукой',caution:'Плечо.'},
+{id:'seated_row',name:'Горизонтальная тяга блока',pattern:'Горизонтальная тяга',equipment:'Блок',level:'Новичок',muscles:'широчайшие, ромбовидные, задняя дельта',tech:'Тянуть локтями, грудь раскрыта.',errors:'Сутулость, рывок корпусом.',reg:'Лёгкий блок',prog:'Пауза в сведении',caution:'Плечо/локоть.'},
+{id:'chest_supported_row',name:'Тяга с опорой грудью',pattern:'Горизонтальная тяга',equipment:'Тренажёр',level:'Средний',muscles:'середина спины, широчайшие',tech:'Грудь на опоре, плечи вниз.',errors:'Рывки, подъём плеч.',reg:'Блок',prog:'Гантели',caution:'Плечо.'},
+{id:'one_arm_cable_row',name:'Тяга одной рукой в блоке',pattern:'Горизонтальная тяга',equipment:'Блок',level:'Средний',muscles:'широчайшие, ромбовидные, кор',tech:'Корпус не вращается, локоть назад.',errors:'Поворот корпуса.',reg:'Двумя руками',prog:'Больше вес',caution:'Слабый кор.'},
+{id:'lat_pulldown',name:'Тяга верхнего блока',pattern:'Вертикальная тяга',equipment:'Блок',level:'Новичок',muscles:'широчайшие, бицепс, нижняя трапеция',tech:'Тяга к верхней груди, не за голову.',errors:'Тяга за голову, рывки.',reg:'Меньше вес',prog:'Подтягивания',caution:'Плечо.'},
+{id:'assisted_pullup',name:'Подтягивания с ассистом',pattern:'Вертикальная тяга',equipment:'Тренажёр',level:'Средний',muscles:'широчайшие, бицепс',tech:'Старт с депрессии лопаток, контроль.',errors:'Рывки, неполная амплитуда.',reg:'Верхний блок',prog:'Подтягивания',caution:'Плечо/локоть.'},
+{id:'dead_bug',name:'Dead bug',pattern:'Кор',equipment:'Собственный вес',level:'Новичок',muscles:'поперечная мышца живота, стабилизаторы таза',tech:'Поясница стабильна, медленный темп.',errors:'Прогиб поясницы.',reg:'Только ноги',prog:'Руки+ноги',caution:'Острая боль в пояснице.'},
+{id:'pallof',name:'Pallof press',pattern:'Кор',equipment:'Блок',level:'Новичок',muscles:'косые, поперечная мышца живота',tech:'Таз неподвижен, корпус не вращается.',errors:'Разворот корпуса.',reg:'Ближе к блоку',prog:'Дальше от блока',caution:'Боль в плече.'},
+{id:'side_plank',name:'Боковая планка',pattern:'Кор',equipment:'Собственный вес',level:'Новичок',muscles:'косые, квадратная мышца поясницы',tech:'Тело в линию, шея нейтрально.',errors:'Провисание таза.',reg:'С коленей',prog:'Полная планка',caution:'Плечо.'},
+{id:'farmers_walk',name:'Farmer’s walk',pattern:'Переноски',equipment:'Свободные веса',level:'Средний',muscles:'кор, трапеции, хват, ягодичные',tech:'Корпус высокий, шаг ровный.',errors:'Наклон, задержка дыхания.',reg:'Лёгкие гантели',prog:'Больше вес/дистанция',caution:'Поясница/хват.'},
+{id:'external_rotation',name:'Наружная ротация плеча',pattern:'ВПН/лопатка',equipment:'Резинки',level:'Новичок',muscles:'подостная, малая круглая',tech:'Локоть 90°, плечо опущено, без рывка.',errors:'Увод локтя, движение корпусом.',reg:'Изометрия',prog:'Кроссовер',caution:'Боль/нестабильность плеча.'},
+{id:'face_pull',name:'Face pull',pattern:'ВПН/лопатка',equipment:'Блок',level:'Средний',muscles:'задняя дельта, трапеция, наружные ротаторы',tech:'Тянуть к лицу, лопатки вниз-назад.',errors:'Прогиб, шея напряжена.',reg:'Резинка',prog:'С наружной ротацией',caution:'Плечо.'},
+{id:'wall_slide',name:'Serratus wall slide',pattern:'ВПН/лопатка',equipment:'Резинки',level:'Новичок',muscles:'передняя зубчатая, нижняя трапеция',tech:'Скользить вверх без подъёма плеч.',errors:'Зажим шеи.',reg:'Без резинки',prog:'С резинкой',caution:'Боль в плече.'},
+{id:'balance_tandem',name:'Тандем-стойка',pattern:'Баланс',equipment:'Собственный вес',level:'Новичок',muscles:'стопа, голень, стабилизаторы таза',tech:'Ровная стойка, взгляд вперёд.',errors:'Потеря осанки.',reg:'С опорой',prog:'Глаза закрыты/подушка',caution:'Риск падения.'},
+{id:'incline_walk',name:'Ходьба на дорожке под наклоном',pattern:'Кардио',equipment:'Кардио',level:'Новичок',muscles:'сердечно-сосудистая система, ягодичные, голень',tech:'Умеренный темп, без держания за поручни при возможности.',errors:'Слишком высокая интенсивность.',reg:'Ровная ходьба',prog:'Интервалы',caution:'Одышка/АД/боль.'}
+];
+function seedClients(){
+ const d=todayISO();
+ return [
+  {id:uid(),name:'Айгуль',age:34,mode:'cycle',level:'Новичок',goal:'сила, тонус, стабильный режим',equipment:'зал, тренажёры, гантели',height:168,weight:67,lastPeriod:'2026-06-01',cycleLength:28,menstruationLength:5,injuries:'нет значимых',notes:'Демо-клиентка с регулярным ОМЦ.',onboardingDone:true,programs:[],activeProgramId:null,completedSessionIds:[],workouts:[],checkins:[],customExercises:[],selectedExerciseId:''},
+  {id:uid(),name:'Марина',age:49,mode:'peri',level:'Средний',goal:'мышечная масса, сон, композиция тела',equipment:'зал',height:164,weight:72,lastPeriod:'2026-05-18',cycleLength:35,menstruationLength:5,injuries:'периодическая боль в колене',notes:'Демо-клиентка в перименопаузе.',onboardingDone:true,programs:[],activeProgramId:null,completedSessionIds:[],workouts:[],checkins:[],customExercises:[],selectedExerciseId:''},
+  {id:uid(),name:'Елена',age:58,mode:'post',level:'Новичок',goal:'сила, баланс, костная плотность',equipment:'тренажёры, резинки',height:162,weight:69,lastPeriod:'',cycleLength:28,menstruationLength:5,injuries:'остеоартроз колена 1–2 ст.',notes:'Демо-клиентка в постменопаузе.',onboardingDone:true,programs:[],activeProgramId:null,completedSessionIds:[],workouts:[],checkins:[],customExercises:[],selectedExerciseId:''}
+ ];
+}
+function defaultState(){return {role:'client',currentSection:'onboarding',activeClientId:null,clients:seedClients(),pro:{selectedClientId:null,reportText:''}}}
+let state=load();
+if(!state.activeClientId) state.activeClientId=state.clients[0]?.id;
+if(!state.pro.selectedClientId) state.pro.selectedClientId=state.activeClientId;
+ensureDemoData();
+function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)return merge(defaultState(),JSON.parse(raw));}catch(e){}return defaultState();}
+function merge(a,b){ if(Array.isArray(a))return Array.isArray(b)?b:a; if(a&&typeof a==='object'){const o={...a}; if(b&&typeof b==='object')Object.keys(b).forEach(k=>o[k]=merge(a[k],b[k])); return o;} return b===undefined?a:b; }
+function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function client(){return state.clients.find(c=>c.id===state.activeClientId)||state.clients[0];}
+function selectedClient(){return state.clients.find(c=>c.id===state.pro.selectedClientId)||client();}
+function setActiveClient(id){state.activeClientId=id; state.pro.selectedClientId=id; save(); renderAll();}
+window.setActiveClient=setActiveClient;
+function allExercises(c=client()){return [...baseExercises,...(c.customExercises||[])];}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
+function top(id,title,subtitle,actions=''){return `<div class="topbar"><div><div class="kicker">FemFit Diary 360 • ${esc(id)}</div><h1 class="page-title">${esc(title)}</h1><p class="page-subtitle">${subtitle}</p></div><div class="toolbar">${actions}</div></div>`}
+function stat(label,value,note=''){return `<div class="metric"><div class="label">${esc(label)}</div><div class="value">${value}</div><div class="note">${note}</div></div>`}
+function zoneClass(z){return z==='Зелёная'?'green':z==='Жёлтая'?'yellow':z==='Оранжевая'?'orange':z==='Красная'?'red':'blue'}
+function show(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(id)?.classList.add('active');state.currentSection=id;save();renderSection(id);document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));buildTabbar();closeDrawer();try{window.scrollTo(0,0)}catch(e){}}
+window.show=show;
+function setRole(role){state.role=role; if(role==='pro' && !['pro','report'].includes(state.currentSection)) state.currentSection='pro'; if(role==='client' && ['pro','report'].includes(state.currentSection)) state.currentSection='dashboard'; save(); initNav(); show(state.currentSection);}
+window.setRole=setRole;
+function initNav(){const nav=$('nav'); const items=state.role==='pro'?proNav:clientNav; nav.innerHTML=items.map(([id,label,b])=>`<button data-id="${id}" onclick="show('${id}')"><span>${label}</span><span class="badge">${b}</span></button>`).join(''); $('roleClient').classList.toggle('active',state.role==='client'); $('rolePro').classList.toggle('active',state.role==='pro'); const mb=$('mbRole'); if(mb)mb.textContent=state.role==='pro'?'Специалист':'Клиентка'; buildTabbar();}
+function updateSide(){const c=client(); const ci=cycleInfo(todayISO(),c); const score=readinessScore(c); const z=readinessZone(score); $('sideClient').innerHTML=`<b>${esc(c.name)}</b><br>${modes[c.mode]} • ${esc(c.level)}<br><span class="small muted">${c.mode==='cycle'?ci.note:'Симптомы и восстановление'}</span>`; $('sideMetrics').innerHTML=`<span><b>Готовность</b><em>${score}%</em></span><span><b>Зона</b><em>${z}</em></span><span><b>Тренировок</b><em>${c.workouts.length}</em></span>`;}
+function parseDate(v){ if(!v)return null; const s=String(v).trim(); if(/^\d{4}-\d{2}-\d{2}$/.test(s))return new Date(s+'T00:00:00'); const m=s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/); if(m)return new Date(`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}T00:00:00`); const d=new Date(s); return isNaN(d)?null:d;}
+function dayDiff(a,b){return Math.floor((parseDate(a)-parseDate(b))/(1000*60*60*24));}
+function cycleInfo(date=todayISO(),c=client()){ if(c.mode!=='cycle') return {day:'—',phase:modes[c.mode],note:modes[c.mode]}; const lp=parseDate(c.lastPeriod); const len=Number(c.cycleLength||28); const men=Number(c.menstruationLength||5); if(!lp||!len)return {day:'—',phase:'Не рассчитано',note:'Введите дату 1-го дня цикла'}; const diff=dayDiff(date,c.lastPeriod); const day=((diff%len)+len)%len+1; let phase=day<=men?'Менструальная':day<=12?'Фолликулярная':day<=16?'Овуляторное окно':'Лютеиновая'; return {day,phase,note:`${day} день • ${phase}`};}
+function latestCheckin(c=client()){return (c.checkins||[]).slice().sort((a,b)=>String(b.date).localeCompare(String(a.date)))[0]||null;}
+function readinessScore(c=client()){ const ch=latestCheckin(c); if(!ch)return 76; const sleep=Number(ch.sleep||3), energy=Number(ch.energy||3), mood=Number(ch.mood||3), motivation=Number(ch.motivation||3); const stress=Number(ch.stress||3), soreness=Number(ch.soreness||2); const pain=Number(ch.pain||0), fem=Number(ch.femaleSymptoms||0); const positive=((sleep+energy+mood+motivation)/20)*55; const recovery=((6-stress)+(6-soreness))/10*25; const symptomPenalty=Math.min(25,pain*2.2+fem*1.4); return Math.max(0,Math.min(100,Math.round(positive+recovery+25-symptomPenalty)));}
+function readinessZone(score=readinessScore()){return score>=75?'Зелёная':score>=55?'Жёлтая':score>=35?'Оранжевая':'Красная'}
+function readinessAdvice(c=client()){ const score=readinessScore(c), z=readinessZone(score), ch=latestCheckin(c); const pain=Number(ch?.pain||0), fem=Number(ch?.femaleSymptoms||0); if(pain>=6) return 'Боль ≥6/10: тренировку не проводить, нужна очная оценка/коррекция плана.'; if(z==='Зелёная') return 'Тренировка по плану. При RPE ниже целевого можно прогрессировать на 2,5–5%.'; if(z==='Жёлтая') return 'Снизить вес на 5–10% или убрать 1 подход в базовых упражнениях. HIIT не усиливать.'; if(z==='Оранжевая') return 'Лёгкая тренировка: техника, мобилизация, ходьба, кор без провокации боли. Объём снизить на 20–40%.'; return 'Восстановительный день. При красных флагах, боли или кровотечении — медицинская оценка.';}
+function e1rm(weight,reps){weight=Number(weight||0);reps=Number(reps||0); if(!weight||!reps)return 0; return weight*(1+reps/30)}
+function tonnage(w){return (w.exercises||[]).flatMap(e=>e.sets||[]).reduce((s,x)=>s+Number(x.weight||0)*Number(x.reps||0),0)}
+function avgWorkoutRPE(w){const sets=(w.exercises||[]).flatMap(e=>e.sets||[]).filter(s=>s.rpe); if(!sets.length)return 0; return sets.reduce((a,b)=>a+Number(b.rpe||0),0)/sets.length}
+function avgRPE(c=client()){const arr=c.workouts||[]; const sets=arr.flatMap(w=>(w.exercises||[]).flatMap(e=>e.sets||[])).filter(s=>s.rpe); if(!sets.length)return 0; return sets.reduce((a,b)=>a+Number(b.rpe||0),0)/sets.length}
+function activeProgram(c=client()){return (c.programs||[]).find(p=>p.id===c.activeProgramId)||c.programs?.[0]||null;}
+function nextSession(c=client()){const p=activeProgram(c); if(!p)return null; return p.sessions.find(s=>!c.completedSessionIds.includes(s.id))||p.sessions[p.sessions.length-1];}
+function setClientField(k,v){const c=client(); c[k]=isNaN(v)||v===''?v:Number(v); save(); renderAll();}
+window.setClientField=setClientField;
+function ensureDemoData(){ state.clients.forEach(c=>{ if(!c.checkins.length){c.checkins.push({id:uid(),date:todayISO(),sleep:4,energy:4,stress:2,mood:4,soreness:2,pain:c.mode==='peri'?3:1,femaleSymptoms:c.mode==='cycle'?3:(c.mode==='peri'?5:2),motivation:4});} if(!c.programs.length){generateProgramForClient(c,false);} if(!c.workouts.length){const s=nextSession(c); if(s){ createWorkoutFromSessionForClient(c,s,false); const w=c.workouts[0]; w.date=new Date(Date.now()-86400000*3).toISOString().slice(0,10); (w.exercises||[]).forEach((e,ei)=>e.sets.forEach((set,si)=>{ set.reps=ei===4?10:8+si; set.weight=ei===4?0:(ei+1)*10+si*2.5; set.rpe=ei===4?6:7; set.rir=3; set.pain=c.mode==='peri'&&ei===0?3:1;})); }} }); save();}
+function programTemplates(mode,level){
+ const beginner={A:['leg_press','glute_bridge','chest_press','seated_row','dead_bug'],B:['goblet_squat','back_extension','landmine_press','lat_pulldown','pallof'],C:['step_up','leg_curl','pushup','external_rotation','side_plank'],D:['box_squat','hip_thrust','shoulder_press_machine','chest_supported_row','farmers_walk']};
+ const medium={A:['goblet_squat','rdl_db','db_bench','seated_row','pallof'],B:['split_squat','hip_thrust','landmine_press','lat_pulldown','side_plank'],C:['step_up','leg_curl','chest_press','one_arm_cable_row','farmers_walk'],D:['leg_press','back_extension','shoulder_press_machine','assisted_pullup','dead_bug']};
+ const advanced={A:['goblet_squat','rdl_db','db_bench','chest_supported_row','pallof'],B:['split_squat','hip_thrust','landmine_press','assisted_pullup','farmers_walk'],C:['step_up','leg_curl','pushup','one_arm_cable_row','side_plank'],D:['leg_press','back_extension','shoulder_press_machine','lat_pulldown','external_rotation']};
+ let tpl=level==='Продвинутый'?advanced:(level==='Средний'?medium:beginner);
+ if(mode==='post') tpl={A:['leg_press','glute_bridge','chest_press','seated_row','dead_bug'],B:['box_squat','back_extension','landmine_press','lat_pulldown','balance_tandem'],C:['step_up','leg_curl','chest_supported_row','external_rotation','farmers_walk'],D:['incline_walk','hip_thrust','shoulder_press_machine','seated_row','side_plank']};
+ if(mode==='peri'&&level==='Новичок') tpl={A:['leg_press','rdl_db','chest_press','seated_row','pallof'],B:['split_squat','glute_bridge','landmine_press','lat_pulldown','side_plank'],C:['goblet_squat','back_extension','chest_supported_row','external_rotation','incline_walk']};
+ return tpl;
+}
+function blockForWeek(w){ if([4,8].includes(w)) return {name:'Deload',sets:2,reps:'10–12',rpe:'5–6',rir:'4–5'}; if(w<=3)return {name:'Адаптация',sets:3,reps:'8–12',rpe:'6–7',rir:'3–4'}; if(w<=7)return {name:'Накопление',sets:4,reps:'8–10',rpe:'7–8',rir:'2–3'}; if(w<=11)return {name:'Интенсификация',sets:4,reps:'6–8',rpe:'7–8',rir:'1–3'}; return {name:'Закрепление',sets:3,reps:'8–10',rpe:'6–7',rir:'3–4'};}
+function addDays(date,n){const d=parseDate(date); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10)}
+function generateProgramForClient(c=client(),notify=true){ const sessions=Number(c.sessionsPerWeek||3); const tpl=programTemplates(c.mode,c.level); const keys=Object.keys(tpl).slice(0,sessions); const start=todayISO(); const days=sessions===4?[0,2,4,6]:sessions===2?[0,3]:[0,2,4]; const arr=[]; for(let week=1;week<=12;week++){const b=blockForWeek(week);keys.forEach((k,i)=>{ const exs=tpl[k].map((id,order)=>{const ex=baseExercises.find(e=>e.id===id)||allExercises(c).find(e=>e.id===id); return {exerciseId:id,name:ex?.name||id,pattern:ex?.pattern||'',sets:order===4?Math.max(2,b.sets-1):b.sets,reps:order===4?((ex?.pattern==='Кор'||ex?.pattern==='Баланс')?'30–45 сек / 10–12':'12–15'):b.reps,rpe:b.rpe,rir:b.rir};}); arr.push({id:uid(),week,date:addDays(start,(week-1)*7+(days[i]||0)),name:`Неделя ${week} • Тренировка ${k}`,sessionKey:k,block:b.name,mode:c.mode,level:c.level,exercises:exs});});}
+ const p={id:uid(),createdAt:new Date().toISOString(),name:`${modes[c.mode]} • ${c.level} • 12 недель`,mode:c.mode,level:c.level,sessionsPerWeek:sessions,startDate:start,sessions:arr}; c.programs.unshift(p); c.activeProgramId=p.id; c.onboardingDone=true; if(notify){save();toast('12-недельная программа создана');renderAll();show('programs');} }
+window.generateProgram=function(){generateProgramForClient(client(),true)};
+function createWorkoutFromSessionForClient(c,s,notify=true){ if(!s)return; const w={id:uid(),date:todayISO(),title:s.name,sessionId:s.id,mode:c.mode,cycle:cycleInfo(todayISO(),c),readiness:{score:readinessScore(c),zone:readinessZone(readinessScore(c))},summary:{status:'',feelAfter:'',painAfter:'',fatigueAfter:'',comment:''},notes:'Создано из 12-недельной программы.',exercises:s.exercises.map(e=>({id:uid(),exerciseId:e.exerciseId,name:e.name,pattern:e.pattern,target:`${e.sets}×${e.reps}, RPE ${e.rpe}, RIR ${e.rir}`,sets:Array.from({length:Number(e.sets)||3},(_,i)=>({id:uid(),set:i+1,reps:'',weight:'',rpe:'',rir:'',pain:'',comment:''}))}))}; c.workouts.unshift(w); if(!c.completedSessionIds.includes(s.id)) c.completedSessionIds.push(s.id); if(notify){save();toast('Тренировка добавлена');show('log');renderAll();} }
+window.createWorkoutFromSession=function(sessionId){const c=client(); const p=activeProgram(c); const s=p?.sessions.find(x=>x.id===sessionId)||nextSession(c); createWorkoutFromSessionForClient(c,s,true)};
+function renderOnboarding(){const c=client(); $('onboarding').innerHTML=top('onboarding','FemFit Diary 360 v1.3','Первичная настройка дневника: режим женского модуля, уровень подготовки, частота тренировок, цель и оборудование.',`<button class="btn ghost" onclick="show('dashboard')">Пропустить</button>`)+`
+<div class="grid cols-2"><div class="card"><h2>1. Режим дневника</h2><div class="choice-grid">${Object.entries(modes).map(([k,v])=>`<div class="choice ${c.mode===k?'active':''}" onclick="setClientField('mode','${k}'); renderOnboarding()"><h3>${v}</h3><p>${k==='cycle'?'ОМЦ, ПМС, условная фаза цикла и симптом-ориентированная коррекция нагрузки.':k==='peri'?'Нерегулярный цикл, приливы, сон, восстановление, переносимость интенсивности.':'Сила, мышечная масса, баланс, костная плотность и профилактика падений.'}</p></div>`).join('')}</div></div>
+<div class="card"><h2>2. Уровень и формат</h2><div class="input-grid" style="grid-template-columns:1fr 1fr"><div class="field"><label>Имя</label><input value="${esc(c.name)}" onchange="setClientField('name',this.value)"></div><div class="field"><label>Возраст</label><input type="number" value="${esc(c.age)}" onchange="setClientField('age',this.value)"></div><div class="field"><label>Уровень</label><select onchange="setClientField('level',this.value)">${levels.map(x=>`<option ${c.level===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Тренировок в неделю</label><select onchange="setClientField('sessionsPerWeek',this.value)"><option ${c.sessionsPerWeek==2?'selected':''}>2</option><option ${!c.sessionsPerWeek||c.sessionsPerWeek==3?'selected':''}>3</option><option ${c.sessionsPerWeek==4?'selected':''}>4</option></select></div><div class="field" style="grid-column:1/-1"><label>Цель</label><input value="${esc(c.goal)}" onchange="setClientField('goal',this.value)"></div><div class="field" style="grid-column:1/-1"><label>Оборудование</label><input value="${esc(c.equipment)}" onchange="setClientField('equipment',this.value)"></div></div></div></div>
+<div class="card" style="margin-top:18px"><h2>3. Безопасный старт</h2><p>Дневник не ставит диагнозы и не назначает лечение. При боли в груди, обмороке, неврологических симптомах, боли ≥6/10, кровотечении после менопаузы, острой травме или после операции без допуска врача тренировка не проводится.</p><div class="toolbar" style="justify-content:flex-start"><button class="btn primary" onclick="generateProgram()">Создать 12-недельную программу</button><button class="btn" onclick="show('profile')">Заполнить профиль</button></div></div>`;}
+function renderDashboard(){const c=client(); const ci=cycleInfo(todayISO(),c); const score=readinessScore(c); const z=readinessZone(score); const totalT=c.workouts.reduce((s,w)=>s+tonnage(w),0); const p=activeProgram(c); const comp=p?Math.round(c.completedSessionIds.length/p.sessions.length*100):0; const right=c.mode==='cycle'?`<h2>Цикл сегодня</h2><div class="ringwrap" style="justify-content:center">${cycleRing(c)}</div>${cycleLegend()}<p class="small muted" style="margin-top:10px">Фаза — это контекст самочувствия, а не команда менять нагрузку. Решение принимает индекс готовности.</p>`:`<h2>Женский статус</h2><p>${modes[c.mode]}. ${c.mode==='peri'?'Цикл нерегулярный — опора на сон, приливы, боль и восстановление.':'Приоритет — сила, мышечная масса, костная плотность и баланс.'}</p><div class="divider"></div><p class="small"><b>Симптомы сегодня:</b> ${Number(latestCheckin(c)?.femaleSymptoms||0)}/10</p>`; $('dashboard').innerHTML=top('dashboard','Главная','Готовность ведёт, женский статус объясняет. Короткая сводка дня: восстановление, план, нагрузка и сигналы безопасности.',`<button class="btn primary" onclick="show('today')">Тренировка дня</button><button class="btn" onclick="show('readiness')">Обновить готовность</button>`)+`
+<div class="grid cols-2" style="align-items:stretch"><div class="card hero"><div class="ringwrap">${readinessRing(score,z)}<div style="flex:1;min-width:190px"><div class="kicker">Сегодня</div><h2 style="margin:2px 0 8px">${esc(c.name||'Клиентка')}</h2><p>${readinessAdvice(c)}</p></div></div></div><div class="card">${right}</div></div>
+<div class="grid cols-4" style="margin-top:18px">${stat('Выполнение плана',comp+'%',`${c.completedSessionIds.length} из ${p?p.sessions.length:0} сессий`)}${stat('Тоннаж',fmt(totalT,0)+' кг','вес × повторы за всё время')}${stat('Средний RPE '+'',fmt(avgRPE(c),1),'усилие 0–10')}${stat('Тренировок',c.workouts.length,'в дневнике')}</div>
+<div class="grid cols-2" style="margin-top:18px"><div class="card"><h2>Выполнение 12-недельного плана</h2>${renderWeeklyBars(c)}</div><div class="card"><h2>Последняя тренировка</h2>${c.workouts[0]?`<p style="margin-top:0"><b>${esc(c.workouts[0].title)}</b> • ${esc(c.workouts[0].date)}</p><p class="small">${summaryBadge(c.workouts[0])} · тоннаж ${fmt(tonnage(c.workouts[0]),0)} кг</p><div class="toolbar" style="justify-content:flex-start;margin-top:8px"><button class="btn smallbtn" onclick="show('log')">Открыть дневник</button><button class="btn smallbtn" onclick="openSummary('${c.workouts[0].id}')">Записать итог</button></div>`:'<p>Пока нет тренировок. Создайте программу и начните с тренировки дня.</p>'}</div></div>
+<div class="grid cols-2" style="margin-top:18px"><div class="card"><h2>Динамика тоннажа</h2>${lineChart(workoutSeries(c,'tonnage'))}</div><div class="card"><h2>Динамика RPE</h2>${lineChart(workoutSeries(c,'rpe'),10)}</div></div>`;}
+function renderWeeklyBars(c=client()){const p=activeProgram(c); if(!p)return '<div class="empty">Создайте программу.</div>'; let out='<div class="barlist">'; for(let w=1;w<=12;w++){const ss=p.sessions.filter(s=>s.week===w); const done=ss.filter(s=>c.completedSessionIds.includes(s.id)).length; const pct=ss.length?Math.round(done/ss.length*100):0; out+=`<div class="barrow"><span>Неделя ${w}</span><div class="bar"><span style="width:${pct}%"></span></div><b>${pct}%</b></div>`;} return out+'</div>';}
+function workoutSeries(c,kind){return (c.workouts||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))).slice(-12).map(w=>({label:w.date.slice(5),value:kind==='tonnage'?tonnage(w):avgWorkoutRPE(w)}));}
+function lineChart(data,maxGiven){if(!data.length)return '<div class="empty">Пока нет данных.</div>'; const w=620,h=190,p=22; const max=maxGiven||Math.max(...data.map(d=>d.value),1); const pts=data.map((d,i)=>{const x=p+i*(w-2*p)/(Math.max(data.length-1,1)); const y=h-p-(d.value/(max||1))*(h-2*p); return [x,y,d]}); const path=pts.map((pt,i)=>(i?'L':'M')+pt[0].toFixed(1)+' '+pt[1].toFixed(1)).join(' '); return `<div class="chart"><svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none"><line x1="${p}" y1="${h-p}" x2="${w-p}" y2="${h-p}" stroke="#eadbd2"/><line x1="${p}" y1="${p}" x2="${p}" y2="${h-p}" stroke="#eadbd2"/><path d="${path}" fill="none" stroke="#b77c72" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>${pts.map(pt=>`<circle cx="${pt[0]}" cy="${pt[1]}" r="5" fill="#6f8f83"/>`).join('')}${pts.map(pt=>`<text x="${pt[0]}" y="${h-4}" text-anchor="middle" font-size="11" fill="#766c66">${pt[2].label}</text>`).join('')}</svg></div>`;}
+function renderProfile(){const c=client(); $('profile').innerHTML=top('profile','Профиль клиентки','Базовые данные, цели, оборудование, ограничения, травмы и комментарии специалиста.')+`<div class="card"><div class="input-grid"><div class="field"><label>Имя</label><input value="${esc(c.name)}" onchange="setClientField('name',this.value)"></div><div class="field"><label>Возраст</label><input type="number" value="${esc(c.age)}" onchange="setClientField('age',this.value)"></div><div class="field"><label>Рост, см</label><input type="number" value="${esc(c.height)}" onchange="setClientField('height',this.value)"></div><div class="field"><label>Вес, кг</label><input type="number" value="${esc(c.weight)}" onchange="setClientField('weight',this.value)"></div><div class="field"><label>Режим</label><select onchange="setClientField('mode',this.value)">${Object.entries(modes).map(([k,v])=>`<option value="${k}" ${c.mode===k?'selected':''}>${v}</option>`).join('')}</select></div><div class="field"><label>Уровень</label><select onchange="setClientField('level',this.value)">${levels.map(x=>`<option ${c.level===x?'selected':''}>${x}</option>`).join('')}</select></div><div class="field"><label>Тренировок/нед.</label><select onchange="setClientField('sessionsPerWeek',this.value)"><option ${c.sessionsPerWeek==2?'selected':''}>2</option><option ${!c.sessionsPerWeek||c.sessionsPerWeek==3?'selected':''}>3</option><option ${c.sessionsPerWeek==4?'selected':''}>4</option></select></div><div class="field"><label>Оборудование</label><input value="${esc(c.equipment)}" onchange="setClientField('equipment',this.value)"></div><div class="field" style="grid-column:1/-1"><label>Цель</label><input value="${esc(c.goal)}" onchange="setClientField('goal',this.value)"></div><div class="field" style="grid-column:1/-1"><label>Травмы / операции / ограничения</label><textarea onchange="setClientField('injuries',this.value)">${esc(c.injuries)}</textarea></div><div class="field" style="grid-column:1/-1"><label>Комментарий специалиста</label><textarea onchange="setClientField('notes',this.value)">${esc(c.notes)}</textarea></div></div></div>`;}
+function renderFemale(){const c=client(); const ci=cycleInfo(todayISO(),c); const center=c.mode==='cycle'?`<div class="card"><h2>Условная фаза цикла</h2><div class="ringwrap" style="justify-content:center">${cycleRing(c)}</div>${cycleLegend()}<p class="small muted" style="margin-top:10px">Расчёт ориентировочный: длина и день овуляции у всех разные. Фаза подсказывает, почему меняется самочувствие, но нагрузку определяет готовность и симптомы.</p></div>`:menoPanel(c); $('female').innerHTML=top('female','Женский модуль','ОМЦ, перименопауза или постменопауза. Нагрузка корректируется не по календарному дню, а по совокупности: симптомы, сон, боль, RPE/RIR и фактическая работоспособность.')+`
+<div class="card"><h2>Режим дневника</h2><div class="choice-grid">${Object.entries(modes).map(([k,v])=>`<div class="choice ${c.mode===k?'active':''}" onclick="setClientField('mode','${k}'); renderFemale()"><h3>${v}</h3><p>${k==='cycle'?'Расчёт дня и условной фазы цикла, ПМС-симптомы.':k==='peri'?'Нерегулярный цикл, приливы, сон, восстановление.':'Сила, мышечная масса, костная плотность, баланс.'}</p></div>`).join('')}</div></div>
+<div class="grid cols-2" style="margin-top:18px">${center}<div class="card"><h2>Решение по нагрузке сегодня</h2><div class="ringwrap" style="gap:16px"><div style="flex:1;min-width:160px"><span class="zone ${zoneClass(readinessZone(readinessScore(c)))}">${readinessZone(readinessScore(c))}</span><p style="margin-top:12px">${readinessAdvice(c)}</p></div></div><div class="divider"></div><p class="small muted">Это ориентир дневника, а не предписание. При красных флагах — раздел «Флаги» и очная оценка.</p></div></div>
+${c.mode==='cycle'?`<div class="card" style="margin-top:18px"><h2>Параметры цикла</h2><div class="input-grid"><div class="field"><label>1-й день последней менструации ${hint('Дата начала последней менструации. От неё считается условный день цикла.')}</label><input type="date" value="${esc(c.lastPeriod)}" onchange="setClientField('lastPeriod',this.value)"></div><div class="field"><label>Средняя длина цикла, дней</label><input type="number" value="${esc(c.cycleLength||28)}" onchange="setClientField('cycleLength',this.value)"></div><div class="field"><label>Длительность менструации, дней</label><input type="number" value="${esc(c.menstruationLength||5)}" onchange="setClientField('menstruationLength',this.value)"></div><div class="field"><label>Примечание</label><input value="${esc(c.femaleNote||'')}" onchange="setClientField('femaleNote',this.value)"></div></div></div>`:''}`;}
+function renderReadiness(){const c=client(); const last=latestCheckin(c)||{}; const score=readinessScore(c); const z=readinessZone(score); const hints={sleep:'Качество сна прошлой ночью: 1 — очень плохо, 5 — отлично.',energy:'Общий уровень энергии сейчас: 1 — истощение, 5 — бодрость.',stress:'Уровень стресса: 1 — спокойно, 5 — сильный стресс. Высокий стресс снижает готовность.',mood:'Настроение: 1 — подавленное, 5 — приподнятое.',soreness:'Мышечная болезненность после прошлых тренировок: 1 — нет, 5 — выраженная.',pain:'Боль (сустав/спина и т.п.) 0–10. Боль ≥6 — тренировку не проводим, нужна оценка.',femaleSymptoms:(c.mode==='cycle'?'Выраженность ОМЦ/ПМС-симптомов 0–10: отёки, тяга к сладкому, усталость, головная боль.':'Выраженность приливов/ночной потливости и связанных симптомов 0–10.'),motivation:'Желание тренироваться: 1 — нет, 5 — большое.'}; const fields=[['sleep','Сон',1,5],['energy','Энергия',1,5],['stress','Стресс',1,5],['mood','Настроение',1,5],['soreness','Мышечная болезненность',1,5],['pain','Боль',0,10],['femaleSymptoms',c.mode==='cycle'?'ОМЦ/ПМС-симптомы':'Приливы/симптомы',0,10],['motivation','Желание тренироваться',1,5]]; $('readiness').innerHTML=top('readiness','Готовность к тренировке','Короткий чек-ин перед тренировкой. Из него считается индекс готовности и зона, которые подсказывают, как скорректировать нагрузку.')+`
+<div class="grid cols-2" style="align-items:stretch"><div class="card hero"><div class="ringwrap">${readinessRing(score,z)}<div style="flex:1;min-width:180px"><div class="kicker">Текущее решение</div><h2 style="margin:2px 0 8px">${z} зона</h2><p>${readinessAdvice(c)}</p></div></div></div><div class="card soft"><h3>Как читать зоны</h3><p class="small"><b style="color:#3f6f53">Зелёная</b> — тренировка по плану.<br><b style="color:#856221">Жёлтая</b> — снизить вес 5–10% или убрать 1 подход.<br><b style="color:#9a5a31">Оранжевая</b> — лёгкая техническая сессия, −20–40% объёма.<br><b style="color:#9c3f47">Красная</b> — восстановление; при боли/флагах — к специалисту.</p></div></div>
+<div class="card" style="margin-top:18px"><h2>Чек-ин на ${esc(todayISO())}</h2><div class="input-grid">${fields.map(f=>`<div class="field"><label>${f[1]} (${f[2]}–${f[3]}) ${hint(hints[f[0]]||'')}</label><input id="chk_${f[0]}" type="number" min="${f[2]}" max="${f[3]}" value="${last[f[0]]??(f[2]===0?0:3)}"></div>`).join('')}<div class="field"><label>Дата</label><input id="chk_date" type="date" value="${todayISO()}"></div></div><div class="toolbar" style="justify-content:flex-start;margin-top:16px"><button class="btn primary" onclick="saveCheckin()">Сохранить готовность</button></div></div>`;}
+window.saveCheckin=function(){const c=client(); const ids=['sleep','energy','stress','mood','soreness','pain','femaleSymptoms','motivation']; const chk={id:uid(),date:$('chk_date').value||todayISO()}; ids.forEach(k=>chk[k]=Number($('chk_'+k).value||0)); c.checkins.unshift(chk); save(); toast('Готовность сохранена'); renderAll();};
+function renderPrograms(){const c=client(); const p=activeProgram(c); $('programs').innerHTML=top('programs','12-недельные программы','Готовые программы под режим, уровень и частоту тренировок. Недели 4 и 8 — разгрузочные.',`<button class="btn primary" onclick="generateProgram()">Создать новую программу</button>`)+(p?`<div class="card"><h2>${esc(p.name)}</h2><p>Старт: ${esc(p.startDate)} • частота: ${p.sessionsPerWeek}/нед. • всего сессий: ${p.sessions.length}</p>${renderProgramTable(c,p)}</div>`:'<div class="empty">Программа ещё не создана.</div>');}
+function renderProgramTable(c,p){return `<div class="table-wrap"><table><thead><tr><th>Неделя</th><th>Дата</th><th>Тренировка</th><th>Блок</th><th>Упражнения</th><th>Статус</th><th></th></tr></thead><tbody>${p.sessions.slice(0,48).map(s=>`<tr><td class="num">${s.week}</td><td class="nowrap">${s.date}</td><td>${esc(s.name)}</td><td>${esc(s.block)}</td><td>${s.exercises.map(e=>esc(e.name)).join('<br>')}</td><td class="num">${c.completedSessionIds.includes(s.id)?'✓':'—'}</td><td class="num"><button class="btn smallbtn" onclick="createWorkoutFromSession('${s.id}')">В дневник</button></td></tr>`).join('')}</tbody></table></div>`;}
+function renderToday(){const c=client(); const s=nextSession(c); const score=readinessScore(c); const z=readinessZone(score); const last=c.workouts[0]; $('today').innerHTML=top('today','Сегодня','Один понятный поток: проверь готовность, посмотри тренировку дня, внеси подходы и зафиксируй итог.')+(s?`
+<div class="grid cols-2" style="align-items:stretch"><div class="card hero"><div class="ringwrap">${readinessRing(score,z)}<div style="flex:1;min-width:190px"><div class="kicker">Коррекция нагрузки</div><h2 style="margin:2px 0 8px">${z} зона</h2><p>${readinessAdvice(c)}</p><div class="toolbar" style="justify-content:flex-start;margin-top:10px"><button class="btn" onclick="show('readiness')">Обновить готовность</button></div></div></div></div>
+<div class="stepflow" style="margin-top:18px"><div class="step done"><div class="num">1</div><div><h3>Готовность проверена</h3><p>Индекс ${score}% • ${z} зона. ${c.mode==='cycle'?cycleInfo(todayISO(),c).note:modes[c.mode]}.</p></div></div><div class="step"><div class="num">2</div><div><h3>Тренировка дня — ${esc(s.name)}</h3><p>Блок «${esc(s.block)}». ${s.exercises.length} упражнения, паттерны не дублируются.</p></div></div><div class="step"><div class="num">3</div><div><h3>Внеси подходы</h3><p>Добавь сессию в дневник и заполняй вес, повторы и RPE по ходу тренировки.</p><div class="toolbar" style="justify-content:flex-start;margin-top:8px"><button class="btn primary" onclick="createWorkoutFromSession('${s.id}')">Добавить в дневник</button></div></div></div><div class="step"><div class="num">4</div><div><h3>Зафиксируй итог</h3><p>В конце отметь, как прошло, боль и усталость — для прогрессии и отчёта специалисту.</p>${last?`<div class="toolbar" style="justify-content:flex-start;margin-top:8px"><button class="btn" onclick="openSummary('${last.id}')">Итог последней тренировки</button></div>`:''}</div></div></div>
+<div class="card" style="margin-top:18px"><h2>${esc(s.name)}</h2><div class="table-wrap"><table><thead><tr><th>№</th><th>Упражнение</th><th>Паттерн</th><th>Подходы</th><th>Повторы</th><th>RPE ${hint('RPE — субъективное усилие подхода по шкале 0–10. RPE 8 ≈ остались 2 повтора в запасе.')}</th><th>RIR ${hint('RIR — сколько повторов вы могли бы сделать ещё (в запасе). RIR 2 ≈ RPE 8.')}</th></tr></thead><tbody>${s.exercises.map((e,i)=>`<tr><td class="num">${i+1}</td><td>${esc(e.name)}</td><td>${esc(e.pattern)}</td><td class="num">${e.sets}</td><td class="num">${e.reps}</td><td class="num">${e.rpe}</td><td class="num">${e.rir}</td></tr>`).join('')}</tbody></table></div></div>`:'<div class="empty">Программа ещё не создана. Откройте раздел «Программы» и создайте 12-недельный план.</div>');}
+function renderLog(){const c=client(); $('log').innerHTML=top('log','Дневник тренировок','Создание и редактирование тренировок, упражнений и подходов.',`<button class="btn primary" onclick="newWorkout()">+ Тренировка</button>`)+(c.workouts.length?`<div class="grid">${c.workouts.map(w=>renderWorkoutCard(w)).join('')}</div>`:'<div class="empty">Пока нет тренировок.</div>');}
+function renderWorkoutCard(w){return `<div class="card"><div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap"><div><h2 style="margin-bottom:6px">${esc(w.title)}</h2><p style="margin:0">${esc(w.date)} • готовность ${w.readiness?.score||'—'}% • ${w.readiness?.zone||'—'} • тоннаж ${fmt(tonnage(w),0)} кг</p><div style="margin-top:8px">${summaryBadge(w)}</div></div><div class="row-actions"><button class="btn smallbtn" onclick="openSummary('${w.id}')">Итог</button><button class="btn smallbtn" onclick="editWorkout('${w.id}')">Редактировать</button><button class="btn danger smallbtn" onclick="deleteWorkout('${w.id}')">Удалить</button></div></div><div class="table-wrap" style="margin-top:14px"><table><thead><tr><th>Упражнение</th><th>Паттерн</th><th>Цель</th><th>Подходы (вес × повт)</th></tr></thead><tbody>${w.exercises.map(e=>`<tr><td>${esc(e.name)}</td><td>${esc(e.pattern)}</td><td>${esc(e.target||'')}</td><td>${(e.sets||[]).map(s=>`${s.set}: ${s.weight||0}×${s.reps||0}, RPE ${s.rpe||'—'}, боль ${s.pain||'—'}`).join('<br>')||'—'}</td></tr>`).join('')}</tbody></table></div></div>`}
+window.newWorkout=function(){const c=client(); const w={id:uid(),date:todayISO(),title:'Свободная тренировка',mode:c.mode,cycle:cycleInfo(todayISO(),c),readiness:{score:readinessScore(c),zone:readinessZone(readinessScore(c))},summary:{status:'',feelAfter:'',painAfter:'',fatigueAfter:'',comment:''},notes:'',exercises:[]}; c.workouts.unshift(w); save(); editWorkout(w.id);};
+window.deleteWorkout=function(id){const c=client(); if(!confirm('Удалить тренировку?'))return; c.workouts=c.workouts.filter(w=>w.id!==id); save(); renderAll();};
+window.editWorkout=function(id){const c=client(); const w=c.workouts.find(x=>x.id===id); if(!w)return; showModal(workoutEditor(w));};
+function workoutEditor(w){const exOptions=allExercises().map(e=>`<option value="${e.id}">${esc(e.name)} • ${esc(e.pattern)}</option>`).join(''); return `<h2>Редактирование тренировки</h2><div class="input-grid"><div class="field"><label>Дата</label><input type="date" value="${esc(w.date)}" onchange="updateWorkout('${w.id}','date',this.value)"></div><div class="field"><label>Название</label><input value="${esc(w.title)}" onchange="updateWorkout('${w.id}','title',this.value)"></div><div class="field" style="grid-column:1/-1"><label>Комментарий</label><textarea onchange="updateWorkout('${w.id}','notes',this.value)">${esc(w.notes)}</textarea></div></div><div class="divider"></div><div class="toolbar" style="justify-content:flex-start"><select id="addExSelect">${exOptions}</select><button class="btn primary" onclick="addExerciseToWorkout('${w.id}')">Добавить упражнение</button></div><div class="divider"></div><div id="workoutEditorBody">${workoutEditorBody(w)}</div><div class="toolbar" style="justify-content:flex-start;margin-top:16px"><button class="btn green" onclick="closeModal()">Готово</button></div>`;}
+function workoutEditorBody(w){return (w.exercises||[]).map(e=>`<div class="card soft" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;gap:10px;align-items:center"><h3 style="margin:0">${esc(e.name)}</h3><button class="btn danger smallbtn" onclick="removeExerciseFromWorkout('${w.id}','${e.id}')">Удалить</button></div><p class="small muted" style="margin:6px 0 12px">${esc(e.pattern)} • ${esc(e.target||'')}</p><div class="seteditor">${e.sets.map(s=>`<div class="setrow"><div class="sn">${s.set}</div><div class="minif"><label>Повт.</label><input inputmode="numeric" value="${esc(s.reps)}" onchange="updateSet('${w.id}','${e.id}','${s.id}','reps',this.value)"></div><div class="minif"><label>Вес, кг</label><input inputmode="decimal" value="${esc(s.weight)}" onchange="updateSet('${w.id}','${e.id}','${s.id}','weight',this.value)"></div><div class="minif"><label>RPE</label><input inputmode="decimal" value="${esc(s.rpe)}" onchange="updateSet('${w.id}','${e.id}','${s.id}','rpe',this.value)"></div><div class="minif"><label>RIR</label><input inputmode="numeric" value="${esc(s.rir)}" onchange="updateSet('${w.id}','${e.id}','${s.id}','rir',this.value)"></div><div class="minif"><label>Боль</label><input inputmode="numeric" value="${esc(s.pain)}" onchange="updateSet('${w.id}','${e.id}','${s.id}','pain',this.value)"></div><div class="e1">e1RM<b>${fmt(e1rm(s.weight,s.reps),1)}</b></div></div>`).join('')}</div><button class="btn smallbtn" style="margin-top:10px" onclick="addSet('${w.id}','${e.id}')">+ Подход</button></div>`).join('')||'<div class="empty">Добавьте упражнение из списка выше.</div>'}
+window.updateWorkout=function(id,k,v){const w=client().workouts.find(x=>x.id===id); if(w){w[k]=v;save();}};
+window.addExerciseToWorkout=function(wid){const c=client(); const w=c.workouts.find(x=>x.id===wid); const ex=allExercises().find(e=>e.id===$('addExSelect').value); if(!w||!ex)return; w.exercises.push({id:uid(),exerciseId:ex.id,name:ex.name,pattern:ex.pattern,target:'3×8–12, RPE 6–8',sets:[1,2,3].map(i=>({id:uid(),set:i,reps:'',weight:'',rpe:'',rir:'',pain:'',comment:''}))}); save(); $('workoutEditorBody').innerHTML=workoutEditorBody(w);};
+window.removeExerciseFromWorkout=function(wid,eid){const w=client().workouts.find(x=>x.id===wid); if(!w)return; w.exercises=w.exercises.filter(e=>e.id!==eid); save(); $('workoutEditorBody').innerHTML=workoutEditorBody(w);};
+window.addSet=function(wid,eid){const w=client().workouts.find(x=>x.id===wid); const e=w?.exercises.find(x=>x.id===eid); if(!e)return; e.sets.push({id:uid(),set:e.sets.length+1,reps:'',weight:'',rpe:'',rir:'',pain:'',comment:''}); save(); $('workoutEditorBody').innerHTML=workoutEditorBody(w);};
+window.updateSet=function(wid,eid,sid,k,v){const w=client().workouts.find(x=>x.id===wid); const e=w?.exercises.find(x=>x.id===eid); const s=e?.sets.find(x=>x.id===sid); if(!s)return; s[k]=v; save();};
+function renderSets(){const c=client(); const rows=c.workouts.flatMap(w=>(w.exercises||[]).flatMap(e=>(e.sets||[]).map(s=>({w,e,s})))); $('sets').innerHTML=top('sets','Журнал подходов','Сводная таблица фактических подходов: повторы, вес, RPE/RIR, боль, тоннаж и e1RM.')+(rows.length?`<div class="table-wrap"><table><thead><tr><th>Дата</th><th>Тренировка</th><th>Упражнение</th><th>Паттерн</th><th>Повт.</th><th>Вес</th><th>RPE</th><th>RIR</th><th>Боль</th><th>Тоннаж</th><th>e1RM</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="nowrap">${esc(r.w.date)}</td><td>${esc(r.w.title)}</td><td>${esc(r.e.name)}</td><td>${esc(r.e.pattern)}</td><td class="num">${esc(r.s.reps)}</td><td class="num">${esc(r.s.weight)}</td><td class="num">${esc(r.s.rpe)}</td><td class="num">${esc(r.s.rir)}</td><td class="num">${esc(r.s.pain)}</td><td class="num">${fmt(Number(r.s.reps||0)*Number(r.s.weight||0),0)}</td><td class="num">${fmt(e1rm(r.s.weight,r.s.reps),1)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="empty">Нет подходов.</div>');}
+function renderProgress(){const c=client(); const names=[...new Set(c.workouts.flatMap(w=>(w.exercises||[]).map(e=>e.name)))]; const selected=c.selectedExerciseId||names[0]||''; const data=c.workouts.slice().sort((a,b)=>String(a.date).localeCompare(String(b.date))).map(w=>{let best=0;(w.exercises||[]).filter(e=>e.name===selected).forEach(e=>(e.sets||[]).forEach(s=>best=Math.max(best,e1rm(s.weight,s.reps))));return {label:w.date.slice(5),value:best};}).filter(x=>x.value>0); $('progress').innerHTML=top('progress','Прогресс','Динамика e1RM по выбранному упражнению, общий объём и RPE.')+`<div class="card"><div class="field" style="max-width:420px"><label>Упражнение</label><select onchange="client().selectedExerciseId=this.value; save(); renderProgress()">${names.map(x=>`<option ${selected===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div><div class="divider"></div>${selected?lineChart(data):'<div class="empty">Нет данных.</div>'}</div><div class="grid cols-3" style="margin-top:18px">${stat('Тренировок',c.workouts.length)}${stat('Средний RPE',fmt(avgRPE(c),1))}${stat('Тоннаж',fmt(c.workouts.reduce((s,w)=>s+tonnage(w),0),0)+' кг')}</div>`;}
+window.client=client; window.save=save; window.renderProgress=renderProgress;
+function renderLibrary(){const c=client(); const pattern=window.libPattern||'Все'; const q=(window.libQ||'').toLowerCase(); const list=allExercises(c).filter(e=>(pattern==='Все'||e.pattern===pattern)&&(!q||[e.name,e.pattern,e.equipment,e.muscles].join(' ').toLowerCase().includes(q))); $('library').innerHTML=top('library','Библиотека упражнений','База упражнений по паттернам, оборудованию, уровню, технике, ошибкам, регрессиям и ограничениям.',`<button class="btn" onclick="showAddExercise()">+ Своё упражнение</button>`)+`<div class="card"><div class="input-grid" style="grid-template-columns:2fr 1fr"><div class="field"><label>Поиск</label><input value="${esc(window.libQ||'')}" oninput="window.libQ=this.value; renderLibrary()"></div><div class="field"><label>Паттерн</label><select onchange="window.libPattern=this.value; renderLibrary()"><option>Все</option>${patterns.map(x=>`<option ${pattern===x?'selected':''}>${x}</option>`).join('')}</select></div></div></div><div class="grid cols-3" style="margin-top:18px">${list.map(e=>`<div class="lib-card"><h4>${esc(e.name)}</h4><div class="tagline"><span class="tag">${esc(e.pattern)}</span><span class="tag">${esc(e.equipment)}</span><span class="tag">${esc(e.level)}</span></div><p class="small"><b>Мышцы:</b> ${esc(e.muscles)}</p><p class="small"><b>Техника:</b> ${esc(e.tech)}</p><p class="small muted"><b>Ошибки:</b> ${esc(e.errors)}</p><p class="small muted"><b>Регрессия:</b> ${esc(e.reg)} · <b>Прогрессия:</b> ${esc(e.prog)}</p><p class="small muted"><b>Осторожно:</b> ${esc(e.caution)}</p></div>`).join('')}</div>`;}
+window.renderLibrary=renderLibrary;
+window.showAddExercise=function(){showModal(`<h2>Добавить упражнение</h2><div class="input-grid" style="grid-template-columns:1fr 1fr"><div class="field"><label>Название</label><input id="ce_name"></div><div class="field"><label>Паттерн</label><select id="ce_pattern">${patterns.map(x=>`<option>${x}</option>`).join('')}</select></div><div class="field"><label>Оборудование</label><select id="ce_equipment">${equipment.map(x=>`<option>${x}</option>`).join('')}</select></div><div class="field"><label>Уровень</label><select id="ce_level">${levels.map(x=>`<option>${x}</option>`).join('')}</select></div><div class="field" style="grid-column:1/-1"><label>Мышцы</label><input id="ce_muscles"></div><div class="field" style="grid-column:1/-1"><label>Техника</label><textarea id="ce_tech"></textarea></div></div><div class="toolbar" style="justify-content:flex-start;margin-top:16px"><button class="btn primary" onclick="addCustomExercise()">Добавить</button><button class="btn" onclick="closeModal()">Закрыть</button></div>`)};
+window.addCustomExercise=function(){const c=client(); c.customExercises.push({id:'custom_'+uid(),name:$('ce_name').value||'Новое упражнение',pattern:$('ce_pattern').value,equipment:$('ce_equipment').value,level:$('ce_level').value,muscles:$('ce_muscles').value,tech:$('ce_tech').value,errors:'Заполнить тренеру',reg:'Упростить',prog:'Усложнить',caution:'Оценить индивидуально'}); save(); closeModal(); toast('Упражнение добавлено');};
+function redFlagCount(c){let count=0; const ch=latestCheckin(c); if(Number(ch?.pain||0)>=6)count++; if(c.mode==='post' && /кров/i.test(c.notes||''))count++; const highPainSets=c.workouts.flatMap(w=>(w.exercises||[]).flatMap(e=>e.sets||[])).filter(s=>Number(s.pain||0)>=6).length; return count+highPainSets;}
+function clientSummary(c){const score=readinessScore(c), z=readinessZone(score), p=activeProgram(c); const comp=p?Math.round(c.completedSessionIds.length/p.sessions.length*100):0; return {score,z,comp,workouts:c.workouts.length,tonnage:c.workouts.reduce((s,w)=>s+tonnage(w),0),avgRPE:avgRPE(c),flags:redFlagCount(c)};}
+function renderPro(){const sc=selectedClient(); $('pro').innerHTML=top('pro','Кабинет тренера / врача','Список клиенток, быстрый статус, выполнение плана, готовность, боль, RPE и переход к карточке.',`<button class="btn primary" onclick="showAddClient()">+ Клиентка</button><button class="btn" onclick="generateReport()">Сформировать отчёт</button>`)+`<div class="client-list">${state.clients.map(c=>{const s=clientSummary(c); return `<div class="client-row ${sc.id===c.id?'active':''}" onclick="selectProClient('${c.id}')"><div><b>${esc(c.name)}</b><br><span class="small muted">${modes[c.mode]} • ${esc(c.level)} • ${esc(c.goal)}</span></div><div><span class="zone ${zoneClass(s.z)}">${s.z}</span><br><span class="small muted">${s.score}%</span></div><div><b>${s.comp}%</b><br><span class="small muted">план</span></div><div><b>${fmt(s.avgRPE,1)}</b><br><span class="small muted">ср. RPE</span></div><div class="row-actions"><button class="btn smallbtn" onclick="event.stopPropagation(); selectProClient('${c.id}'); show('report')">Отчёт</button><button class="btn smallbtn" onclick="event.stopPropagation(); setActiveClient('${c.id}'); setRole('client')">Открыть</button></div></div>`}).join('')}</div><div class="grid cols-2" style="margin-top:18px"><div class="card"><h2>Карточка клиентки</h2>${clientCard(sc)}</div><div class="card"><h2>Рекомендации по коррекции</h2>${recommendationList(sc).map(x=>`<p>• ${esc(x)}</p>`).join('')}</div></div>`;}
+window.selectProClient=function(id){state.pro.selectedClientId=id; state.activeClientId=id; save(); renderPro(); updateSide();};
+function clientCard(c){const s=clientSummary(c); const ci=cycleInfo(todayISO(),c); return `<div class="grid cols-2">${stat('Статус',modes[c.mode],c.mode==='cycle'?ci.note:'восстановление/симптомы')}${stat('Готовность',s.score+'%',`<span class="zone ${zoneClass(s.z)}">${s.z}</span>`)}${stat('Тренировок',s.workouts)}${stat('Тоннаж',fmt(s.tonnage,0)+' кг')}${stat('Средний RPE',fmt(s.avgRPE,1))}${stat('Красные сигналы',s.flags)}</div><div class="divider"></div><p><b>Цель:</b> ${esc(c.goal)}</p><p><b>Ограничения:</b> ${esc(c.injuries||'не указаны')}</p><p><b>Заметки:</b> ${esc(c.notes||'—')}</p>`;}
+function recommendationList(c){const s=clientSummary(c), ch=latestCheckin(c); const rec=[]; if(s.flags>0||Number(ch?.pain||0)>=6) rec.push('При боли ≥6/10 или красных флагах — остановить нагрузку и направить на медицинскую оценку.'); if(s.z==='Зелёная') rec.push('Оставить план без изменений; при RPE ≤7 и технике без ошибок можно увеличить вес на 2,5–5%.'); if(s.z==='Жёлтая') rec.push('Снизить вес на 5–10% или убрать 1 подход в базовых упражнениях; HIIT не усиливать.'); if(s.z==='Оранжевая') rec.push('Перевести сессию в лёгкий технический формат: −20–40% объёма, больше отдыха, без отказа.'); if(s.z==='Красная') rec.push('Восстановительный день: ходьба, дыхание, мобилизация без боли; оценить сон, стресс и симптомы.'); if(s.avgRPE>=8.5) rec.push('Средний RPE высокий: проверить восстановление и рассмотреть deload 5–7 дней.'); if(c.mode==='cycle' && Number(ch?.femaleSymptoms||0)>=6) rec.push('Выраженные ОМЦ/ПМС-симптомы: временно убрать HIIT, снизить объём нижней части тела, оставить технику и умеренную силовую.'); if(c.mode!=='cycle' && Number(ch?.femaleSymptoms||0)>=6) rec.push('Выраженные приливы/симптомы: не усиливать интервальную нагрузку, сделать акцент на силовую умеренной интенсивности и сон.'); if(s.comp<50) rec.push('Низкое выполнение плана: упростить программу, уменьшить частоту или длительность сессий.'); if(!rec.length) rec.push('Данных недостаточно; продолжить сбор дневника 2–3 недели и оценить тренд.'); return rec;}
+function generateReportText(c=selectedClient()){const s=clientSummary(c), ch=latestCheckin(c), ci=cycleInfo(todayISO(),c); const rec=recommendationList(c); const last=c.workouts[0]; return `FemFit Diary 360 v1.3 — отчёт по клиентке\n\nКлиентка: ${c.name}\nВозраст: ${c.age || '—'}\nРежим: ${modes[c.mode]}\nУровень: ${c.level}\nЦель: ${c.goal || '—'}\nОграничения: ${c.injuries || 'не указаны'}\n\n1. Текущий статус\nГотовность: ${s.score}% (${s.z})\nЖенский модуль: ${c.mode==='cycle'?ci.note:modes[c.mode]}\nПоследний чек-ин: ${ch?ch.date:'нет данных'}\nБоль по последнему чек-ину: ${ch?.pain ?? '—'}/10\nСимптомы ОМЦ/менопаузы: ${ch?.femaleSymptoms ?? '—'}/10\n\n2. Тренировочная нагрузка\nКоличество тренировок: ${s.workouts}\nВыполнение 12-недельного плана: ${s.comp}%\nОбщий тоннаж: ${fmt(s.tonnage,0)} кг\nСредний RPE: ${fmt(s.avgRPE,1)}\nПоследняя тренировка: ${last?last.date+' • '+last.title:'нет данных'}\n\n3. Риски и ограничения\nКрасные/болевые сигналы: ${s.flags}\n${s.flags>0?'Есть сигналы, требующие ограничения нагрузки и очной оценки при сохранении симптомов.':'Критических сигналов по введённым данным не выявлено.'}\n\n4. Рекомендации по коррекции нагрузки\n${rec.map((x,i)=>(i+1)+'. '+x).join('\n')}\n\n5. Комментарий\nДанные дневника не являются диагнозом и не заменяют врачебную оценку. Решение по нагрузке строится по совокупности: симптомы, сон, боль, RPE/RIR, техника и динамика выполнения плана.`;}
+window.generateReport=function(){state.pro.reportText=generateReportText(selectedClient()); save(); show('report');};
+function renderReport(){const c=selectedClient(); if(!state.pro.reportText) state.pro.reportText=generateReportText(c); $('report').innerHTML=top('report','Автоматический отчёт','Отчёт для тренера/врача: нагрузка, выполнение плана, симптомы, боль, RPE и рекомендации по коррекции.',`<button class="btn primary" onclick="generateReport()">Обновить отчёт</button><button class="btn" onclick="copyReport()">Копировать</button><button class="btn" onclick="downloadReport()">Скачать TXT</button>`)+`<div class="grid cols-3">${stat('Клиентка',esc(c.name),modes[c.mode]+' • '+c.level)}${stat('Готовность',readinessScore(c)+'%',`<span class="zone ${zoneClass(readinessZone(readinessScore(c)))}">${readinessZone(readinessScore(c))}</span>`)}${stat('Средний RPE',fmt(avgRPE(c),1))}</div><div class="card" style="margin-top:18px"><div class="report-box" id="reportText">${esc(state.pro.reportText)}</div></div>`;}
+window.copyReport=function(){navigator.clipboard?.writeText(state.pro.reportText);toast('Отчёт скопирован');};
+window.downloadReport=function(){const blob=new Blob([state.pro.reportText],{type:'text/plain;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='FemFit_report_'+selectedClient().name+'_'+todayISO()+'.txt'; a.click(); URL.revokeObjectURL(a.href);};
+window.showAddClient=function(){showModal(`<h2>Новая клиентка</h2><div class="input-grid"><div class="field"><label>Имя</label><input id="nc_name"></div><div class="field"><label>Возраст</label><input id="nc_age" type="number"></div><div class="field"><label>Режим</label><select id="nc_mode">${Object.entries(modes).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div><div class="field"><label>Уровень</label><select id="nc_level">${levels.map(x=>`<option>${x}</option>`).join('')}</select></div><div class="field" style="grid-column:1/-1"><label>Цель</label><input id="nc_goal"></div></div><div class="toolbar" style="justify-content:flex-start;margin-top:16px"><button class="btn primary" onclick="addClient()">Добавить</button><button class="btn" onclick="closeModal()">Закрыть</button></div>`)};
+window.addClient=function(){const c={id:uid(),name:$('nc_name').value||'Новая клиентка',age:Number($('nc_age').value||0),mode:$('nc_mode').value,level:$('nc_level').value,goal:$('nc_goal').value,equipment:'',height:'',weight:'',lastPeriod:'',cycleLength:28,menstruationLength:5,injuries:'',notes:'',onboardingDone:false,programs:[],activeProgramId:null,completedSessionIds:[],workouts:[],checkins:[],customExercises:[],selectedExerciseId:''}; state.clients.push(c); state.activeClientId=c.id; state.pro.selectedClientId=c.id; generateProgramForClient(c,false); save(); closeModal(); toast('Клиентка добавлена'); renderAll();};
+function renderRedflags(){const flags=['Боль в груди, давящая боль, выраженная нехватка воздуха','Обморок, предобморочное состояние, внезапная слабость','Неврологические симптомы: нарушение речи, онемение, слабость конечности','Боль в суставе или спине ≥6/10 либо нарастающая боль от тренировки к тренировке','Отёк сустава, острая травма, подозрение на перелом или стрессовый перелом','Кровотечение после менопаузы','Очень обильная менструация, выраженное головокружение или слабость','Неконтролируемое артериальное давление','Послеоперационный период без допуска врача','Лихорадка, инфекция, выраженное ухудшение общего состояния']; $('redflags').innerHTML=top('redflags','Красные флаги','Состояния, при которых нагрузку нужно остановить и направить клиентку на медицинскую оценку.')+`<div class="warning-list">${flags.map(f=>`<div class="warning"><div class="wm">!</div><div><h4>Остановить нагрузку</h4><p>${esc(f)}</p></div></div>`).join('')}</div><div class="card" style="margin-top:18px"><h2>Дисклеймер</h2><p>FemFit Diary 360 — дневник тренировок и самонаблюдения. Он не ставит диагнозы, не назначает лечение и не заменяет врача, физиотерапевта или очную оценку тренера.</p></div>`;}
+function renderData(){ $('data').innerHTML=top('data','Данные','Экспорт, импорт и сброс локальной базы. Данные хранятся только в этом браузере.',`<button class="btn primary" onclick="exportData()">Экспорт JSON</button><button class="btn" onclick="document.getElementById('importFile').click()">Импорт JSON</button><button class="btn danger" onclick="resetData()">Сброс</button>`)+`<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"><div class="card"><h2>Локальное хранение</h2><p>Файл работает автономно. При очистке браузера данные могут исчезнуть. Экспортируйте JSON после важных изменений.</p><div class="grid cols-3">${stat('Клиенток',state.clients.length)}${stat('Тренировок',state.clients.reduce((s,c)=>s+c.workouts.length,0))}${stat('Упражнений',baseExercises.length)}</div></div>`;}
+window.exportData=function(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='FemFit_Diary_360_v1_3_backup_'+todayISO()+'.json'; a.click(); URL.revokeObjectURL(a.href);};
+window.importData=function(ev){const f=ev.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{state=merge(defaultState(),JSON.parse(r.result)); save(); initNav(); renderAll(); show(state.currentSection||'dashboard'); toast('Импортировано');}catch(e){alert('Не удалось импортировать JSON')}}; r.readAsText(f);};
+window.resetData=function(){if(!confirm('Сбросить все локальные данные?'))return; localStorage.removeItem(STORAGE_KEY); state=defaultState(); ensureDemoData(); initNav(); show('onboarding');};
+function showModal(html){$('modalCard').innerHTML=html; $('modal').classList.add('show');}
+window.closeModal=function(){$('modal').classList.remove('show'); renderAll();};
+$('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+/* ===== v1.4 additions ===== */
+function zoneHex(z){return z==='Зелёная'?'#5f9072':z==='Жёлтая'?'#bb8f3f':z==='Оранжевая'?'#c47c4e':z==='Красная'?'#c25e66':'#6f89a7'}
+function hint(t){return `<span class="hint" tabindex="0" role="img" data-tip="${esc(t)}" aria-label="${esc(t)}">?</span>`}
+function readinessRing(score,zone){const r=82,c=2*Math.PI*r,s=Math.max(0,Math.min(100,Number(score)||0)),off=c*(1-s/100);return `<div class="ring"><svg viewBox="0 0 200 200"><circle class="ring-track" cx="100" cy="100" r="${r}"/><circle class="ring-arc" cx="100" cy="100" r="${r}" stroke="${zoneHex(zone)}" stroke-dasharray="${c.toFixed(1)}" style="--circ:${c.toFixed(1)};--off:${off.toFixed(1)}"/></svg><div class="ring-center"><span class="ring-num">${s}</span><span class="ring-unit">индекс готовности</span><span class="zone ${zoneClass(zone)}">${zone}</span></div></div>`}
+function cycleRing(c){const len=Math.max(20,Number(c.cycleLength||28)),men=Math.max(2,Number(c.menstruationLength||5));const ci=cycleInfo(todayISO(),c);const day=typeof ci.day==='number'?ci.day:1;const R=82,C=2*Math.PI*R;const ov0=Math.min(len-2,12),ov1=Math.min(len-1,16);const segs=[[0,Math.min(men,len),'#c25e66'],[men,ov0,'#6f938a'],[ov0,ov1,'#c2a36b'],[ov1,len,'#9d5e78']];const arcs=segs.filter(s=>s[1]>s[0]).map(([a,b,col])=>{const st=a/len,f=(b-a)/len;return `<circle cx="100" cy="100" r="${R}" fill="none" stroke="${col}" stroke-width="15" stroke-dasharray="${(f*C).toFixed(1)} ${C.toFixed(1)}" stroke-dashoffset="${(-st*C).toFixed(1)}"/>`}).join('');const ang=(day/len)*2*Math.PI-Math.PI/2,mx=100+R*Math.cos(ang),my=100+R*Math.sin(ang);return `<div class="ring cycle-ring"><svg viewBox="0 0 200 200"><g transform="rotate(-90 100 100)">${arcs}</g><circle class="cycle-marker" cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="9"/></svg><div class="ring-center"><span class="ring-num">${day}</span><span class="ring-unit">день цикла</span><span class="phase-tag">${esc(ci.phase)}</span></div></div>`}
+function cycleLegend(){return `<div class="cyclegend"><span><i style="background:#c25e66"></i>менструальная</span><span><i style="background:#6f938a"></i>фолликулярная</span><span><i style="background:#c2a36b"></i>овуляторное окно</span><span><i style="background:#9d5e78"></i>лютеиновая</span></div>`}
+function menoPanel(c){const last=latestCheckin(c)||{};const fem=Number(last.femaleSymptoms||0);const note=c.mode==='peri'?'Цикл нерегулярный — фаза не рассчитывается. Решение по нагрузке опирается на сон, приливы, боль и восстановление.':'Менструальный цикл завершён. Приоритет — сила, мышечная масса, костная плотность, баланс и метаболическое здоровье.';return `<div class="card hero"><div class="ringwrap">${readinessRing(readinessScore(c),readinessZone(readinessScore(c)))}<div style="flex:1;min-width:200px"><h2 style="margin-bottom:6px">${modes[c.mode]}</h2><p>${note}</p><div class="divider"></div><p class="small"><b>Симптомы сегодня:</b> ${fem}/10 ${fem>=6?'— выраженные, не усиливать интервальную нагрузку':fem>=3?'— умеренные':'— лёгкие'}</p></div></div></div>`}
+
+/* --- session summary (Итог тренировки) --- */
+function summaryMeta(st){return st==='done'?['done','Выполнено']:st==='partial'?['partial','Частично']:st==='skipped'?['skipped','Пропущено']:['none','Итог не внесён']}
+function summaryBadge(w){const m=summaryMeta(w.summary&&w.summary.status);return `<span class="summary-badge ${m[0]}">${m[1]}</span>`}
+window.openSummary=function(id){const w=client().workouts.find(x=>x.id===id);if(!w)return;if(!w.summary)w.summary={status:'',feelAfter:'',painAfter:'',fatigueAfter:'',comment:''};showModal(summaryEditor(w))};
+function summaryEditor(w){const s=w.summary||{};const opt=(v,l)=>`<option value="${v}" ${s.status===v?'selected':''}>${l}</option>`;return `<h2>Итог тренировки</h2><p class="muted small">${esc(w.title)} • ${esc(w.date)}</p><div class="input-grid" style="grid-template-columns:1fr 1fr;margin-top:14px"><div class="field"><label>Как прошла</label><select onchange="updateSummary('${w.id}','status',this.value)"><option value="">—</option>${opt('done','Выполнено')}${opt('partial','Частично')}${opt('skipped','Пропущено')}</select></div><div class="field"><label>Самочувствие после (1–5)</label><input type="number" min="1" max="5" value="${esc(s.feelAfter)}" onchange="updateSummary('${w.id}','feelAfter',this.value)"></div><div class="field"><label>Боль после (0–10) ${hint('0 — боли нет, 10 — максимально переносимая. Боль ≥6 — повод остановиться и оценить очно.')}</label><input type="number" min="0" max="10" value="${esc(s.painAfter)}" onchange="updateSummary('${w.id}','painAfter',this.value)"></div><div class="field"><label>Итоговая усталость (1–5)</label><input type="number" min="1" max="5" value="${esc(s.fatigueAfter)}" onchange="updateSummary('${w.id}','fatigueAfter',this.value)"></div><div class="field" style="grid-column:1/-1"><label>Комментарий</label><textarea onchange="updateSummary('${w.id}','comment',this.value)">${esc(s.comment||'')}</textarea></div></div><div class="card soft" style="margin-top:16px"><h3 style="font-size:15px">Рекомендация на следующую тренировку</h3><p class="small">${esc(readinessAdvice(client()))}</p></div><div class="toolbar" style="justify-content:flex-start;margin-top:16px"><button class="btn green" onclick="closeModal()">Сохранить итог</button></div>`}
+window.updateSummary=function(id,k,v){const w=client().workouts.find(x=>x.id===id);if(!w)return;if(!w.summary)w.summary={};w.summary[k]=v;save()};
+
+/* --- drawer + tabbar --- */
+window.toggleDrawer=function(){document.getElementById('app').classList.toggle('drawer-open')};
+window.closeDrawer=function(){document.getElementById('app').classList.remove('drawer-open')};
+const tabIcons={today:'◷',readiness:'◔',dashboard:'❤',log:'✎',progress:'📈',pro:'❤',report:'✦',more:'☰'};
+function buildTabbar(){const tb=$('tabbar');if(!tb)return;const items=state.role==='pro'?[['pro','Клиентки'],['report','Отчёт'],['log','Дневник'],['progress','Прогресс']]:[['today','Сегодня'],['readiness','Готовность'],['log','Дневник'],['progress','Прогресс']];const cur=state.currentSection;tb.innerHTML=items.map(([id,label])=>`<button class="${cur===id?'active':''}" onclick="show('${id}')"><span class="ic">${tabIcons[id]||'•'}</span>${label}</button>`).join('')+`<button onclick="toggleDrawer()"><span class="ic">☰</span>Ещё</button>`}
+function syncTabbar(){const tb=$('tabbar');if(!tb)return;tb.querySelectorAll('button').forEach(b=>b.classList.remove('active'));}
+
+function renderSection(id){const map={onboarding:renderOnboarding,dashboard:renderDashboard,profile:renderProfile,female:renderFemale,readiness:renderReadiness,programs:renderPrograms,today:renderToday,log:renderLog,sets:renderSets,progress:renderProgress,library:renderLibrary,pro:renderPro,report:renderReport,redflags:renderRedflags,data:renderData}; if(map[id])map[id](); updateSide();}
+function renderAll(){const active=document.querySelector('.section.active')?.id||state.currentSection; if(active)renderSection(active); updateSide();}
+initNav(); updateSide(); show(state.currentSection || (client().onboardingDone?'dashboard':'onboarding'));
+})();
+</script>
+</body>
+</html>
