@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FemFit Diary 360 — анкета обратной связи</title>
+<meta name="description" content="Анкета обратной связи для участниц пилота FemFit Diary 360. Заполняется за несколько минут, ответы можно скопировать, скачать или отправить письмом." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --porcelain:#faf6f4; --cream:#f3eae5; --panel:#fffdfc; --panel2:#f6efeb;
+    --ink:#2f2830; --muted:#8d8088; --line:#ece1dc;
+    --plum:#9d5e78; --plum2:#b87e94; --plum-soft:#efdde4;
+    --sage:#6f938a; --sage-soft:#e0ede9;
+    --green:#5f9072; --rose:#c25e66;
+    --shadow-sm:0 4px 16px rgba(95,60,70,.06);
+    --shadow:0 22px 54px rgba(95,55,70,.12);
+    --maxw:780px;
+    --font-ui:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--font-ui);color:var(--ink);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(circle at 4% -2%,rgba(157,94,120,.08),transparent 26%),linear-gradient(180deg,#faf6f4,#fffdfc 55%);}
+  h1,h2,h3{font-family:var(--font-display);font-weight:500;letter-spacing:-.015em;line-height:1.12;margin:0}
+  p{margin:0}
+  a{color:var(--plum)}
+  ::selection{background:var(--plum-soft)}
+  :focus-visible{outline:2px solid var(--plum);outline-offset:2px;border-radius:6px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 22px}
+
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(250,246,244,.85);border-bottom:1px solid var(--line)}
+  .nav .row{display:flex;align-items:center;gap:14px;height:60px}
+  .brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:17px;color:var(--ink);text-decoration:none}
+  .brand .mk{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#fff;font-weight:600;background:linear-gradient(140deg,var(--plum),var(--sage))}
+  .nav .back{margin-left:auto;font-size:14px;font-weight:600;color:var(--muted);text-decoration:none}
+
+  header.head{padding:40px 0 6px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--plum)}
+  header.head h1{font-size:clamp(28px,5vw,40px);margin:12px 0 0}
+  header.head p{color:var(--muted);margin-top:12px}
+
+  form{padding:24px 0 40px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:20px;padding:22px;box-shadow:var(--shadow-sm);margin-bottom:16px}
+  .card h2{font-size:20px;margin-bottom:4px}
+  .card .hint{color:var(--muted);font-size:14px;margin-bottom:14px}
+  .q{margin:16px 0}
+  .q:first-of-type{margin-top:6px}
+  .q label.qt{display:block;font-weight:600;font-size:15px;margin-bottom:9px}
+  .q label.qt .opt{color:var(--muted);font-weight:400;font-size:13px}
+
+  .scale{display:flex;gap:7px;flex-wrap:wrap}
+  .scale input{position:absolute;opacity:0;width:0;height:0}
+  .scale label{cursor:pointer;border:1px solid var(--line);background:var(--panel2);border-radius:11px;min-width:44px;height:44px;display:grid;place-items:center;font-weight:600;font-size:15px;color:var(--ink);transition:.14s;padding:0 6px}
+  .scale label:hover{border-color:var(--plum2)}
+  .scale input:checked+label{background:linear-gradient(140deg,var(--plum),#ad6e86);color:#fff;border-color:transparent}
+  .scale.wide label{min-width:38px;height:40px;font-size:14px}
+  .scends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:6px}
+
+  .choice{display:grid;gap:8px}
+  .choice label{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:var(--panel2);border-radius:12px;padding:11px 14px;cursor:pointer;font-size:14.5px;transition:.14s}
+  .choice label:hover{border-color:var(--plum2)}
+  .choice input{accent-color:var(--plum);width:17px;height:17px}
+  .choice input:checked+span{font-weight:600}
+
+  textarea,input.txt{width:100%;border:1px solid var(--line);background:var(--panel);border-radius:12px;padding:11px 13px;font-size:15px;color:var(--ink);font-family:inherit}
+  textarea{min-height:84px;resize:vertical}
+  input.txt:focus,textarea:focus{outline:none;border-color:var(--plum2);box-shadow:0 0 0 4px rgba(157,94,120,.12)}
+
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+  .btn{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:13px 18px;border-radius:13px;font-size:15px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-sm);transition:.16s}
+  .btn:hover{transform:translateY(-1px)}
+  .btn.primary{background:linear-gradient(140deg,var(--plum),#ad6e86);color:#fff;border-color:transparent}
+  .btn.green{background:linear-gradient(140deg,var(--sage),#7da498);color:#fff;border-color:transparent}
+
+  .result{display:none}
+  .result.show{display:block;animation:fade .25s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .result textarea{min-height:260px;font-size:13px;line-height:1.5;background:var(--panel2)}
+  .done{display:grid;grid-template-columns:auto 1fr;gap:12px;background:var(--sage-soft);border:1px solid #cfe2db;border-radius:14px;padding:14px 16px;margin-bottom:14px}
+  .done .m{width:30px;height:30px;border-radius:9px;background:#cfe2db;color:#3f6f53;display:grid;place-items:center;flex:none}
+  .done h3{font-size:15px;color:#3f6f53}
+  .done p{font-size:13.5px;color:#3f6f53}
+
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;border-radius:12px;padding:11px 17px;font-size:14px;box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:.2s;z-index:100}
+  .toast.show{opacity:1;transform:translateX(-50%)}
+
+  .priv{font-size:13px;color:var(--muted);text-align:center;margin-top:8px}
+  footer{border-top:1px solid var(--line);padding:24px 0;margin-top:24px;color:var(--muted);font-size:13px;text-align:center}
+
+  @media(prefers-reduced-motion:reduce){.result.show{animation:none}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap row">
+    <a class="brand" href="index.html"><span class="mk">F</span> FemFit Diary 360</a>
+    <a class="back" href="pilot.html">← К пилоту</a>
+  </div>
+</header>
+
+<header class="head">
+  <div class="wrap">
+    <span class="eyebrow">Анкета · 3–5 минут</span>
+    <h1>Спасибо, что протестировали дневник</h1>
+    <p>Ваши ответы помогут сделать продукт понятнее и полезнее. Здесь нет правильных ответов — пишите как есть. В конце ответы соберутся в текст, который можно скопировать или отправить.</p>
+  </div>
+</header>
+
+<form id="form" class="wrap" autocomplete="off">
+  <div id="fields"></div>
+
+  <div class="actions">
+    <button type="button" class="btn primary" id="build">Собрать мои ответы</button>
+    <button type="reset" class="btn">Очистить</button>
+  </div>
+
+  <div class="card result" id="result">
+    <div class="done"><div class="m">✓</div><div><h3>Ответы собраны</h3><p>Скопируйте их и отправьте организатору пилота — письмом, в мессенджер или как файл.</p></div></div>
+    <textarea id="out" readonly></textarea>
+    <div class="actions">
+      <button type="button" class="btn green" id="copy">Скопировать</button>
+      <button type="button" class="btn" id="download">Скачать .txt</button>
+      <button type="button" class="btn" id="email">Отправить письмом</button>
+    </div>
+    <p class="priv">Анкета ничего не отправляет сама и не хранит ответы на сервере — всё остаётся у вас, пока вы не передадите текст организатору.</p>
+  </div>
+</form>
+
+<div class="toast" id="toast"></div>
+<footer><div class="wrap">© 2026 FemFit Diary 360 · анкета обратной связи · <a href="pilot.html">о пилоте</a></div></footer>
+
+<script>
+(function(){
+  var EMAIL=""; // организатор может вписать адрес: например "pilot@example.com"
+  var schema=[
+    {title:"О вас",hint:"Чтобы понимать контекст ваших ответов.",qs:[
+      {id:"role",t:"Ваша роль в пилоте",type:"choice",opts:["Клиентка — регулярный цикл","Клиентка — перименопауза","Клиентка — постменопауза","Тренер / health-коуч","Врач / спортивная медицина"]},
+      {id:"level",t:"Уровень подготовки",type:"choice",opts:["Новичок","Средний","Продвинутый","Не применимо (специалист)"]},
+      {id:"days",t:"Сколько дней вы пользовались дневником?",type:"choice",opts:["1–3 дня","Около недели","2–3 недели","Весь пилот"]},
+      {id:"workouts",t:"Сколько примерно тренировок внесли?",type:"text",ph:"например: 6"}
+    ]},
+    {title:"Понятность",hint:"Оцените от 1 (совсем непонятно) до 5 (полностью понятно).",qs:[
+      {id:"clear_what",t:"Было понятно, что нужно заполнять",type:"scale5"},
+      {id:"not_overloaded",t:"Интерфейс не показался перегруженным",type:"scale5"},
+      {id:"sets_input",t:"Вводить подходы (вес, повторы, RPE) было удобно",type:"scale5"},
+      {id:"zones",t:"Понятна логика готовности и значение зон",type:"scale5"},
+      {id:"cycle",t:"Понятна логика женского модуля (цикл / менопауза)",type:"scale5",opt:"если пользовались"},
+      {id:"terms",t:"Терминов (RPE, RIR, e1RM) было не слишком много",type:"scale5"}
+    ]},
+    {title:"Польза и безопасность",hint:"Оцените от 1 до 5.",qs:[
+      {id:"useful",t:"Рекомендации по нагрузке были полезны",type:"scale5"},
+      {id:"safer",t:"С дневником я чувствовала себя увереннее и безопаснее",type:"scale5"},
+      {id:"safety_seen",t:"Я заметила предупреждения о безопасности и поняла, когда остановиться",type:"scale5"}
+    ]},
+    {title:"Для специалистов",hint:"Заполняют тренеры и врачи. Клиентки могут пропустить.",qs:[
+      {id:"report_useful",t:"Отчёт полезен и достаточен для сопровождения",type:"scale5",opt:"если вы специалист"},
+      {id:"report_missing",t:"Каких данных не хватило в отчёте?",type:"text",ph:"кратко"}
+    ]},
+    {title:"Своими словами",hint:"Самое ценное — здесь.",qs:[
+      {id:"liked",t:"Что понравилось больше всего?",type:"area"},
+      {id:"stuck",t:"Что мешало или где вы застряли?",type:"area"},
+      {id:"skipped",t:"Какие поля вы не заполняли и почему?",type:"area"},
+      {id:"change",t:"Что бы вы добавили, убрали или упростили?",type:"area"}
+    ]},
+    {title:"Итог",hint:"",qs:[
+      {id:"nps",t:"Насколько вероятно, что вы порекомендуете дневник подруге или коллеге? (0 — точно нет, 10 — точно да)",type:"scale10"}
+    ]}
+  ];
+
+  var labels={}; // id -> question text
+  function el(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e;}
+
+  function renderScale(q,max){
+    var wrap=el('div','scale'+(max>5?' wide':''));
+    for(var i=(max>5?0:1);i<=max;i++){
+      var id=q.id+'_'+i;
+      var inp=el('input');inp.type='radio';inp.name=q.id;inp.value=i;inp.id=id;
+      var lab=el('label',null,i);lab.setAttribute('for',id);
+      wrap.appendChild(inp);wrap.appendChild(lab);
+    }
+    return wrap;
+  }
+
+  var box=document.getElementById('fields');
+  schema.forEach(function(sec){
+    var card=el('div','card');
+    card.appendChild(el('h2',null,sec.title));
+    if(sec.hint)card.appendChild(el('p','hint',sec.hint));
+    sec.qs.forEach(function(q){
+      labels[q.id]=q.t;
+      var qd=el('div','q');
+      var lt=el('label','qt',q.t+(q.opt?' <span class="opt">('+q.opt+')</span>':''));
+      qd.appendChild(lt);
+      if(q.type==='scale5'){qd.appendChild(renderScale(q,5));var e=el('div','scends','<span>1 — нет</span><span>5 — да</span>');qd.appendChild(e);}
+      else if(q.type==='scale10'){qd.appendChild(renderScale(q,10));var e2=el('div','scends','<span>0</span><span>10</span>');qd.appendChild(e2);}
+      else if(q.type==='choice'){var ch=el('div','choice');q.opts.forEach(function(o,idx){var l=el('label');var inp=el('input');inp.type='radio';inp.name=q.id;inp.value=o;l.appendChild(inp);l.appendChild(el('span',null,o));ch.appendChild(l);});qd.appendChild(ch);}
+      else if(q.type==='area'){var ta=el('textarea');ta.name=q.id;qd.appendChild(ta);}
+      else if(q.type==='text'){var ti=el('input','txt');ti.type='text';ti.name=q.id;if(q.ph)ti.placeholder=q.ph;qd.appendChild(ti);}
+      card.appendChild(qd);
+    });
+    box.appendChild(card);
+  });
+
+  function val(name){
+    var checked=document.querySelector('[name="'+name+'"]:checked');
+    if(checked)return checked.value;
+    var f=document.querySelector('textarea[name="'+name+'"], input[name="'+name+'"]');
+    if(f&&f.type!=='radio')return f.value.trim();
+    return '';
+  }
+
+  function build(){
+    var lines=['FemFit Diary 360 — обратная связь по пилоту','Дата: '+new Date().toLocaleDateString('ru-RU'),''];
+    schema.forEach(function(sec){
+      lines.push('## '+sec.title);
+      sec.qs.forEach(function(q){
+        var v=val(q.id);
+        lines.push('- '+q.t+': '+(v!==''?v:'—'));
+      });
+      lines.push('');
+    });
+    return lines.join('\n');
+  }
+
+  var out=document.getElementById('out');
+  var result=document.getElementById('result');
+  function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},1800);}
+
+  document.getElementById('build').addEventListener('click',function(){
+    out.value=build();
+    result.classList.add('show');
+    result.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+
+  document.getElementById('copy').addEventListener('click',function(){
+    out.select();
+    try{
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out.value);}
+      else{document.execCommand('copy');}
+      toast('Скопировано');
+    }catch(e){document.execCommand('copy');toast('Скопировано');}
+  });
+
+  document.getElementById('download').addEventListener('click',function(){
+    var blob=new Blob([out.value],{type:'text/plain;charset=utf-8'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(blob);
+    a.download='femfit-feedback.txt';document.body.appendChild(a);a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},100);
+    toast('Файл сохранён');
+  });
+
+  document.getElementById('email').addEventListener('click',function(){
+    var subj=encodeURIComponent('FemFit Diary 360 — обратная связь');
+    var body=encodeURIComponent(out.value);
+    window.location.href='mailto:'+EMAIL+'?subject='+subj+'&body='+body;
+  });
+
+  document.getElementById('form').addEventListener('reset',function(){
+    result.classList.remove('show');out.value='';
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FemFit Diary 360 — пилотное тестирование: план и критерии</title>
+<meta name="description" content="Набор организатора пилота FemFit Diary 360: цель, состав группы, чек-лист тестирования, критерии успеха и метрики." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --porcelain:#faf6f4; --cream:#f3eae5; --panel:#fffdfc; --panel2:#f6efeb;
+    --ink:#2f2830; --muted:#8d8088; --line:#ece1dc;
+    --plum:#9d5e78; --plum2:#b87e94; --plum-soft:#efdde4;
+    --sage:#6f938a; --sage-soft:#e0ede9; --gold:#c2a36b;
+    --green:#5f9072; --rose:#c25e66;
+    --shadow-sm:0 4px 16px rgba(95,60,70,.06);
+    --shadow:0 22px 54px rgba(95,55,70,.12);
+    --maxw:1080px;
+    --font-ui:'Inter',ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+    --font-display:'Fraunces',Georgia,'Times New Roman',serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:var(--font-ui);color:var(--ink);font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;
+    background:radial-gradient(circle at 4% -2%,rgba(157,94,120,.08),transparent 26%),linear-gradient(180deg,#faf6f4,#fffdfc 55%);}
+  h1,h2,h3,h4{font-family:var(--font-display);font-weight:500;letter-spacing:-.015em;line-height:1.12;margin:0}
+  p{margin:0}
+  a{color:var(--plum);text-decoration:none}
+  a:hover{text-decoration:underline}
+  ::selection{background:var(--plum-soft)}
+  :focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 26px}
+
+  .nav{position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);background:rgba(250,246,244,.85);border-bottom:1px solid var(--line)}
+  .nav .row{display:flex;align-items:center;gap:16px;height:64px}
+  .brand{display:flex;align-items:center;gap:11px;font-family:var(--font-display);font-size:18px;color:var(--ink)}
+  .brand .mk{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;color:#fff;font-weight:600;background:linear-gradient(140deg,var(--plum),var(--sage))}
+  .nav .links{margin-left:auto;display:flex;gap:18px;font-size:14.5px;color:var(--muted)}
+  .nav .links a:hover{color:var(--ink);text-decoration:none}
+
+  header.head{padding:46px 0 8px}
+  .eyebrow{font-size:12px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--plum)}
+  header.head h1{font-size:clamp(30px,4.4vw,46px);margin:14px 0 0}
+  header.head p{color:var(--muted);margin-top:14px;max-width:700px}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:22px}
+  .btn{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:12px 18px;border-radius:13px;font-size:14.5px;font-weight:600;cursor:pointer;box-shadow:var(--shadow-sm);transition:.16s}
+  .btn:hover{transform:translateY(-1px);text-decoration:none}
+  .btn.primary{background:linear-gradient(140deg,var(--plum),#ad6e86);color:#fff;border-color:transparent}
+
+  .layout{display:grid;grid-template-columns:220px 1fr;gap:38px;align-items:start;padding:30px 0 50px}
+  .toc{position:sticky;top:82px;display:grid;gap:5px;font-size:14px}
+  .toc a{color:var(--muted);padding:7px 11px;border-radius:10px;border:1px solid transparent}
+  .toc a:hover{color:var(--ink);text-decoration:none;background:var(--panel);border-color:var(--line)}
+
+  section.b{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:26px 28px;box-shadow:var(--shadow-sm);margin-bottom:18px;scroll-margin-top:82px}
+  section.b h2{font-size:24px;display:flex;align-items:center;gap:12px}
+  section.b h2 .ix{font-size:14px;color:var(--plum);font-family:var(--font-ui);font-weight:700;background:var(--plum-soft);border-radius:8px;padding:3px 9px}
+  .b h3{font-size:17px;margin:18px 0 8px}
+  .b p{margin:10px 0;color:#403842}
+  .b .muted{color:var(--muted);font-size:14px}
+
+  ul.clean{margin:10px 0;padding:0;list-style:none;display:grid;gap:9px}
+  ul.clean li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start}
+  ul.clean li::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--plum2);margin-top:9px}
+
+  .group{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+  .gc{border:1px solid var(--line);border-radius:16px;padding:16px;background:linear-gradient(155deg,#fffdfc,#f7f0ec)}
+  .gc .big{font-family:var(--font-display);font-size:30px;color:var(--plum)}
+  .gc .lab{font-size:13.5px;color:var(--muted);margin-top:2px}
+
+  .check{display:grid;gap:9px;margin-top:8px}
+  .ci{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;background:var(--panel2);border:1px solid var(--line);border-radius:13px;padding:12px 14px}
+  .ci .bx{width:20px;height:20px;border-radius:6px;border:2px solid var(--plum2);flex:none;margin-top:1px}
+  .ci span{font-size:14.5px;color:#403842}
+
+  .crit{display:grid;gap:10px;margin-top:8px}
+  .cr{display:grid;grid-template-columns:1fr auto;gap:14px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .cr .t{font-size:14.5px;color:#403842}
+  .cr .v{font-family:var(--font-display);font-size:19px;color:#3f6f53;background:var(--sage-soft);border-radius:10px;padding:6px 13px;white-space:nowrap}
+
+  table.metrics{width:100%;border-collapse:separate;border-spacing:0;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-top:8px}
+  table.metrics th,table.metrics td{padding:11px 14px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+  table.metrics th{background:var(--panel2);color:#6f5f67;font-weight:600;font-family:var(--font-ui)}
+  table.metrics tr:last-child td{border-bottom:0}
+  table.metrics td:first-child{font-weight:600;color:var(--ink)}
+
+  .note{display:grid;grid-template-columns:auto 1fr;gap:14px;border-radius:16px;padding:16px 18px;margin-top:16px}
+  .note.sage{background:var(--sage-soft);border:1px solid #cfe2db}
+  .note.gold{background:#fbf6ef;border:1px solid #ecdcc2}
+  .note .m{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex:none;font-size:15px}
+  .note.sage .m{background:#cfe2db;color:#3f6f53}
+  .note.gold .m{background:#f1e2c6;color:#8a6a2a}
+  .note h4{font-size:15px;margin-bottom:3px}
+  .note.sage h4{color:#3f6f53}.note.gold h4{color:#7d5f24}
+  .note p{font-size:14px}
+  .note.sage p{color:#3f6f53}.note.gold p{color:#7a6740}
+
+  footer{border-top:1px solid var(--line);padding:28px 0;margin-top:10px;color:var(--muted);font-size:13.5px}
+  footer .row{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+
+  @media(max-width:880px){
+    .layout{grid-template-columns:1fr;gap:0}
+    .toc{position:static;display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+    .group{grid-template-columns:1fr}
+    .nav .links a:not(:last-child){display:none}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap row">
+    <a class="brand" href="index.html"><span class="mk">F</span> FemFit Diary 360</a>
+    <nav class="links">
+      <a href="index.html">Главная</a>
+      <a href="guide.html">Инструкции</a>
+      <a href="feedback.html">Анкета</a>
+      <a href="app.html">Дневник</a>
+    </nav>
+  </div>
+</header>
+
+<header class="head">
+  <div class="wrap">
+    <span class="eyebrow">Пилот · набор организатора</span>
+    <h1>Как провести пилотное тестирование</h1>
+    <p>Цель пилота — не «идеальное приложение», а проверка: нужен ли продукт женщинам и удобен ли специалистам. Здесь план, состав группы, чек-лист, критерии успеха и метрики. Анкету для участниц вынесли на отдельную страницу.</p>
+    <div class="cta-row">
+      <a class="btn primary" href="feedback.html">Открыть анкету обратной связи</a>
+      <a class="btn" href="guide.html">Инструкции для участниц</a>
+    </div>
+  </div>
+</header>
+
+<div class="wrap layout">
+  <nav class="toc" aria-label="Содержание">
+    <a href="#goal">Цель и гипотезы</a>
+    <a href="#group">Состав группы</a>
+    <a href="#run">Как запустить</a>
+    <a href="#checklist">Чек-лист</a>
+    <a href="#criteria">Критерии успеха</a>
+    <a href="#metrics">Метрики</a>
+    <a href="#after">После пилота</a>
+  </nav>
+
+  <main>
+
+    <section class="b" id="goal">
+      <h2><span class="ix">01</span> Цель и гипотезы</h2>
+      <p>Пилот проверяет три вещи: понятность, пользу и безопасность. Формулируем как гипотезы, которые тест подтвердит или опровергнет.</p>
+      <ul class="clean">
+        <li><b>Понятность.</b> Женщина без подсказок понимает, что заполнять, и не тонет в интерфейсе и терминах.</li>
+        <li><b>Польза.</b> Готовность и рекомендации по нагрузке воспринимаются как полезные, а не как лишний шаг.</li>
+        <li><b>Безопасность.</b> Предупреждения и красные флаги замечают и понимают, когда остановиться.</li>
+        <li><b>Ценность для специалиста.</b> Тренер и врач видят в отчёте достаточно, чтобы сопровождать клиентку.</li>
+      </ul>
+    </section>
+
+    <section class="b" id="group">
+      <h2><span class="ix">02</span> Состав группы и сроки</h2>
+      <p>Минимально достаточная группа для качественной обратной связи — около 12–20 человек. Длительность — <b>3–4 недели</b>: этого хватает, чтобы пройти несколько циклов тренировок и оценить удержание.</p>
+      <div class="group">
+        <div class="gc"><div class="big">5</div><div class="lab">молодых женщин с регулярным циклом</div></div>
+        <div class="gc"><div class="big">5</div><div class="lab">женщин в перименопаузе</div></div>
+        <div class="gc"><div class="big">5</div><div class="lab">женщин в постменопаузе</div></div>
+        <div class="gc"><div class="big">2–3</div><div class="lab">тренера или health-коуча</div></div>
+        <div class="gc"><div class="big">1–2</div><div class="lab">врача спортивной медицины</div></div>
+        <div class="gc"><div class="big">3–4</div><div class="lab">недели тестирования</div></div>
+      </div>
+      <div class="note gold"><div class="m">i</div><div><h4>Смешивайте уровни подготовки</h4><p>В каждой группе полезно иметь и новичка, и продвинутую — так видно, где интерфейс понятен одним и сложен другим.</p></div></div>
+    </section>
+
+    <section class="b" id="run">
+      <h2><span class="ix">03</span> Как запустить</h2>
+      <ul class="clean">
+        <li>Дайте участнице ссылку на дневник и на инструкцию для её роли. Кратко объясните: «начинаем каждый день с готовности».</li>
+        <li>Перед стартом — короткое согласие и дисклеймер (страница «Документы»). Особенно важно для женщин с хроническими состояниями.</li>
+        <li>Договоритесь о ритме: тренировки по программе и заполнение готовности в дни тренировок в течение 3–4 недель.</li>
+        <li>Предупредите, что данные хранятся локально в браузере. Просите не очищать браузер и при возможности делать экспорт JSON в конце.</li>
+        <li>В середине пилота — короткая сверка: всё ли понятно, нет ли технических затыков.</li>
+        <li>В конце — анкета обратной связи и, по возможности, экспорт JSON для метрик использования.</li>
+      </ul>
+      <div class="note sage"><div class="m">✓</div><div><h4>Сбор анкет</h4><p>Страница <a href="feedback.html">анкеты</a> собирает ответы в текст без сервера — участница копирует, скачивает или отправляет письмом. Для удобной агрегации продублируйте те же вопросы в Google Forms или Tally и раздайте ссылку — ответы соберутся в таблицу автоматически.</p></div></div>
+    </section>
+
+    <section class="b" id="checklist">
+      <h2><span class="ix">04</span> Чек-лист тестирования</h2>
+      <p>Если есть возможность наблюдать за участницей (юзабилити-сессия) — отмечайте по пунктам. Если нет — эти же вопросы закрывает анкета.</p>
+      <div class="check">
+        <div class="ci"><div class="bx"></div><span>Понимает, что нужно заполнять, без подсказок организатора</span></div>
+        <div class="ci"><div class="bx"></div><span>Интерфейс не воспринимается перегруженным</span></div>
+        <div class="ci"><div class="bx"></div><span>Ввод подходов (вес, повторы, RPE) удобен с телефона</span></div>
+        <div class="ci"><div class="bx"></div><span>Понятна логика готовности и значение зон</span></div>
+        <div class="ci"><div class="bx"></div><span>Понятна логика женского модуля (цикл / менопауза)</span></div>
+        <div class="ci"><div class="bx"></div><span>Рекомендации по нагрузке воспринимаются как полезные</span></div>
+        <div class="ci"><div class="bx"></div><span>Терминов (RPE, RIR, e1RM) не слишком много, они понятны</span></div>
+        <div class="ci"><div class="bx"></div><span>Замечает предупреждения о безопасности и красные флаги</span></div>
+        <div class="ci"><div class="bx"></div><span>Для специалиста: отчёт полезен и достаточен</span></div>
+        <div class="ci"><div class="bx"></div><span>Зафиксировано: где остановилась, какие поля не заполняла, что просила добавить</span></div>
+      </div>
+    </section>
+
+    <section class="b" id="criteria">
+      <h2><span class="ix">05</span> Критерии успеха</h2>
+      <p>Ориентиры, при которых продукт считается удачным для перехода к следующей версии. Это <b>практические пороги для пилота</b>, а не доказанные нормативы — корректируйте под свою выборку.</p>
+      <div class="crit">
+        <div class="cr"><div class="t">Дошли до конца пилота (использовали ≥ 2 недель)</div><div class="v">≥ 60%</div></div>
+        <div class="cr"><div class="t">Оценили понятность интерфейса на 4–5 из 5</div><div class="v">≥ 70%</div></div>
+        <div class="cr"><div class="t">Средняя оценка пользы рекомендаций</div><div class="v">≥ 4.0 / 5</div></div>
+        <div class="cr"><div class="t">Заметили и поняли предупреждения о безопасности</div><div class="v">≥ 90%</div></div>
+        <div class="cr"><div class="t">Готовность рекомендовать (NPS)</div><div class="v">≥ +20</div></div>
+        <div class="cr"><div class="t">Специалисты: отчёт полезен для сопровождения</div><div class="v">большинство</div></div>
+      </div>
+      <div class="note gold"><div class="m">!</div><div><h4>Качество важнее цифр</h4><p>На выборке в 15–20 человек статистики не будет. Главная ценность — повторяющиеся проблемы и формулировки участниц. Один и тот же затык у трёх женщин важнее средней оценки.</p></div></div>
+    </section>
+
+    <section class="b" id="metrics">
+      <h2><span class="ix">06</span> Метрики и где их брать</h2>
+      <table class="metrics">
+        <thead><tr><th>Метрика</th><th>Источник</th></tr></thead>
+        <tbody>
+          <tr><td>Сколько дней пользовалась</td><td>Анкета · даты в экспортированном JSON</td></tr>
+          <tr><td>Сколько тренировок внесено</td><td>JSON дневника (раздел «Данные»)</td></tr>
+          <tr><td>Сколько раз заполняла готовность</td><td>JSON · число чек-инов</td></tr>
+          <tr><td>Понятность интерфейса и логики</td><td>Анкета (шкалы 1–5)</td></tr>
+          <tr><td>Польза рекомендаций</td><td>Анкета (шкала 1–5)</td></tr>
+          <tr><td>Где останавливалась / что не заполняла</td><td>Наблюдение · открытые вопросы анкеты</td></tr>
+          <tr><td>Какие функции нужны чаще / каких не хватает</td><td>Открытые вопросы анкеты</td></tr>
+          <tr><td>Готовность рекомендовать (NPS)</td><td>Анкета (0–10)</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="b" id="after">
+      <h2><span class="ix">07</span> Что делать с результатами</h2>
+      <ul class="clean">
+        <li>Соберите все ответы и наблюдения в одну таблицу, сгруппируйте проблемы по частоте.</li>
+        <li>Разделите правки на «обязательно до запуска», «желательно» и «потом».</li>
+        <li>Сформируйте список изменений для версии v1.7 (или сразу для онлайн-версии v2.0).</li>
+        <li>Только после этого имеет смысл переход на платформу с базой, авторизацией и ролями.</li>
+      </ul>
+      <div class="note sage"><div class="m">→</div><div><h4>Следующий шаг после пилота</h4><p>Подтверждённый список правок + решение о платформе (Softr+Airtable / Glide для MVP или Supabase+Next.js для серьёзной версии).</p></div></div>
+    </section>
+
+  </main>
+</div>
+
+<footer>
+  <div class="wrap row">
+    <div>© 2026 FemFit Diary 360 · набор организатора пилота</div>
+    <div><a href="index.html">Главная</a> · <a href="guide.html">Инструкции</a> · <a href="feedback.html">Анкета</a> · <a href="legal.html">Документы</a></div>
+  </div>
+</footer>
+
+</body>
+</html>
