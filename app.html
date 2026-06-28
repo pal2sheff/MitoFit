@@ -261,7 +261,12 @@
       .section.active{animation:none}
       *{scroll-behavior:auto}
     }
-  </style>
+  
+  .backbtn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:8px 14px;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:11px;font-size:14px;font-weight:600;cursor:pointer;margin-bottom:12px;transition:.15s}
+  .backbtn:hover{color:var(--ink);border-color:var(--plum2)}
+  .backbtn:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+  .modal-back{margin-bottom:14px}
+</style>
 <!-- TODO: подключить аналитику (Plausible / GA / Метрика). Ключевые действия можно помечать data-event. -->
 </head>
 <body>
@@ -366,10 +371,11 @@ function setActiveClient(id){state.activeClientId=id; state.pro.selectedClientId
 window.setActiveClient=setActiveClient;
 function allExercises(c=client()){return [...baseExercises,...(c.customExercises||[])];}
 function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200)}
-function top(id,title,subtitle,actions=''){return `<div class="topbar"><div><div class="kicker">FemFit Diary • ${esc(id)}</div><h1 class="page-title">${esc(title)}</h1><p class="page-subtitle">${subtitle}</p></div><div class="toolbar">${actions}</div></div>`}
+function top(id,title,subtitle,actions=''){const back=(id==='today'||id==='onboarding')?'':`<button class="backbtn" type="button" aria-label="Вернуться назад" onclick="goBack()">← Назад</button>`;return `<div class="topbar"><div>${back}<div class="kicker">FemFit Diary • ${esc(id)}</div><h1 class="page-title">${esc(title)}</h1><p class="page-subtitle">${subtitle}</p></div><div class="toolbar">${actions}</div></div>`}
 function stat(label,value,note=''){return `<div class="metric"><div class="label">${esc(label)}</div><div class="value">${value}</div><div class="note">${note}</div></div>`}
 function zoneClass(z){return z==='Зелёная'?'green':z==='Жёлтая'?'yellow':z==='Оранжевая'?'orange':z==='Красная'?'red':'blue'}
-function show(id){document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(id)?.classList.add('active');state.currentSection=id;save();renderSection(id);document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));buildTabbar();closeDrawer();try{window.scrollTo(0,0)}catch(e){}}
+const navHistory=[];
+function show(id,isBack){if(!isBack && state.currentSection && state.currentSection!==id){navHistory.push(state.currentSection); if(navHistory.length>40)navHistory.shift();}document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));$(id)?.classList.add('active');state.currentSection=id;save();renderSection(id);document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.id===id));buildTabbar();closeDrawer();try{window.scrollTo(0,0)}catch(e){}}
 window.show=show;
 function setRole(role){state.role=role; if(role==='pro' && !['pro','report'].includes(state.currentSection)) state.currentSection='pro'; if(role==='client' && ['pro','report'].includes(state.currentSection)) state.currentSection='dashboard'; save(); initNav(); show(state.currentSection);}
 window.setRole=setRole;
@@ -750,7 +756,8 @@ function renderData(){ $('data').innerHTML=top('data','Данные','Экспо
 window.exportData=function(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='FemFit_Diary_backup_'+todayISO()+'.json'; a.click(); URL.revokeObjectURL(a.href);};
 window.importData=function(ev){const f=ev.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{state=merge(defaultState(),JSON.parse(r.result)); save(); initNav(); renderAll(); show(state.currentSection||'today'); toast('Импортировано');}catch(e){alert('Не удалось импортировать JSON')}}; r.readAsText(f);};
 window.resetData=function(){if(!confirm('Сбросить все локальные данные?'))return; localStorage.removeItem(STORAGE_KEY); state=defaultState(); ensureDemoData(); initNav(); show('onboarding');};
-function showModal(html){$('modalCard').innerHTML=html; $('modal').classList.add('show');}
+window.goBack=function(){var prev=navHistory.pop(); show(prev||'today', true);};
+function showModal(html){$('modalCard').innerHTML='<button class="backbtn modal-back" type="button" aria-label="Вернуться назад" onclick="closeModal()">← Назад</button>'+html; $('modal').classList.add('show');}
 window.closeModal=function(){$('modal').classList.remove('show'); renderAll();};
 $('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 

@@ -108,6 +108,10 @@
     .nav .links a:not(:last-child){display:none}
   }
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.panel.show{animation:none}}
+
+  .backlink{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 12px;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:11px;font-size:14px;font-weight:600;text-decoration:none}
+  .backlink:hover{color:var(--ink);text-decoration:none}
+  .backlink:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -115,6 +119,7 @@
 <header class="nav">
   <div class="wrap row">
     <a class="brand" href="index.html"><span class="mk">F</span> FemFit Diary</a>
+    <a href="index.html" class="backlink" aria-label="Вернуться назад" onclick="if(history.length>1&&document.referrer){history.back();return false;}">← Назад</a>
     <nav class="links">
       <a href="index.html">Главная</a>
       <a href="legal.html">Документы</a>

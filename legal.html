@@ -90,6 +90,10 @@
     .kv{grid-template-columns:1fr}
   }
   @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+  .backlink{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 12px;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:11px;font-size:14px;font-weight:600;text-decoration:none}
+  .backlink:hover{color:var(--ink);text-decoration:none}
+  .backlink:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
 </style>
 </head>
 <body>
@@ -105,7 +109,7 @@
 <header class="nav">
   <div class="wrap row">
     <a class="brand" href="index.html"><span class="mk">F</span> FemFit Diary</a>
-    <a class="back" href="index.html">← На главную</a>
+    <a href="index.html" class="backlink" aria-label="Вернуться назад" onclick="if(history.length>1&&document.referrer){history.back();return false;}">← Назад</a>
   </div>
 </header>
 
