@@ -293,6 +293,7 @@
     <section id="redflags" class="section"></section>
     <section id="data" class="section"></section>
     <section id="more" class="section"></section>
+    <section id="learn" class="section"></section>
   </main>
 </div>
 <nav class="tabbar" id="tabbar"></nav>
@@ -783,10 +784,28 @@ function renderMore(){const c=client(); const item=(label,sub,act,ev)=>`<div cla
  ${item('Библиотека тренировок','Каталог и упражнения',"show('library')",'workout_library_open')}
  ${item('Флаги безопасности','Когда остановиться и к врачу',"show('redflags')")}
  ${item('Данные','Экспорт, импорт и сброс',"show('data')")}
+ ${item('Обучение','Техника, RPE, цикл, безопасность',"show('learn')")}
  ${item('Инструкции ↗','Как пользоваться дневником',"window.open('guide.html','_blank')",'guide_click')}
  ${item('Документы ↗','Приватность и дисклеймер',"window.open('legal.html','_blank')",'legal_click')}
 </div><div class="card soft" style="margin-top:18px"><h3 style="font-size:16px">Режим</h3><p class="small">Переключение «Участница / Специалист» — вверху слева. Специалисту доступны кабинет участниц и отчёты.</p></div>`;}
-function renderSection(id){const map={onboarding:renderOnboarding,dashboard:renderDashboard,profile:renderProfile,female:renderFemale,readiness:renderReadiness,programs:renderPrograms,today:renderToday,log:renderLog,sets:renderSets,progress:renderProgress,library:renderLibrary,pro:renderPro,report:renderReport,redflags:renderRedflags,data:renderData,more:renderMore}; if(map[id])map[id](); updateSide();}
+function learnCard(icon,title,desc,media,link){return `<div class="card"><div style="display:flex;gap:12px;align-items:flex-start"><div style="width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--plum-soft);color:var(--plum);font-size:18px;flex:none">${icon}</div><div><h3 style="margin:0 0 4px;font-size:17px">${title}</h3><p class="small muted" style="margin:0">${desc}</p></div></div><div role="img" aria-label="${esc(title)}: обучающее изображение или видео появится позже" data-img="${media}" style="margin-top:12px;height:118px;border:1px dashed var(--line);border-radius:14px;background:var(--panel2);display:grid;place-items:center;color:var(--muted);font-size:13px;text-align:center;padding:10px;line-height:1.4">Изображение или видео<br>появится позже</div>${link?`<div class="row-actions" style="justify-content:flex-start;margin-top:10px">${link}</div>`:''}</div>`;}
+function renderLearn(){
+ /* TODO: подключить библиотеку изображений упражнений. */
+ /* TODO: подключить обучающие видео по технике упражнений. */
+ /* TODO: добавить видеоинструкции по RPE/RIR, циклу, кардио, стретчингу и мобилити. */
+ $('learn').innerHTML=top('learn','Обучение','Короткие материалы по технике, нагрузке и безопасности. Изображения и видео добавим позже — без обещаний лечения и «идеального тела».')+`<div class="grid cols-2">
+ ${learnCard('▦','Техника упражнений','Как выполнять базовые движения безопасно и эффективно.','/assets/img/technique.webp',`<button class="btn smallbtn" onclick="show('library')" data-event="workout_library_open">Библиотека</button>`)}
+ ${learnCard('◔','Как оценивать RPE и RIR','Усилие подхода и запас повторов — чтобы дозировать нагрузку без отказа.','/assets/img/rpe-rir.webp',`<a class="btn smallbtn" href="guide.html" target="_blank" rel="noopener" data-event="guide_click">Инструкция ↗</a>`)}
+ ${learnCard('✎','Как вести дневник','Готовность → тренировка → фиксация → итог → прогресс.','/assets/img/diary.webp',`<button class="btn smallbtn" onclick="show('today')" data-event="start_today_click">К сегодняшнему дню</button>`)}
+ ${learnCard('♀','Как читать цикл','Фаза — контекст самочувствия, решение принимает готовность.','/assets/img/cycle-strength.webp',`<button class="btn smallbtn" onclick="show('female')" data-event="cycle_open">Раздел «Цикл»</button>`)}
+ ${learnCard('❤','Кардио Zone 2','Умеренный разговорный темп, RPE 5–6, для метаболического здоровья.','/assets/img/treadmill-zone2.webp',`<button class="btn smallbtn" onclick="show('library')">Кардио в библиотеке</button>`)}
+ ${learnCard('≈','Мобилити и стретчинг','Мягко, без боли, без попытки «продавить» амплитуду.','/assets/img/mobility.webp',`<button class="btn smallbtn" onclick="show('library')">Комплексы</button>`)}
+ ${learnCard('☾','Тренировки в перименопаузе','Силовая основа, умеренное кардио, контроль восстановления.','/assets/img/perimenopause-strength.webp','')}
+ ${learnCard('☀','Тренировки в постменопаузе','Сила, баланс и профилактика падений, осевая нагрузка с осторожностью.','/assets/img/postmenopause-balance.webp','')}
+ ${learnCard('!','Сигналы безопасности','Когда остановить тренировку и обратиться к специалисту.','/assets/img/safety.webp',`<button class="btn smallbtn" onclick="show('redflags')">Красные флаги</button>`)}
+ </div><div class="card soft" style="margin-top:18px"><p class="small">Материалы носят образовательный характер и не заменяют консультацию врача, физиотерапевта, реабилитолога или очную оценку тренера. Без обещаний лечения, похудения или «идеального тела».</p></div>`;
+}
+function renderSection(id){const map={onboarding:renderOnboarding,dashboard:renderDashboard,profile:renderProfile,female:renderFemale,readiness:renderReadiness,programs:renderPrograms,today:renderToday,log:renderLog,sets:renderSets,progress:renderProgress,library:renderLibrary,pro:renderPro,report:renderReport,redflags:renderRedflags,data:renderData,more:renderMore,learn:renderLearn}; if(map[id])map[id](); updateSide();}
 function renderAll(){const active=document.querySelector('.section.active')?.id||state.currentSection; if(active)renderSection(active); updateSide();}
 initNav(); updateSide(); show(state.currentSection || (client().onboardingDone?'today':'onboarding'));
 })();
