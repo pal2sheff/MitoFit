@@ -241,6 +241,23 @@
   .imgph .cap p{font-size:12.5px;color:var(--muted);margin:0}
   @media(max-width:820px){.visgrid{grid-template-columns:1fr 1fr}}
   @media(max-width:560px){.visgrid{grid-template-columns:1fr}}
+
+  .steps-after{list-style:none;counter-reset:sa;padding:0;margin:0;display:grid;gap:10px;max-width:640px}
+  .steps-after li{counter-increment:sa;position:relative;padding-left:42px;color:var(--ink)}
+  .steps-after li::before{content:counter(sa);position:absolute;left:0;top:-2px;width:28px;height:28px;border-radius:50%;background:var(--plum-soft);color:var(--plum);display:grid;place-items:center;font-weight:700;font-size:13px}
+  .uimock{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+  .umc{border:1px solid var(--line);border-radius:18px;background:linear-gradient(160deg,#fffdfc,#f7f0ec);box-shadow:var(--shadow);padding:16px}
+  .umc .ey{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--plum)}
+  .umc h4{font-size:16px;margin:6px 0 10px}
+  .umc .r{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--ink);margin:6px 0;gap:10px}
+  .umc .bar{height:7px;border-radius:999px;background:var(--panel2);overflow:hidden;flex:1}
+  .umc .bar i{display:block;height:100%;border-radius:999px}
+  .umc .pill{display:inline-block;font-size:11px;padding:3px 9px;border-radius:999px;background:var(--sage-soft);color:#3f6f53;font-weight:600}
+  .umc .pill.amber{background:#fbf1dd;color:#856221}
+  .umc .mini{display:inline-block;margin-top:10px;font-size:12px;font-weight:600;color:#fff;background:linear-gradient(140deg,var(--plum),#ad6e86);border-radius:9px;padding:8px 13px}
+  .umc .ring{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(var(--plum) 82%, var(--panel2) 0)}
+  .umc .ring span{width:48px;height:48px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:15px;font-weight:700;color:var(--plum)}
+  @media(max-width:820px){.uimock{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -303,6 +320,20 @@
           </div>
         </div>
         <div class="cap"><b>Готовность ведёт</b> · фаза цикла объясняет</div>
+      </div>
+      <div class="afterpilot reveal" style="margin-top:26px">
+        <h3 style="font-family:var(--font-display);font-weight:500;font-size:22px;margin:0 0 12px">Что будет после заявки</h3>
+        <ol class="steps-after">
+          <li>Вы заполните короткую анкету.</li>
+          <li>Мы определим ваш режим: цикл, перименопауза или постменопауза.</li>
+          <li>Подберём стартовый сценарий тренировок.</li>
+          <li>Дадим доступ к дневнику.</li>
+          <li>Попросим обратную связь на 2-й, 6-й и 12-й неделе.</li>
+        </ol>
+      </div>
+      <div id="pilotFallback" class="card" hidden role="status" aria-live="polite" style="margin-top:18px;max-width:620px">
+        <h3 style="font-family:var(--font-display);font-weight:500;font-size:20px;margin:0 0 6px">Заявка на пилот скоро откроется</h3>
+        <p style="margin:0;color:var(--muted)">Здесь готовится форма заявки. Перед запуском пилота сюда будет подключена Google Form, Tally или Typeform. Спасибо за интерес — мы откроем набор совсем скоро.</p>
       </div>
     </div>
   </section>
@@ -485,7 +516,56 @@
     </div>
   </section>
 
-      <!-- TODO: добавить женские premium-фото в /assets/img/ (hero-femfit, cycle-strength, perimenopause-strength,
+          <section class="block" id="mockups">
+      <div class="wrap">
+        <div class="sec-head reveal">
+          <span class="eyebrow">Как выглядит дневник</span>
+          <h2>Просто и понятно с первого экрана</h2>
+          <p class="muted">Экран «Сегодня» собирает готовность, тренировку, цикл и прогресс в одном месте — без перегруза.</p>
+        </div>
+        <div class="uimock reveal">
+          <div class="umc" role="img" aria-label="Карточка готовности: индекс 82, зелёная зона, показатели сна, энергии, стресса и боли">
+            <div class="ey">Готовность</div>
+            <div class="r"><div class="ring"><span>82</span></div><span class="pill">зелёная зона</span></div>
+            <div class="r">Сон <span class="bar"><i style="width:80%;background:var(--sage)"></i></span></div>
+            <div class="r">Энергия <span class="bar"><i style="width:75%;background:var(--sage)"></i></span></div>
+            <div class="r">Стресс <span class="bar"><i style="width:30%;background:var(--plum2)"></i></span></div>
+            <div class="r">Боль <span class="bar"><i style="width:10%;background:var(--plum2)"></i></span></div>
+          </div>
+          <div class="umc" role="img" aria-label="Карточка тренировки дня: силовая Fullbody, 35 минут, RPE 7, кнопка начать">
+            <div class="ey">Тренировка дня</div>
+            <span class="pill">силовая</span>
+            <h4 style="margin-top:8px">Fullbody A</h4>
+            <div class="r">Длительность<b>35 мин</b></div>
+            <div class="r">Рекомендуемый RPE<b>7</b></div>
+            <span class="mini">Начать тренировку</span>
+          </div>
+          <div class="umc" role="img" aria-label="Карточка цикла и состояния: день 12, фолликулярная фаза, лёгкие симптомы, подсказка">
+            <div class="ey">Цикл и состояние</div>
+            <h4>День 12 · Фолликулярная</h4>
+            <div class="r">Симптомы<span class="pill">лёгкие</span></div>
+            <p class="muted" style="font-size:12.5px;margin:8px 0 0">Цикл — контекст. Готовность — решение.</p>
+          </div>
+          <div class="umc" role="img" aria-label="Карточка баланса недели: сила 3 из 3, кардио 1 из 2, мобилити 0 из 2, восстановление 1 из 1">
+            <div class="ey">Баланс недели</div>
+            <div class="r">Сила <span class="bar"><i style="width:100%;background:var(--plum)"></i></span><b>3/3</b></div>
+            <div class="r">Кардио <span class="bar"><i style="width:50%;background:var(--sage)"></i></span><b>1/2</b></div>
+            <div class="r">Мобилити <span class="bar"><i style="width:0%;background:#6f89a7"></i></span><b>0/2</b></div>
+            <div class="r">Восстановление <span class="bar"><i style="width:100%;background:#7da498"></i></span><b>1/1</b></div>
+          </div>
+          <div class="umc" role="img" aria-label="Карточка кабинета специалиста: список участниц, готовность, выполнение плана, сигналы безопасности, отчёт">
+            <div class="ey">Кабинет специалиста</div>
+            <h4>Мои участницы</h4>
+            <div class="r">Готовность<span class="pill">76%</span></div>
+            <div class="r">Выполнение плана<span class="pill">4/6</span></div>
+            <div class="r">Сигналы безопасности<span class="pill">нет</span></div>
+            <span class="mini">Открыть отчёт</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TODO: добавить женские premium-фото в /assets/img/ (hero-femfit, cycle-strength, perimenopause-strength,
          postmenopause-balance, treadmill-zone2, elliptical-cardio, stretching, mobility, specialist-dashboard, pilot-user).
          Заменить плейсхолдеры на <img loading="lazy" alt="..."> с теми же alt. Без сексуализированных и «до/после» фото. -->
     <section class="block" id="visuals">
@@ -498,39 +578,39 @@
         <div class="visgrid reveal">
         <figure class="imgph" role="img" aria-label="Женщина спокойно тренируется с гантелями в светлом зале" data-img="/assets/img/hero-femfit.webp">
           <div class="ph"><div class="ic">◆</div></div>
-          <figcaption class="cap"><h4>Силовая тренировка</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Силовая тренировка</h4></figcaption>
         </figure>
         <figure class="imgph" role="img" aria-label="Силовая тренировка с учётом фазы цикла и самочувствия" data-img="/assets/img/cycle-strength.webp">
           <div class="ph"><div class="ic">♀</div></div>
-          <figcaption class="cap"><h4>Тренировка с учётом цикла</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Тренировка с учётом цикла</h4></figcaption>
         </figure>
         <figure class="imgph" role="img" aria-label="Женщина в перименопаузе выполняет силовое упражнение" data-img="/assets/img/perimenopause-strength.webp">
           <div class="ph"><div class="ic">☾</div></div>
-          <figcaption class="cap"><h4>Перименопауза</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Перименопауза</h4></figcaption>
         </figure>
         <figure class="imgph" role="img" aria-label="Упражнение на баланс и устойчивость в постменопаузе" data-img="/assets/img/postmenopause-balance.webp">
           <div class="ph"><div class="ic">☀</div></div>
-          <figcaption class="cap"><h4>Постменопауза и баланс</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Постменопауза и баланс</h4></figcaption>
         </figure>
         <figure class="imgph" role="img" aria-label="Спокойное кардио в разговорном темпе на беговой дорожке" data-img="/assets/img/treadmill-zone2.webp">
           <div class="ph"><div class="ic">❤</div></div>
-          <figcaption class="cap"><h4>Кардио Zone 2</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Кардио Zone 2</h4></figcaption>
         </figure>
         <figure class="imgph" role="img" aria-label="Кардио на эллиптическом тренажёре без ударной нагрузки" data-img="/assets/img/elliptical-cardio.webp">
           <div class="ph"><div class="ic">◗</div></div>
-          <figcaption class="cap"><h4>Эллипс</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Эллипс</h4></figcaption>
         </figure>
         <figure class="imgph" role="img" aria-label="Мягкий стретчинг после тренировки, без боли" data-img="/assets/img/stretching.webp">
           <div class="ph"><div class="ic">≈</div></div>
-          <figcaption class="cap"><h4>Стретчинг</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Стретчинг</h4></figcaption>
         </figure>
         <figure class="imgph" role="img" aria-label="Упражнение на подвижность суставов" data-img="/assets/img/mobility.webp">
           <div class="ph"><div class="ic">◯</div></div>
-          <figcaption class="cap"><h4>Мобилити</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Мобилити</h4></figcaption>
         </figure>
         <figure class="imgph" role="img" aria-label="Динамика участницы и анализ разнообразия нагрузки" data-img="/assets/img/specialist-dashboard.webp">
           <div class="ph"><div class="ic">▤</div></div>
-          <figcaption class="cap"><h4>Кабинет специалиста</h4><p>фото появится позже</p></figcaption>
+          <figcaption class="cap"><h4>Кабинет специалиста</h4></figcaption>
         </figure>
         </div>
       </div>
@@ -583,10 +663,9 @@
         <div class="box">
           <div class="big">12</div>
           <div class="lab">недель пилота</div>
-          <!-- TODO: заменить ссылку на реальную форму заявки (Google Forms / Tally) -->
-          <a class="btn primary" style="width:100%;justify-content:center" href="https://forms.gle/REPLACE_WITH_FORM_LINK" data-event="cta_pilot_click" target="_blank" rel="noopener">Подать заявку как участница</a>
-          <a class="btn" style="width:100%;justify-content:center;margin-top:10px" href="https://forms.gle/REPLACE_WITH_FORM_LINK" data-event="coach_section_click" target="_blank" rel="noopener">Подать заявку как тренер</a>
-          <a class="btn" style="width:100%;justify-content:center;margin-top:10px" href="https://forms.gle/REPLACE_WITH_FORM_LINK" data-event="medical_section_click" target="_blank" rel="noopener">Обсудить для клиники</a>
+          <button type="button" class="btn primary" style="width:100%;justify-content:center" onclick="openPilot('participant')" data-event="cta_pilot_click">Подать заявку как участница</button>
+          <button type="button" class="btn" style="width:100%;justify-content:center;margin-top:10px" onclick="openPilot('coach')" data-event="coach_section_click">Подать заявку как тренер</button>
+          <button type="button" class="btn" style="width:100%;justify-content:center;margin-top:10px" onclick="openPilot('clinic')" data-event="specialist_open">Обсудить для клиники</button>
           <a class="btn ghost" href="app.html" style="width:100%;justify-content:center;margin-top:10px" data-event="open_demo_click">Сначала посмотреть демо</a>
           <p style="font-size:12.5px;color:var(--muted);margin-top:12px">Участие не заменяет консультацию врача. Перед стартом проконсультируйтесь со специалистом.</p>
         </div>
@@ -677,5 +756,15 @@
   })();
 </script>
 <!-- TODO: подключить аналитику после выбора системы: Plausible / Google Analytics / Яндекс Метрика. Точки событий помечены атрибутами data-event. -->
+<script>
+  // TODO: заменить PILOT_FORM_URL на реальную ссылку формы пилота (Google Forms / Tally / Typeform).
+  const PILOT_FORM_URL = "https://forms.gle/REPLACE_WITH_REAL_FORM";
+  function pilotReady(){ return PILOT_FORM_URL && !/REPLACE/i.test(PILOT_FORM_URL); }
+  function openPilot(role){
+    if(pilotReady()){ window.open(PILOT_FORM_URL, "_blank", "noopener"); return; }
+    var fb=document.getElementById("pilotFallback");
+    if(fb){ fb.hidden=false; if(fb.scrollIntoView)fb.scrollIntoView({behavior:"smooth", block:"center"}); }
+  }
+</script>
 </body>
 </html>
