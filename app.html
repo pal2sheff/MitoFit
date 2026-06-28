@@ -266,6 +266,13 @@
   .backbtn:hover{color:var(--ink);border-color:var(--plum2)}
   .backbtn:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
   .modal-back{margin-bottom:14px}
+
+  .reclist{margin:8px 0 0;padding-left:18px}
+  .reclist li{margin:4px 0;font-size:14px}
+  .whybox{border:1px solid var(--line);border-radius:12px;padding:10px 14px;background:var(--panel);margin-top:4px}
+  .whybox summary{cursor:pointer;font-weight:600;color:var(--plum);list-style:none}
+  .whybox summary::-webkit-details-marker{display:none}
+  .choice-grid button.choice{font:inherit;width:100%;min-height:44px;cursor:pointer}
 </style>
 <!-- TODO: подключить аналитику (Plausible / GA / Метрика). Ключевые действия можно помечать data-event. -->
 </head>
@@ -566,7 +573,7 @@ function renderProgramTable(c,p){return `<div class="table-wrap"><table><thead><
 function renderToday(){const c=client(); const s=nextSession(c); const score=readinessScore(c); const z=readinessZone(score); const last=c.workouts[0]; const b=weekBalance(c); const ci=cycleInfo(todayISO(),c); const kind=s?(s.kind||'strength'):'strength'; const planDur=(s&&s.plan&&(s.plan.match(/(\d+(?:[–-]\d+)?)\s*мин/)||[])[1])||(kind==='strength'?'40–50':''); const planRpe=(s&&s.plan&&(s.plan.match(/RPE\s*([0-9–-]+)/)||[])[1])||''; $('today').innerHTML=top('today','Сегодня','Главное на сегодня: готовность, тренировка дня, цикл и прогресс. Начните с оценки готовности.')+`
 <div class="grid cols-2" style="align-items:stretch">
   <div class="card hero"><div class="ringwrap">${readinessRing(score,z)}<div style="flex:1;min-width:168px"><div class="kicker">Готовность</div><h2 style="margin:2px 0 6px">${z} зона</h2><p class="small">${readinessAdvice(c)}</p><button class="btn primary" style="margin-top:10px" onclick="show('readiness')" data-event="readiness_start">Оценить готовность</button></div></div></div>
-  <div class="card"><div class="kicker">Тренировка дня</div>${s?`<h2 style="margin:2px 0 6px">${esc(s.name.replace(/^Нед \d+ • /,''))}</h2><div class="tagline"><span class="tag" style="background:${kindColor(kind)};color:#fff;border-color:transparent">${kindLabel(kind)}</span>${planDur?`<span class="tag">${planDur} мин</span>`:''}${planRpe?`<span class="tag">RPE ${planRpe}</span>`:''}</div><div class="row-actions" style="justify-content:flex-start;margin-top:12px"><button class="btn primary" onclick="createWorkoutFromSession('${s.id}')" data-event="workout_start">Начать тренировку</button>${last?`<button class="btn" onclick="openSummary('${last.id}')" data-event="workout_finish">Завершить</button>`:''}</div>`:`<p class="muted">Программа ещё не выбрана.</p><button class="btn primary" style="margin-top:8px" onclick="show('programs')" data-event="program_select">Выбрать программу</button>`}</div>
+  <div class="card"><div class="kicker">Тренировка дня</div>${s?`<h2 style="margin:2px 0 6px">${esc(s.name.replace(/^Нед \d+ • /,''))}</h2><div class="tagline"><span class="tag" style="background:${kindColor(kind)};color:#fff;border-color:transparent">${kindLabel(kind)}</span>${planDur?`<span class="tag">${planDur} мин</span>`:''}${planRpe?`<span class="tag">RPE ${planRpe}</span>`:''}</div><div class="row-actions" style="justify-content:flex-start;margin-top:12px"><button class="btn primary" onclick="openTrainingPicker()" data-event="workout_start">Подобрать тренировку</button><button class="btn" onclick="createWorkoutFromSession('${s.id}')">Начать по плану</button>${last?`<button class="btn" onclick="openSummary('${last.id}')" data-event="workout_finish">Завершить</button>`:''}</div>`:`<p class="muted">Программа ещё не выбрана.</p><div class="row-actions" style="justify-content:flex-start;margin-top:8px"><button class="btn primary" onclick="openTrainingPicker()" data-event="workout_start">Подобрать тренировку</button><button class="btn" onclick="show('programs')" data-event="program_select">Выбрать программу</button></div>`}</div>
   <div class="card"><div class="kicker">Цикл и самочувствие</div>${c.mode==='cycle'?`<h2 style="margin:2px 0 6px">День ${typeof ci.day==='number'?ci.day:'—'} · ${esc(ci.phase)}</h2><p class="small muted">${esc(ci.note||'Фаза — контекст самочувствия, решение принимает готовность.')}</p>`:`<h2 style="margin:2px 0 6px">${modes[c.mode]}</h2><p class="small muted">Опора на сон, приливы, боль и восстановление.</p>`}<p class="small"><b>Симптомы:</b> ${Number(latestCheckin(c)?.femaleSymptoms||0)}/10</p><button class="btn" style="margin-top:6px" onclick="show('female')" data-event="cycle_open">Открыть цикл</button></div>
   <div class="card"><div class="kicker">Прогресс недели</div><div style="margin-top:6px">${balRow('Сила',b.strength,3,'var(--plum)')}${balRow('Кардио',b.cardio,2,'var(--sage)')}${balRow('Мобилити',b.mobility,2,'#6f89a7')}${balRow('Восстановление',b.recovery,1,'#7da498')}</div><button class="btn" style="margin-top:6px" onclick="show('progress')" data-event="progress_open">Посмотреть прогресс</button></div>
 </div>
@@ -812,6 +819,85 @@ function renderLearn(){
  ${learnCard('!','Сигналы безопасности','Когда остановить тренировку и обратиться к специалисту.','/assets/img/safety.webp',`<button class="btn smallbtn" onclick="show('redflags')">Красные флаги</button>`)}
  </div><div class="card soft" style="margin-top:18px"><p class="small">Материалы носят образовательный характер и не заменяют консультацию врача, физиотерапевта, реабилитолога или очную оценку тренера. Без обещаний лечения, похудения или «идеального тела».</p></div>`;
 }
+
+/* ===== training picker wizard v2.0 ===== */
+window.pickStep=1; window.pickFeel=null; window.pickPainZone=null; window.pickType='auto'; window.pickTime=30; window.pickRec=null;
+const FEELS=[['good','Хорошо, готова тренироваться'],['medium','Средне, хочу умеренную нагрузку'],['tired','Устала, нужен мягкий вариант'],['pain','Есть боль или дискомфорт']];
+const PAINZONES=['колено','поясница','плечо','тазобедренный','голеностоп','другое'];
+const WANTS=[['auto','Подберите за меня'],['силовая','Силовая'],['кардио','Кардио'],['мобилити','Мобилити'],['стретчинг','Стретчинг'],['восстановление','Восстановление']];
+const TIMES=[15,30,45,60];
+
+window.openTrainingPicker=function(){window.pickStep=1;window.pickFeel=null;window.pickPainZone=null;window.pickType='auto';window.pickTime=30;window.pickRec=null;showModal(pickerHTML());};
+window.pickSet=function(field,val){window[field]=val; if(field==='pickFeel'&&val!=='pain')window.pickPainZone=null; showModal(pickerHTML());};
+window.pickNav=function(step){window.pickStep=step; showModal(pickerHTML());};
+window.pickToResult=function(){window.pickRec=buildRec(client()); window.pickStep=4; showModal(pickerHTML());};
+
+function optBtn(field,val,label,active){return `<button type="button" class="choice ${active?'active':''}" style="text-align:left" onclick="pickSet('${field}','${val}')"><h3 style="font-size:15px;margin:0">${label}</h3></button>`;}
+
+function pickerHTML(){
+ const step=window.pickStep;
+ if(step===4)return resultHTML();
+ let body='',navHTML='';
+ if(step===1){
+   body=`<h2>Как вы сегодня себя чувствуете?</h2><div class="choice-grid" style="margin-top:14px">${FEELS.map(([v,l])=>optBtn('pickFeel',v,l,window.pickFeel===v)).join('')}</div>`;
+   if(window.pickFeel==='pain'){ body+=`<div class="divider"></div><h3 style="font-size:16px">Где дискомфорт?</h3><div class="choice-grid" style="margin-top:10px">${PAINZONES.map(z=>`<button type="button" class="choice ${window.pickPainZone===z?'active':''}" style="text-align:left" onclick="pickSet('pickPainZone','${z}')"><h3 style="font-size:15px;margin:0">${z}</h3></button>`).join('')}</div><div class="card soft" style="margin-top:12px"><p class="small">При выраженной боли лучше выбрать восстановление и обратиться к специалисту. Дневник не ставит диагнозы.</p></div>`; }
+   navHTML=`<button class="btn" onclick="closeModal()">Отмена</button><button class="btn primary" ${window.pickFeel?'':'disabled'} onclick="pickNav(2)">Далее</button>`;
+ } else if(step===2){
+   body=`<h2>Что вы хотите сегодня?</h2><p class="muted small" style="margin-top:-2px">По умолчанию подберём за вас.</p><div class="choice-grid" style="margin-top:14px">${WANTS.map(([v,l])=>optBtn('pickType',v,l,window.pickType===v)).join('')}</div>`;
+   navHTML=`<button class="btn" onclick="pickNav(1)">Назад</button><button class="btn primary" onclick="pickNav(3)">Далее</button>`;
+ } else {
+   body=`<h2>Сколько времени есть?</h2><div class="choice-grid" style="margin-top:14px">${TIMES.map(t=>`<button type="button" class="choice ${window.pickTime===t?'active':''}" style="text-align:left" onclick="pickSet('pickTime',${t})"><h3 style="font-size:15px;margin:0">${t} минут</h3></button>`).join('')}</div>`;
+   navHTML=`<button class="btn" onclick="pickNav(2)">Назад</button><button class="btn primary" onclick="pickToResult()">Показать тренировку</button>`;
+ }
+ const dots=[1,2,3].map(n=>`<span style="width:${n===step?'24px':'8px'};height:8px;border-radius:999px;background:${n<=step?'var(--plum)':'var(--line)'};display:inline-block"></span>`).join(' ');
+ return `<h2 style="margin-bottom:4px">Подобрать тренировку</h2><div style="display:flex;gap:6px;align-items:center;margin-bottom:16px">${dots}<span class="muted small" style="margin-left:auto">Шаг ${step} из 3</span></div>${body}<div class="toolbar" style="justify-content:space-between;margin-top:18px">${navHTML}</div>`;
+}
+
+function recExercises(c,count){
+ const ses=nextSession(c);
+ let base;
+ if(ses&&(ses.kind||'strength')==='strength'&&ses.exercises&&ses.exercises.length){ base=ses.exercises.map(e=>({exerciseId:e.exerciseId,name:e.name,pattern:e.pattern})); }
+ else { base=SB.FB_A.ids.map(id=>{const ex=baseExercises.find(x=>x.id===id);return {exerciseId:id,name:ex?ex.name:id,pattern:ex?ex.pattern:''};}); }
+ return base.slice(0,count);
+}
+function effZone(c){const rank={'Зелёная':0,'Жёлтая':1,'Оранжевая':2,'Красная':3};const rz=readinessZone(readinessScore(c));const fz={good:'Зелёная',medium:'Жёлтая',tired:'Оранжевая',pain:'Оранжевая'}[window.pickFeel||'good'];return (rank[rz]>=rank[fz])?rz:fz;}
+function autoKind(c,zone){const b=weekBalance(c); if(zone==='Зелёная'||zone==='Жёлтая'){ if(b.strength<3)return 'strength'; if(b.cardio<2)return 'cardio'; if(b.mobility<2)return 'mobility'; return 'strength';} return 'mobility';}
+function wantKind(w){return {'силовая':'strength','кардио':'cardio','мобилити':'mobility','стретчинг':'stretch','восстановление':'recovery'}[w]||'strength';}
+function libByKind(kind){const map={cardio:'tl_tread2',mobility:'tl_mobhip',stretch:'tl_strhams',recovery:'tl_recday',balance:'tl_balance'};return trainingLibrary.find(x=>x.id===map[kind])||trainingLibrary.find(x=>x.kind===kind);}
+function buildRec(c){
+ const zone=effZone(c); const minutes=Number(window.pickTime||30); const count=minutes<=15?3:minutes<=30?4:5;
+ let kind; const want=window.pickType||'auto';
+ if(zone==='Красная')kind='recovery';
+ else if(zone==='Оранжевая')kind=(want==='кардио'?'cardio':'mobility');
+ else kind=(want==='auto'?autoKind(c,zone):wantKind(want));
+ const rec={kind,minutes,level:c.level||'Новичок',zone,reasons:[]};
+ if(kind==='strength'){ rec.title='Силовая Fullbody'; rec.rpe=(zone==='Жёлтая'?'6':'7'); rec.sets=(zone==='Жёлтая'?2:3); rec.exercises=recExercises(c,count); rec.track=['вес','повторы','RPE','боль']; }
+ else { const li=libByKind(kind)||{name:kindLabel(kind),rpe:'3',goal:''}; rec.title=li.name; rec.rpe=li.rpe||'3'; rec.goal=li.goal||''; rec.track=(kind==='cardio'?['минуты','RPE','самочувствие']:(kind==='recovery'?['минуты','самочувствие']:['минуты','зона','ощущение'])); }
+ const b=weekBalance(c);
+ rec.reasons.push('Готовность: '+String(zone).toLowerCase()+' зона');
+ if(b.strength<3&&kind==='strength')rec.reasons.push('На этой неделе не хватает силовой нагрузки');
+ if(b.cardio<2&&kind==='cardio')rec.reasons.push('На этой неделе мало кардио');
+ if(window.pickFeel==='pain')rec.reasons.push('Вы отметили дискомфорт'+(window.pickPainZone?' ('+window.pickPainZone+')':'')+' — нагрузка мягче');
+ if(zone==='Зелёная')rec.reasons.push('Признаков перегрузки не отмечено');
+ if(zone==='Красная')rec.reasons.push('Сегодня лучше восстановиться; при сигналах безопасности — к специалисту');
+ return rec;
+}
+
+function resultHTML(){const r=window.pickRec; if(!r)return '<p>Не удалось подобрать. Попробуйте ещё раз.</p><div class="toolbar"><button class="btn" onclick="pickNav(1)">Заново</button></div>';
+ const tags=`<span class="tag" style="background:${kindColor(r.kind)};color:#fff;border-color:transparent">${kindLabel(r.kind)}</span><span class="tag">${r.minutes} мин</span><span class="tag">${esc(r.level)}</span><span class="tag">RPE ${esc(r.rpe)}</span>`;
+ let plan = (r.kind==='strength') ? `<ul class="reclist">${r.exercises.map(e=>`<li>${esc(e.name)} — ${r.sets}×8–10</li>`).join('')}</ul>` : `<p class="small muted" style="margin-top:6px">${esc(r.goal||(kindLabel(r.kind)+' '+r.minutes+' минут в спокойном темпе.'))}</p>`;
+ const track=`<p class="small" style="margin-top:8px"><b>Что отслеживать:</b> ${r.track.join(', ')}</p>`;
+ const why=`<details class="whybox"><summary>Почему эта тренировка?</summary><ul class="reclist">${r.reasons.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></details>`;
+ return `<h2 style="margin-bottom:4px">Ваша тренировка на сегодня</h2><div class="card soft" style="margin-top:10px"><h3 style="font-size:19px;margin:0 0 8px">${esc(r.title)} · ${r.minutes} минут</h3><div class="tagline">${tags}</div>${plan}${track}</div>
+ <div class="row-actions" style="justify-content:flex-start;margin-top:14px"><button class="btn primary" onclick="startRec()" data-event="workout_start">Начать тренировку</button><button class="btn" onclick="simplerRec()">Сделать проще</button></div>
+ <div class="row-actions" style="justify-content:flex-start;margin-top:8px"><button class="btn ghost smallbtn" onclick="swapRec('кардио')">Заменить на кардио</button><button class="btn ghost smallbtn" onclick="swapRec('восстановление')">Заменить на восстановление</button><button class="btn ghost smallbtn" onclick="pickNav(2)">Выбрать другой</button></div>
+ <div style="margin-top:12px">${why}</div>`;
+}
+function recToWorkout(c,r){ let exercises=[]; if(r.kind==='strength'){ exercises=r.exercises.map(e=>({exerciseId:e.exerciseId,name:e.name,pattern:e.pattern,target:r.sets+'×8–10',sets:Array.from({length:r.sets},(_,i)=>({id:uid(),set:i+1,reps:'',weight:'',rpe:'',rir:'',pain:'',comment:''}))})); } const plan=(r.kind!=='strength')?`${kindLabel(r.kind)} · ${r.minutes} мин · RPE ${r.rpe}. ${r.goal||''}`:''; return {id:uid(),date:todayISO(),title:r.title,kind:r.kind,mode:c.mode,cycle:cycleInfo(todayISO(),c),readiness:{score:readinessScore(c),zone:readinessZone(readinessScore(c))},summary:{status:'',feelAfter:'',painAfter:'',fatigueAfter:'',comment:''},notes:plan||('Подобрано мастером. Отслеживать: '+r.track.join(', ')),exercises};}
+window.startRec=function(){const c=client(); const r=window.pickRec; if(!r)return; const w=recToWorkout(c,r); c.workouts.unshift(w); save(); closeModal(); if(w.exercises.length){show('log'); editWorkout(w.id);} else {show('log'); toast('Тренировка добавлена — запишите итог после выполнения');}};
+window.simplerRec=function(){const r=window.pickRec; if(!r)return; if(r.kind==='strength'){ r.exercises=r.exercises.slice(0,3); r.sets=Math.max(2,(r.sets||3)-1); r.rpe='6'; if(!/^Мягкая/.test(r.title))r.title='Мягкая '+r.title; r.reasons.push('Упрощено: меньше упражнений и подходов, ниже RPE'); } else { r.minutes=Math.max(10,(r.minutes||20)-5); r.reasons.push('Упрощено: короче по времени'); } showModal(resultHTML());};
+window.swapRec=function(want){const c=client(); window.pickType=want; window.pickRec=buildRec(c); showModal(resultHTML());};
+
 function renderSection(id){const map={onboarding:renderOnboarding,dashboard:renderDashboard,profile:renderProfile,female:renderFemale,readiness:renderReadiness,programs:renderPrograms,today:renderToday,log:renderLog,sets:renderSets,progress:renderProgress,library:renderLibrary,pro:renderPro,report:renderReport,redflags:renderRedflags,data:renderData,more:renderMore,learn:renderLearn}; if(map[id])map[id](); updateSide();}
 function renderAll(){const active=document.querySelector('.section.active')?.id||state.currentSection; if(active)renderSection(active); updateSide();}
 initNav(); updateSide(); show(state.currentSection || (client().onboardingDone?'today':'onboarding'));
