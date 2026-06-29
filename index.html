@@ -268,9 +268,12 @@
   @media(max-width:820px){.uimock{grid-template-columns:1fr}}
 
   .lang-switch{display:inline-flex;gap:5px}
-  .lang-switch button{min-height:38px;padding:6px 11px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--muted);font-weight:700;font-size:12px;letter-spacing:.04em;cursor:pointer}
+  .lang-switch button{min-height:44px;padding:6px 11px;border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--muted);font-weight:700;font-size:12px;letter-spacing:.04em;cursor:pointer}
   .lang-switch button.active{background:var(--plum);color:#fff;border-color:transparent}
   .lang-switch button:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+
+  a:focus-visible,button:focus-visible,[tabindex]:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid #9d5e78;outline-offset:2px}
+  @media(max-width:480px){html,body{overflow-x:hidden}}
 </style>
 </head>
 <body>
