@@ -112,6 +112,16 @@
   .backlink{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:6px 12px;border:1px solid var(--line);background:var(--panel);color:var(--muted);border-radius:11px;font-size:14px;font-weight:600;text-decoration:none}
   .backlink:hover{color:var(--ink);text-decoration:none}
   .backlink:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+
+  .quickstart{padding:30px 0 8px}
+  ol.qs{counter-reset:qs;list-style:none;padding:0;margin:18px 0 0;display:grid;gap:10px;max-width:640px}
+  ol.qs li{counter-increment:qs;position:relative;padding:12px 14px 12px 54px;background:var(--panel,#fff);border:1px solid var(--line,#ecdfe4);border-radius:14px;font-size:15px}
+  ol.qs li::before{content:counter(qs);position:absolute;left:13px;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:var(--plum-soft,#f3e3ea);color:var(--plum,#9d5e78);display:grid;place-items:center;font-weight:700;font-size:13px}
+  .qs-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:20px}
+  .qs-btn{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 22px;border-radius:12px;font-weight:600;font-size:15px;text-decoration:none;border:1px solid var(--line,#ecdfe4);color:var(--ink,#2e2730);background:var(--panel,#fff)}
+  .qs-btn.primary{background:linear-gradient(140deg,#ad6e86,#9d5e78);color:#fff;border-color:transparent}
+  .qs-btn:focus-visible{outline:2px solid var(--plum,#9d5e78);outline-offset:2px}
+  @media(max-width:560px){.qs-btn{width:100%}}
 </style>
 </head>
 <body>
@@ -135,12 +145,32 @@
     <p>Короткие пошаговые сценарии для трёх ролей и общая справка: как читать зоны готовности, что означают термины и как разобрать отчёт. Выберите свою роль.</p>
 
     <div class="tabs" role="tablist" aria-label="Роль">
-      <button class="tab" role="tab" id="tab-client" aria-controls="p-client" aria-selected="true"><span class="e">◔</span> Клиентка</button>
+      <button class="tab" role="tab" id="tab-client" aria-controls="p-client" aria-selected="true"><span class="e">◔</span> Участница</button>
       <button class="tab" role="tab" id="tab-coach" aria-controls="p-coach" aria-selected="false"><span class="e">❤</span> Тренер</button>
       <button class="tab" role="tab" id="tab-doc" aria-controls="p-doc" aria-selected="false"><span class="e">✦</span> Врач</button>
     </div>
   </div>
 </header>
+
+<section class="quickstart">
+  <div class="wrap">
+    <span class="eyebrow">Быстрый старт</span>
+    <h2 style="margin:6px 0 6px">Самый простой сценарий</h2>
+    <p style="max-width:640px">FemFit Diary сам подскажет подходящий формат: силовая, кардио, мобилити или восстановление. Можно принять рекомендацию, сделать тренировку проще или выбрать другой вариант.</p>
+    <ol class="qs">
+      <li>Откройте экран <b>«Сегодня»</b>.</li>
+      <li>Нажмите <b>«Оценить готовность»</b>.</li>
+      <li>Нажмите <b>«Подобрать тренировку»</b>.</li>
+      <li>Нажмите <b>«Начать тренировку»</b>.</li>
+      <li>После занятия нажмите <b>«Завершить тренировку»</b>.</li>
+      <li>Откройте <b>«Прогресс недели»</b>.</li>
+    </ol>
+    <div class="qs-actions">
+      <a class="qs-btn primary" href="app.html" data-event="open_demo_click">Открыть дневник</a>
+      <a class="qs-btn" href="index.html#pilot" data-event="cta_pilot_click">Записаться в пилот</a>
+    </div>
+  </div>
+</section>
 
 <div class="wrap">
 
@@ -149,7 +179,7 @@
     <div class="intro">Дневник ведёт силовые тренировки с учётом самочувствия и женской физиологии. Главный принцип: <b>каждый день начинается с готовности</b> — она подсказывает, тренироваться по плану или мягче. Цикл при этом — контекст, а не команда.</div>
     <div class="steps">
       <div class="stepc"><div class="n">1</div><div><h3>Заполните профиль и анкету</h3><p>Имя, цель, уровень подготовки, при желании — антропометрия и замеры. Внесите медицинские ограничения, если они есть.</p><span class="where">Профиль · Медицинские ограничения</span></div></div>
-      <div class="stepc"><div class="n">2</div><div><h3>Настройте женский модуль</h3><p>Выберите режим: регулярный цикл, перименопауза или постменопауза. Для цикла укажите дату первого дня последней менструации и среднюю длину — дневник рассчитает условный день и фазу.</p><span class="where">Женский модуль</span></div></div>
+      <div class="stepc"><div class="n">2</div><div><h3>Настройте женский модуль</h3><p>Выберите режим: регулярный цикл, перименопауза или постменопауза. Для цикла укажите дату первого дня последней менструации и среднюю длину — дневник рассчитает условный день и фазу.</p><span class="where">Цикл и состояние</span></div></div>
       <div class="stepc"><div class="n">3</div><div><h3>Начните день с готовности</h3><p>Короткий чек-ин: сон, энергия, стресс, настроение, мышечная болезненность, боль, симптомы цикла или менопаузы, желание тренироваться. На выходе — индекс и цветовая зона.</p><span class="where">Готовность</span></div></div>
       <div class="stepc"><div class="n">4</div><div><h3>Откройте «Сегодня»</h3><p>Тренировка дня с поправкой на вашу зону. Здесь же — четыре понятных шага: готовность, тренировка, подходы, итог. Добавьте сессию в дневник.</p><span class="where">Сегодня</span></div></div>
       <div class="stepc"><div class="n">5</div><div><h3>Вводите подходы по ходу</h3><p>Карточками: вес, повторы, RPE/RIR и боль. Это удобно с телефона, а ориентировочный максимум (e1RM) считается сам.</p><span class="where">Дневник · ввод подходов</span></div></div>
@@ -158,15 +188,15 @@
       <div class="stepc"><div class="n">8</div><div><h3>Делайте резервную копию</h3><p>Данные хранятся локально в вашем браузере. Периодически выгружайте их (экспорт JSON), чтобы не потерять при очистке браузера или смене устройства.</p><span class="where">Данные · экспорт</span></div></div>
     </div>
     <div class="callout sage"><div class="m">✓</div><div><h4>Если день тяжёлый — это нормально</h4><p>Плохой сон, ПМС или приливы — повод сделать мягче, а не корить себя. Жёлтая и оранжевая зоны существуют именно для этого.</p></div></div>
-    <div class="callout rose"><div class="m">!</div><div><h4>Когда остановиться</h4><p>Боль в груди, одышка, обморок, боль выше 6/10, аномальное кровотечение — прекратите тренировку и обратитесь к врачу. Полный список — в <a href="legal.html#flags">разделе «Красные флаги»</a>.</p></div></div>
+    <div class="callout rose"><div class="m">!</div><div><h4>Когда остановиться</h4><p>Боль в груди, одышка, обморок, боль выше 6/10, аномальное кровотечение — прекратите тренировку и обратитесь к врачу. Полный список — в <a href="legal.html#flags">разделе «Сигналы безопасности»</a>.</p></div></div>
   </div>
 
   <!-- COACH -->
   <div class="panel" id="p-coach" role="tabpanel" aria-labelledby="tab-coach">
     <div class="intro">В режиме специалиста вы видите участниц, их готовность и выполнение плана, ведёте программы и используете отчёт для разбора. Дневник помогает принимать решения о нагрузке, но <b>не заменяет очную оценку техники и состояния.</b></div>
     <div class="steps">
-      <div class="stepc"><div class="n">1</div><div><h3>Переключитесь в режим «Специалист»</h3><p>Сверху слева — переключатель «Клиентка / Специалист». В режиме специалиста открывается кабинет.</p><span class="where">Специалист</span></div></div>
-      <div class="stepc"><div class="n">2</div><div><h3>Откройте список участниц</h3><p>По каждой — готовность на сегодня, выполнение 12-недельного плана и средний RPE. Быстрый обзор, кому нужна корректировка.</p><span class="where">Клиентки</span></div></div>
+      <div class="stepc"><div class="n">1</div><div><h3>Переключитесь в режим «Специалист»</h3><p>Сверху слева — переключатель «Личный дневник / Специалист». В режиме специалиста открывается кабинет.</p><span class="where">Специалист</span></div></div>
+      <div class="stepc"><div class="n">2</div><div><h3>Откройте список участниц</h3><p>По каждой — готовность на сегодня, выполнение 12-недельного плана и средний RPE. Быстрый обзор, кому нужна корректировка.</p><span class="where">Участницы</span></div></div>
       <div class="stepc"><div class="n">3</div><div><h3>Изучите карточку участницы</h3><p>Динамика тоннажа и RPE, последние тренировки с итогами, женский статус и сигналы боли. Это контекст для решения по нагрузке.</p><span class="where">Профиль участницы</span></div></div>
       <div class="stepc"><div class="n">4</div><div><h3>Подберите программу</h3><p>Готовые 12-недельные шаблоны под уровень: фуллбоди, upper/lower, push/pull/legs с разгрузочными неделями. Опирайтесь на двигательные паттерны, а не только на отдельные мышцы.</p><span class="where">Программы</span></div></div>
       <div class="stepc"><div class="n">5</div><div><h3>Используйте зоны готовности для коррекции</h3><p>Зелёная — план; жёлтая — снизить вес или убрать подход; оранжевая — техническая сессия; красная — восстановление. Подробнее — в справке ниже.</p><span class="where">Готовность участницы</span></div></div>
@@ -174,7 +204,7 @@
       <div class="stepc"><div class="n">7</div><div><h3>Разберите автоматический отчёт</h3><p>Сводка по нагрузке, симптомам, боли, RPE и рекомендациям. Используйте её для встречи с участницей. Как читать — в справке ниже.</p><span class="where">Отчёт</span></div></div>
     </div>
     <div class="callout sage"><div class="m">♀</div><div><h4>Цикл — контекст, не план</h4><p>Не стройте периодизацию строго по фазе цикла: данные это не подтверждают. Опирайтесь на готовность и симптомы конкретной участницы.</p></div></div>
-    <div class="callout rose"><div class="m">→</div><div><h4>Когда направить к врачу</h4><p>Стойкая боль, красные флаги, аномальное кровотечение, неконтролируемое давление — это зона врача. Дневник не диагностирует; при таких сигналах рекомендуйте очную консультацию.</p></div></div>
+    <div class="callout rose"><div class="m">→</div><div><h4>Когда направить к врачу</h4><p>Стойкая боль, сигналы безопасности, аномальное кровотечение, неконтролируемое давление — это зона врача. Дневник не диагностирует; при таких сигналах рекомендуйте очную консультацию.</p></div></div>
   </div>
 
   <!-- DOCTOR -->
@@ -182,8 +212,8 @@
     <div class="intro">Для врача спортивной медицины или интегративного сопровождения дневник — источник структурированных данных о нагрузке, боли, симптомах и восстановлении. <b>Решение о допуске, ограничениях и обследовании принимает врач</b>, дневник лишь собирает наблюдения.</div>
     <div class="steps">
       <div class="stepc"><div class="n">1</div><div><h3>Работайте в режиме «Специалист»</h3><p>Фокус — на безопасности и динамике. Внесите медицинские ограничения участницы в её профиль, чтобы они учитывались в сопровождении.</p><span class="where">Специалист · Ограничения</span></div></div>
-      <div class="stepc"><div class="n">2</div><div><h3>Смотрите сигналы безопасности первыми</h3><p>Красные флаги, динамика боли 0–10 от тренировки к тренировке, неконтролируемые симптомы. Нарастающая боль или флаг — повод остановить нагрузку и оценить очно.</p><span class="where">Красные флаги · Боль</span></div></div>
-      <div class="stepc"><div class="n">3</div><div><h3>Оцените готовность и симптомы</h3><p>Индекс готовности, сон, стресс, симптомы цикла или менопаузы (приливы, ночная потливость) в связке с переносимостью нагрузки.</p><span class="where">Готовность · Женский модуль</span></div></div>
+      <div class="stepc"><div class="n">2</div><div><h3>Смотрите сигналы безопасности первыми</h3><p>Сигналы безопасности, динамика боли 0–10 от тренировки к тренировке, неконтролируемые симптомы. Нарастающая боль или флаг — повод остановить нагрузку и оценить очно.</p><span class="where">Сигналы безопасности · Боль</span></div></div>
+      <div class="stepc"><div class="n">3</div><div><h3>Оцените готовность и симптомы</h3><p>Индекс готовности, сон, стресс, симптомы цикла или менопаузы (приливы, ночная потливость) в связке с переносимостью нагрузки.</p><span class="where">Готовность · Цикл и состояние</span></div></div>
       <div class="stepc"><div class="n">4</div><div><h3>Используйте отчёт на приёме</h3><p>Сводка по нагрузке, симптомам, боли, RPE и рекомендациям даёт быстрый срез между визитами. Расшифровка полей — в справке ниже.</p><span class="where">Отчёт</span></div></div>
       <div class="stepc"><div class="n">5</div><div><h3>Задайте рамки сопровождения</h3><p>Дневник — инструмент самонаблюдения рядом с врачебным ведением, а не его замена. Обозначьте участнице, какие показатели для вас важны и когда связываться вне графика.</p><span class="where">Рекомендации</span></div></div>
     </div>
@@ -217,7 +247,7 @@
       <div class="zr"><span class="zbadge zg">Зелёная</span><p><b>Тренироваться по плану.</b> Самочувствие в норме, можно работать с запланированными весами и объёмом, при необходимости — аккуратно прогрессировать.</p></div>
       <div class="zr"><span class="zbadge zy">Жёлтая</span><p><b>Слегка снизить.</b> Уменьшите рабочий вес примерно на 5–10% или уберите один подход. Цель — провести тренировку без перегруза.</p></div>
       <div class="zr"><span class="zbadge zo">Оранжевая</span><p><b>Лёгкая техническая сессия.</b> Снизьте объём на 20–40%, поработайте над техникой и мобильностью, без тяжёлых подходов.</p></div>
-      <div class="zr"><span class="zbadge zrr">Красная</span><p><b>Восстановление.</b> Прогулка, сон, мягкая активность. При боли ≥6/10, красных флагах или плохом самочувствии — консультация специалиста.</p></div>
+      <div class="zr"><span class="zbadge zrr">Красная</span><p><b>Восстановление.</b> Прогулка, сон, мягкая активность. При боли ≥6/10, сигналах безопасности или плохом самочувствии — консультация специалиста.</p></div>
     </div>
     <div class="callout rose" style="margin-top:14px"><div class="m">!</div><div><h4>Боль выше приоритета зоны</h4><p>Если боль 6/10 и выше — тренировку не проводят независимо от индекса. Сначала причина боли, потом нагрузка.</p></div></div>
   </section>
