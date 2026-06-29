@@ -323,6 +323,53 @@
 <script>
 (function(){
 const STORAGE_KEY='femfit_diary_360_v13';
+/* =====================================================================
+   DATA LAYER (StorageService + модели данных + роли) — port-ready
+   Единый слой доступа к данным. Сейчас работает через localStorage,
+   готов к замене на API без изменения вызывающего кода.
+   TODO: заменить StorageService на API-синхронизацию после подключения backend.
+   TODO: добавить авторизацию и защищённые аккаунты после подключения backend.
+   TODO: перед облачной версией провести юридическую и privacy-проверку модели хранения данных.
+   TODO: при переходе на React Native / Flutter переиспользовать модели данных,
+         тексты, алгоритмы подбора тренировки и расчёта прогресса.
+   ===================================================================== */
+const ROLES={PARTICIPANT:'participant',SPECIALIST:'specialist',CLINIC_ADMIN:'clinic_admin'}; /* clinic_admin — будущая роль */
+const StorageService={
+  /* --- сырой слой: единственное место, где приложение трогает localStorage --- */
+  _read(){ try{const raw=localStorage.getItem(STORAGE_KEY); return raw?JSON.parse(raw):null;}catch(e){return null;} },
+  _load(){ const raw=this._read(); return raw?merge(defaultState(),raw):defaultState(); },
+  _save(st){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(st));}catch(e){} },
+  _clear(){ try{localStorage.removeItem(STORAGE_KEY);}catch(e){} },
+  /* --- доменный API (работает с активной участницей) --- */
+  getUserProfile(){ const c=client()||{}; return createUserProfile({id:c.id,name:c.name,language:(state.language||'ru'),ageRange:c.ageRange,cycleMode:c.mode,trainingLevel:c.level,trainingGoal:c.goal,equipment:c.equipment,limitations:c.limitations,selectedPlanId:c.activeProgramId}); },
+  saveUserProfile(p){ const c=client(); if(!c||!p)return; if(p.name!=null)c.name=p.name; if(p.cycleMode)c.mode=p.cycleMode; if(p.trainingLevel)c.level=p.trainingLevel; if(p.equipment)c.equipment=p.equipment; if(p.limitations!=null)c.limitations=p.limitations; if(p.selectedPlanId!==undefined)c.activeProgramId=p.selectedPlanId; save(); },
+  getReadinessHistory(){ return (client()||{}).checkins||[]; },
+  saveReadiness(entry){ const c=client(); if(!c)return; (c.checkins=c.checkins||[]).unshift(entry); save(); },
+  getWorkoutHistory(){ return (client()||{}).workouts||[]; },
+  saveWorkoutSession(session){ const c=client(); if(!c)return; (c.workouts=c.workouts||[]).unshift(session); save(); },
+  getCycleHistory(){ return (client()||{}).cycleEntries||[]; },
+  saveCycleEntry(entry){ const c=client(); if(!c)return; (c.cycleEntries=c.cycleEntries||[]).unshift(entry); save(); },
+  getSelectedPlan(){ return (typeof activeProgram==='function')?activeProgram(client()):null; },
+  saveSelectedPlan(planId){ const c=client(); if(!c)return; c.activeProgramId=planId; save(); },
+  exportData(){ return window.exportData(); },
+  importData(ev){ return window.importData(ev); }
+};
+/* currentUser / роли — заготовка под аккаунты (НЕ «Клиентка») */
+function currentUser(){ const c=client()||{}; return {id:c.id||null, role:(state.role==='pro'?ROLES.SPECIALIST:ROLES.PARTICIPANT), name:c.name||'', language:(state.language||'ru'), trainingMode:c.mode||'cycle', cycleMode:c.mode||'cycle', selectedPlanId:c.activeProgramId||null, createdAt:c.createdAt||null}; }
+function getParticipants(){ return (state.clients||[]).map(c=>({ id:c.id, name:c.name, ageRange:c.ageRange||'', cycleMode:c.mode, selectedPlan:((c.programs||[]).find(p=>p.id===c.activeProgramId)||{}).name||null, lastReadiness:(typeof readinessScore==='function'?readinessScore(c):null), lastWorkout:((c.workouts||[])[0]||{}).date||null, weeklyProgress:(typeof calculateWeeklyProgress==='function'?calculateWeeklyProgress(c).planCompletion:null), safetySignals:((((typeof latestCheckin==='function')?latestCheckin(c):null)||{}).pain>=6) })); }
+/* ---- модели данных (фабрики: одна форма для текущего кода и будущего backend/RN/Flutter) ---- */
+function createUserProfile(o={}){return {id:o.id||(typeof uid==='function'?uid():String(Date.now())),name:o.name||'',language:o.language||'ru',ageRange:o.ageRange||'',cycleMode:o.cycleMode||'cycle',trainingLevel:o.trainingLevel||'start',trainingGoal:o.trainingGoal||'',equipment:o.equipment||[],limitations:o.limitations||'',selectedPlanId:o.selectedPlanId||null};}
+function createReadinessEntry(o={}){return {id:o.id||uid(),date:o.date||todayISO(),sleep:o.sleep??null,energy:o.energy??null,stress:o.stress??null,soreness:o.soreness??null,pain:o.pain??null,mood:o.mood??null,readinessScore:o.readinessScore??null,readinessZone:o.readinessZone||'',notes:o.notes||''};}
+function createCycleEntry(o={}){return {id:o.id||uid(),date:o.date||todayISO(),cycleDay:o.cycleDay??null,phase:o.phase||'',symptoms:o.symptoms||[],bleeding:o.bleeding||'',discomfort:o.discomfort||'',notes:o.notes||'',menopauseStatus:o.menopauseStatus||''};}
+function createTrainingPlan(o={}){return {id:o.id||uid(),title:o.title||'',durationWeeks:o.durationWeeks||12,level:o.level||'start',cycleMode:o.cycleMode||'cycle',weeklyStructure:o.weeklyStructure||[],workouts:o.workouts||[],progressionRules:o.progressionRules||'',deloadWeeks:o.deloadWeeks||[4,8]};}
+function createWorkoutTemplate(o={}){return {id:o.id||uid(),title:o.title||'',type:o.type||'strength',duration:o.duration||30,level:o.level||'start',equipment:o.equipment||[],targetRPE:o.targetRPE||'',exercises:o.exercises||[],safetyNotes:o.safetyNotes||''};}
+function createWorkoutSession(o={}){return {id:o.id||uid(),date:o.date||todayISO(),templateId:o.templateId||null,status:o.status||'',duration:o.duration||null,averageRPE:o.averageRPE??null,painBefore:o.painBefore??null,painAfter:o.painAfter??null,strengthSets:o.strengthSets||[],cardioData:o.cardioData||null,mobilityData:o.mobilityData||null,notes:o.notes||''};}
+function createExercise(o={}){return {id:o.id||uid(),title:o.title||'',category:o.category||'',movementPattern:o.movementPattern||'',level:o.level||'',equipment:o.equipment||[],shortCue:o.shortCue||'',fullMethodology:o.fullMethodology||'',commonMistakes:o.commonMistakes||[],regressions:o.regressions||[],progressions:o.progressions||[],limitations:o.limitations||'',imageUrl:o.imageUrl||'',videoUrl:o.videoUrl||''};}
+function createProgressSummary(o={}){return {weekNumber:o.weekNumber||1,planCompletion:o.planCompletion||0,strengthCompleted:o.strengthCompleted||0,cardioCompleted:o.cardioCompleted||0,mobilityCompleted:o.mobilityCompleted||0,recoveryCompleted:o.recoveryCompleted||0,averageReadiness:o.averageReadiness||0,averageRPE:o.averageRPE||0,averagePain:o.averagePain||0,recommendation:o.recommendation||''};}
+/* Публичный API слоя данных (для будущих модулей / переноса). */
+window.StorageService=StorageService; window.ROLES=ROLES; window.currentUser=currentUser; window.getParticipants=getParticipants;
+window.createUserProfile=createUserProfile; window.createReadinessEntry=createReadinessEntry; window.createCycleEntry=createCycleEntry; window.createTrainingPlan=createTrainingPlan; window.createWorkoutTemplate=createWorkoutTemplate; window.createWorkoutSession=createWorkoutSession; window.createExercise=createExercise; window.createProgressSummary=createProgressSummary;
+
 const $=id=>document.getElementById(id);
 const todayISO=()=>new Date().toISOString().slice(0,10);
 const uid=()=>Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4);
@@ -378,9 +425,9 @@ let state=load();
 if(!state.activeClientId) state.activeClientId=state.clients[0]?.id;
 if(!state.pro.selectedClientId) state.pro.selectedClientId=state.activeClientId;
 ensureDemoData();
-function load(){try{const raw=localStorage.getItem(STORAGE_KEY);if(raw)return merge(defaultState(),JSON.parse(raw));}catch(e){}return defaultState();}
+function load(){return StorageService._load();}
 function merge(a,b){ if(Array.isArray(a))return Array.isArray(b)?b:a; if(a&&typeof a==='object'){const o={...a}; if(b&&typeof b==='object')Object.keys(b).forEach(k=>o[k]=merge(a[k],b[k])); return o;} return b===undefined?a:b; }
-function save(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+function save(){StorageService._save(state);}
 function client(){return state.clients.find(c=>c.id===state.activeClientId)||state.clients[0];}
 function selectedClient(){return state.clients.find(c=>c.id===state.pro.selectedClientId)||client();}
 function setActiveClient(id){state.activeClientId=id; state.pro.selectedClientId=id; save(); renderAll();}
@@ -840,7 +887,7 @@ function renderRedflags(){const flags=['Боль в груди, давящая �
 function renderData(){ $('data').innerHTML=top('data','Данные','Экспорт, импорт и сброс локальной базы. Данные хранятся только в этом браузере.',`<button class="btn primary" onclick="exportData()">Экспорт JSON</button><button class="btn" onclick="document.getElementById('importFile').click()">Импорт JSON</button><button class="btn danger" onclick="resetData()">Сброс</button>`)+`<input id="importFile" type="file" accept="application/json" style="display:none" onchange="importData(event)"><div class="card"><h2>Локальное хранение</h2><p>Файл работает автономно. При очистке браузера данные могут исчезнуть. Экспортируйте JSON после важных изменений.</p><div class="grid cols-3">${stat('Клиенток',state.clients.length)}${stat('Тренировок',state.clients.reduce((s,c)=>s+c.workouts.length,0))}${stat('Упражнений',baseExercises.length)}</div></div>`;}
 window.exportData=function(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='FemFit_Diary_backup_'+todayISO()+'.json'; a.click(); URL.revokeObjectURL(a.href);};
 window.importData=function(ev){const f=ev.target.files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{try{state=merge(defaultState(),JSON.parse(r.result)); save(); initNav(); renderAll(); show(state.currentSection||'today'); toast('Импортировано');}catch(e){alert('Не удалось импортировать JSON')}}; r.readAsText(f);};
-window.resetData=function(){if(!confirm('Сбросить все локальные данные?'))return; localStorage.removeItem(STORAGE_KEY); state=defaultState(); ensureDemoData(); initNav(); show('onboarding');};
+window.resetData=function(){if(!confirm('Сбросить все локальные данные?'))return; StorageService._clear(); state=defaultState(); ensureDemoData(); initNav(); show('onboarding');};
 window.goBack=function(){var prev=navHistory.pop(); show(prev||'today', true);};
 function showModal(html){$('modalCard').innerHTML='<button class="backbtn modal-back" type="button" aria-label="Вернуться назад" onclick="closeModal()">← Назад</button>'+html; $('modal').classList.add('show');}
 window.closeModal=function(){$('modal').classList.remove('show'); renderAll();};
