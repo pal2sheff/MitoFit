@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>FemFit Diary 360 — анкета обратной связи</title>
-<meta name="description" content="Анкета обратной связи для участниц пилота FemFit Diary 360. Заполняется за несколько минут, ответы можно скопировать, скачать или отправить письмом." />
+<title>FemFit Diary — анкета обратной связи</title>
+<meta name="description" content="Анкета обратной связи для участниц пилота FemFit Diary. Заполняется за несколько минут, ответы можно скопировать, скачать или отправить письмом." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -97,7 +97,7 @@
 
 <header class="nav">
   <div class="wrap row">
-    <a class="brand" href="index.html"><span class="mk">F</span> FemFit Diary 360</a>
+    <a class="brand" href="index.html"><span class="mk">F</span> FemFit Diary</a>
     <a class="back" href="pilot.html">← К пилоту</a>
   </div>
 </header>
@@ -131,14 +131,14 @@
 </form>
 
 <div class="toast" id="toast"></div>
-<footer><div class="wrap">© 2026 FemFit Diary 360 · анкета обратной связи · <a href="pilot.html">о пилоте</a></div></footer>
+<footer><div class="wrap">© 2026 FemFit Diary · анкета обратной связи · <a href="pilot.html">о пилоте</a></div></footer>
 
 <script>
 (function(){
   var EMAIL=""; // организатор может вписать адрес: например "pilot@example.com"
   var schema=[
     {title:"О вас",hint:"Чтобы понимать контекст ваших ответов.",qs:[
-      {id:"role",t:"Ваша роль в пилоте",type:"choice",opts:["Клиентка — регулярный цикл","Клиентка — перименопауза","Клиентка — постменопауза","Тренер / health-коуч","Врач / спортивная медицина"]},
+      {id:"role",t:"Ваша роль в пилоте",type:"choice",opts:["Участница — регулярный цикл","Участница — перименопауза","Участница — постменопауза","Тренер / health-коуч","Врач / спортивная медицина"]},
       {id:"level",t:"Уровень подготовки",type:"choice",opts:["Новичок","Средний","Продвинутый","Не применимо (специалист)"]},
       {id:"days",t:"Сколько дней вы пользовались дневником?",type:"choice",opts:["1–3 дня","Около недели","2–3 недели","Весь пилот"]},
       {id:"workouts",t:"Сколько примерно тренировок внесли?",type:"text",ph:"например: 6"}
@@ -156,7 +156,7 @@
       {id:"safer",t:"С дневником я чувствовала себя увереннее и безопаснее",type:"scale5"},
       {id:"safety_seen",t:"Я заметила предупреждения о безопасности и поняла, когда остановиться",type:"scale5"}
     ]},
-    {title:"Для специалистов",hint:"Заполняют тренеры и врачи. Клиентки могут пропустить.",qs:[
+    {title:"Для специалистов",hint:"Заполняют тренеры и врачи. Участницы могут пропустить.",qs:[
       {id:"report_useful",t:"Отчёт полезен и достаточен для сопровождения",type:"scale5",opt:"если вы специалист"},
       {id:"report_missing",t:"Каких данных не хватило в отчёте?",type:"text",ph:"кратко"}
     ]},
@@ -214,7 +214,7 @@
   }
 
   function build(){
-    var lines=['FemFit Diary 360 — обратная связь по пилоту','Дата: '+new Date().toLocaleDateString('ru-RU'),''];
+    var lines=['FemFit Diary — обратная связь по пилоту','Дата: '+new Date().toLocaleDateString('ru-RU'),''];
     schema.forEach(function(sec){
       lines.push('## '+sec.title);
       sec.qs.forEach(function(q){
@@ -254,7 +254,7 @@
   });
 
   document.getElementById('email').addEventListener('click',function(){
-    var subj=encodeURIComponent('FemFit Diary 360 — обратная связь');
+    var subj=encodeURIComponent('FemFit Diary — обратная связь');
     var body=encodeURIComponent(out.value);
     window.location.href='mailto:'+EMAIL+'?subject='+subj+'&body='+body;
   });
