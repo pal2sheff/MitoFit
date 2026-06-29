@@ -281,6 +281,14 @@
   .whybox summary{cursor:pointer;font-weight:600;color:var(--plum);list-style:none}
   .whybox summary::-webkit-details-marker{display:none}
   .choice-grid button.choice{font:inherit;width:100%;min-height:44px;cursor:pointer}
+
+  .lang-switch{display:inline-flex;gap:5px;flex-wrap:wrap}
+  .role-switch + .lang-switch{margin-top:12px}
+  .lang-switch button{min-height:40px;padding:6px 12px;border-radius:9px;border:1px solid var(--line);background:var(--panel);color:var(--muted);font-weight:700;font-size:12px;letter-spacing:.04em;cursor:pointer;transition:.15s}
+  .lang-switch button.active{background:var(--plum);color:#fff;border-color:transparent}
+  .lang-switch button:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+  .mobilebar .lang-switch{margin-left:8px}
+  .mobilebar .lang-switch button{min-height:34px;padding:4px 9px;font-size:11px}
 </style>
 <!-- TODO: подключить аналитику (Plausible / GA / Метрика). Ключевые действия можно помечать data-event. -->
 </head>
@@ -290,13 +298,14 @@
     <div class="brand"><div class="brand-mark">F</div><div><h1>FemFit Diary</h1><p>premium women&#39;s training diary</p></div></div>
     <p class="version">Версия v1.4 • локальный прототип</p>
     <div class="role-switch"><button id="roleClient" onclick="setRole('client')">Личный дневник</button><button id="rolePro" onclick="setRole('pro')" data-event="specialist_open">Специалист</button></div>
+    <div class="lang-switch" id="langSwitch" role="group" aria-label="Язык интерфейса"></div>
     <nav class="nav" id="nav"></nav>
     <div class="side-card"><h3>Выбранная участница</h3><p id="sideClient">—</p><div class="mini-status" id="sideMetrics"></div></div>
     <div class="side-card"><h3>Безопасность</h3><p>Дневник не ставит диагнозы и не назначает лечение. Это инструмент самонаблюдения рядом с врачом и тренером.</p></div>
   </aside>
   <div class="scrim" id="scrim" onclick="closeDrawer()"></div>
   <main class="content">
-    <header class="mobilebar"><button class="menu" onclick="toggleDrawer()" aria-label="Меню"><span></span></button><div class="mb-title">FemFit Diary</div><div class="mb-role" id="mbRole">Личный дневник</div></header>
+    <header class="mobilebar"><button class="menu" onclick="toggleDrawer()" aria-label="Меню"><span></span></button><div class="mb-title">FemFit Diary</div><div class="mb-role" id="mbRole">Личный дневник</div><div class="lang-switch" id="langSwitchMb" role="group" aria-label="Язык интерфейса"></div></header>
     <section id="onboarding" class="section"></section>
     <section id="dashboard" class="section"></section>
     <section id="profile" class="section"></section>
@@ -340,6 +349,8 @@ const StorageService={
   _load(){ const raw=this._read(); return raw?merge(defaultState(),raw):defaultState(); },
   _save(st){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(st));}catch(e){} },
   _clear(){ try{localStorage.removeItem(STORAGE_KEY);}catch(e){} },
+  setLangPref(l){ try{localStorage.setItem('femfit_lang',l);}catch(e){} },
+  getLangPref(){ try{return localStorage.getItem('femfit_lang');}catch(e){return null;} },
   /* --- доменный API (работает с активной участницей) --- */
   getUserProfile(){ const c=client()||{}; return createUserProfile({id:c.id,name:c.name,language:(state.language||'ru'),ageRange:c.ageRange,cycleMode:c.mode,trainingLevel:c.level,trainingGoal:c.goal,equipment:c.equipment,limitations:c.limitations,selectedPlanId:c.activeProgramId}); },
   saveUserProfile(p){ const c=client(); if(!c||!p)return; if(p.name!=null)c.name=p.name; if(p.cycleMode)c.mode=p.cycleMode; if(p.trainingLevel)c.level=p.trainingLevel; if(p.equipment)c.equipment=p.equipment; if(p.limitations!=null)c.limitations=p.limitations; if(p.selectedPlanId!==undefined)c.activeProgramId=p.selectedPlanId; save(); },
@@ -420,7 +431,7 @@ function seedClients(){
   {id:uid(),name:'Елена',age:58,mode:'post',level:'Новичок',goal:'сила, баланс, костная плотность',equipment:'тренажёры, резинки',height:162,weight:69,lastPeriod:'',cycleLength:28,menstruationLength:5,injuries:'остеоартроз колена 1–2 ст.',notes:'Демо-участница в постменопаузе.',onboardingDone:true,programs:[],activeProgramId:null,completedSessionIds:[],workouts:[],checkins:[],customExercises:[],selectedExerciseId:''}
  ];
 }
-function defaultState(){return {role:'client',currentSection:'',activeClientId:null,clients:seedClients(),pro:{selectedClientId:null,reportText:''}}}
+function defaultState(){return {role:'client',language:'ru',currentSection:'',activeClientId:null,clients:seedClients(),pro:{selectedClientId:null,reportText:''}}}
 let state=load();
 if(!state.activeClientId) state.activeClientId=state.clients[0]?.id;
 if(!state.pro.selectedClientId) state.pro.selectedClientId=state.activeClientId;
@@ -442,7 +453,24 @@ function show(id,isBack){if(!isBack && state.currentSection && state.currentSect
 window.show=show;
 function setRole(role){state.role=role; if(role==='pro' && !['pro','report'].includes(state.currentSection)) state.currentSection='pro'; if(role==='client' && ['pro','report'].includes(state.currentSection)) state.currentSection='dashboard'; save(); initNav(); show(state.currentSection);}
 window.setRole=setRole;
-function initNav(){const nav=$('nav'); const items=state.role==='pro'?proNav:clientNav; nav.innerHTML=items.map(([id,label,b])=>`<button data-id="${id}" onclick="show('${id}')"><span>${label}</span><span class="badge">${b}</span></button>`).join(''); $('roleClient').classList.toggle('active',state.role==='client'); $('rolePro').classList.toggle('active',state.role==='pro'); const mb=$('mbRole'); if(mb)mb.textContent=state.role==='pro'?'Специалист':'Личный дневник'; buildTabbar();}
+
+/* ===== i18n scaffold v2.2 (RU / KZ / EN) =====
+   TODO: провести профессиональную редактуру казахской и английской версии интерфейса.
+   TODO: расширить покрытие строк интерфейса (под-шаг 2): заголовки экранов, кнопки, подсказки. */
+const translations={
+  ru:{nav_today:'Сегодня',nav_workouts:'Тренировки',nav_progress:'Прогресс',nav_cycle:'Цикл',nav_more:'Ещё',nav_participants:'Мои участницы',nav_report:'Отчёт',nav_dashboard:'Дашборд участницы',role_participant:'Личный дневник',role_specialist:'Специалист',lang_label:'Язык'},
+  kk:{nav_today:'Бүгін',nav_workouts:'Жаттығулар',nav_progress:'Прогресс',nav_cycle:'Цикл',nav_more:'Тағы',nav_participants:'Қатысушыларым',nav_report:'Есеп',nav_dashboard:'Қатысушы панелі',role_participant:'Жеке күнделік',role_specialist:'Маман',lang_label:'Тіл'},
+  en:{nav_today:'Today',nav_workouts:'Workouts',nav_progress:'Progress',nav_cycle:'Cycle',nav_more:'More',nav_participants:'My participants',nav_report:'Report',nav_dashboard:'Participant dashboard',role_participant:'Personal diary',role_specialist:'Specialist',lang_label:'Language'}
+};
+function lang(){ return (typeof state!=='undefined' && state && state.language) || 'ru'; }
+function t(key){ const L=translations[lang()]||translations.ru; return (L&&L[key])||translations.ru[key]||key; }
+const NAVKEY={today:'nav_today',library:'nav_workouts',progress:'nav_progress',female:'nav_cycle',more:'nav_more',pro:'nav_participants',report:'nav_report',dashboard:'nav_dashboard'};
+function navLabel(id,fallback){ return NAVKEY[id]?t(NAVKEY[id]):fallback; }
+window.setLang=function(l){ if(!translations[l])return; state.language=l; StorageService.setLangPref(l); save(); initNav(); renderAll(); show(state.currentSection||'more', true); };
+function renderLangSwitch(){ const html=['ru','kk','en'].map(l=>`<button type="button" class="${lang()===l?'active':''}" onclick="setLang('${l}')" data-event="language_change" aria-label="${l==='kk'?'Қазақша':l==='en'?'English':'Русский'}">${l==='kk'?'KZ':l.toUpperCase()}</button>`).join(''); const a=document.getElementById('langSwitch'); if(a)a.innerHTML=html; const b=document.getElementById('langSwitchMb'); if(b)b.innerHTML=html; }
+window.t=t; window.lang=lang; window.translations=translations; window.renderLangSwitch=renderLangSwitch;
+
+function initNav(){const nav=$('nav'); const items=state.role==='pro'?proNav:clientNav; nav.innerHTML=items.map(([id,label,b])=>`<button data-id="${id}" onclick="show('${id}')"><span>${navLabel(id,label)}</span><span class="badge">${b}</span></button>`).join(''); $('roleClient').classList.toggle('active',state.role==='client'); $('rolePro').classList.toggle('active',state.role==='pro'); const rc=$('roleClient'); if(rc)rc.textContent=t('role_participant'); const rp=$('rolePro'); if(rp)rp.textContent=t('role_specialist'); const mb=$('mbRole'); if(mb)mb.textContent=state.role==='pro'?t('role_specialist'):t('role_participant'); renderLangSwitch(); buildTabbar();}
 function updateSide(){const c=client(); const ci=cycleInfo(todayISO(),c); const score=readinessScore(c); const z=readinessZone(score); $('sideClient').innerHTML=`<b>${esc(c.name)}</b><br>${modes[c.mode]} • ${esc(c.level)}<br><span class="small muted">${c.mode==='cycle'?ci.note:'Симптомы и восстановление'}</span>`; $('sideMetrics').innerHTML=`<span><b>Готовность</b><em>${score}%</em></span><span><b>Зона</b><em>${z}</em></span><span><b>Тренировок</b><em>${c.workouts.length}</em></span>`;}
 function parseDate(v){ if(!v)return null; const s=String(v).trim(); if(/^\d{4}-\d{2}-\d{2}$/.test(s))return new Date(s+'T00:00:00'); const m=s.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/); if(m)return new Date(`${m[3]}-${m[2].padStart(2,'0')}-${m[1].padStart(2,'0')}T00:00:00`); const d=new Date(s); return isNaN(d)?null:d;}
 function dayDiff(a,b){return Math.floor((parseDate(a)-parseDate(b))/(1000*60*60*24));}
@@ -912,7 +940,7 @@ window.updateSummary=function(id,k,v){const w=client().workouts.find(x=>x.id===i
 window.toggleDrawer=function(){document.getElementById('app').classList.toggle('drawer-open')};
 window.closeDrawer=function(){document.getElementById('app').classList.remove('drawer-open')};
 const tabIcons={today:'◷',readiness:'◔',dashboard:'❤',log:'✎',progress:'📈',pro:'❤',report:'✦',library:'🗂',female:'♀',more:'…'};
-function buildTabbar(){const tb=$('tabbar');if(!tb)return;const items=state.role==='pro'?[['pro','Участницы'],['report','Отчёт'],['progress','Прогресс'],['library','Тренировки']]:[['today','Сегодня'],['library','Тренировки'],['progress','Прогресс'],['female','Цикл']];const cur=state.currentSection;tb.innerHTML=items.map(([id,label])=>`<button class="${cur===id?'active':''}" onclick="show('${id}')"><span class="ic">${tabIcons[id]||'•'}</span>${label}</button>`).join('')+`<button class="${cur==='more'?'active':''}" onclick="show('more')"><span class="ic">…</span>Ещё</button>`}
+function buildTabbar(){const tb=$('tabbar');if(!tb)return;const items=state.role==='pro'?[['pro','Участницы'],['report','Отчёт'],['progress','Прогресс'],['library','Тренировки']]:[['today','Сегодня'],['library','Тренировки'],['progress','Прогресс'],['female','Цикл']];const cur=state.currentSection;tb.innerHTML=items.map(([id,label])=>`<button class="${cur===id?'active':''}" onclick="show('${id}')"><span class="ic">${tabIcons[id]||'•'}</span>${navLabel(id,label)}</button>`).join('')+`<button class="${cur==='more'?'active':''}" onclick="show('more')"><span class="ic">…</span>${t('nav_more')}</button>`}
 function syncTabbar(){const tb=$('tabbar');if(!tb)return;tb.querySelectorAll('button').forEach(b=>b.classList.remove('active'));}
 
 function renderMore(){const c=client(); const item=(label,sub,act,ev)=>`<div class="lib-card" style="cursor:pointer" tabindex="0" role="button" ${ev?`data-event="${ev}"`:''} onclick="${act}" onkeydown="if(event.key==='Enter'){${act}}"><h4>${label}</h4><p class="small muted" style="margin:4px 0 0">${sub}</p></div>`; $('more').innerHTML=top('more','Ещё','Профиль, программы, дневник, данные и документы — всё второстепенное в одном месте.')+`<div class="grid cols-3">
@@ -927,7 +955,7 @@ function renderMore(){const c=client(); const item=(label,sub,act,ev)=>`<div cla
  ${item('Обучение','Техника, RPE, цикл, безопасность',"show('learn')")}
  ${item('Инструкции ↗','Как пользоваться дневником',"window.open('guide.html','_blank')",'guide_click')}
  ${item('Документы ↗','Приватность и дисклеймер',"window.open('legal.html','_blank')",'legal_click')}
-</div><div class="card soft" style="margin-top:18px"><h3 style="font-size:16px">Режим</h3><p class="small">Переключение «Участница / Специалист» — вверху слева. Специалисту доступны кабинет участниц и отчёты.</p></div>`;}
+</div><div class="card" style="margin-top:18px"><div class="kicker">${t('lang_label')} · RU / KZ / EN</div><div class="row-actions" style="justify-content:flex-start;margin-top:10px"><button class="btn ${lang()==='ru'?'primary':''} smallbtn" onclick="setLang('ru')" data-event="language_change">RU</button><button class="btn ${lang()==='kk'?'primary':''} smallbtn" onclick="setLang('kk')" data-event="language_change">KZ</button><button class="btn ${lang()==='en'?'primary':''} smallbtn" onclick="setLang('en')" data-event="language_change">EN</button></div><p class="small muted" style="margin-top:8px">Каркас перевода интерфейса. Казахская и английская версии будут профессионально отредактированы.</p></div><div class="card soft" style="margin-top:18px"><h3 style="font-size:16px">Режим</h3><p class="small">Переключение «Участница / Специалист» — вверху слева. Специалисту доступны кабинет участниц и отчёты.</p></div>`;}
 function learnCard(icon,title,desc,media,link){return `<div class="card"><div style="display:flex;gap:12px;align-items:flex-start"><div style="width:40px;height:40px;border-radius:11px;display:grid;place-items:center;background:var(--plum-soft);color:var(--plum);font-size:18px;flex:none">${icon}</div><div><h3 style="margin:0 0 4px;font-size:17px">${title}</h3><p class="small muted" style="margin:0">${desc}</p></div></div><div role="img" aria-label="${esc(title)}: обучающее изображение или видео появится позже" data-img="${media}" style="margin-top:12px;height:118px;border:1px dashed var(--line);border-radius:14px;background:var(--panel2);display:grid;place-items:center;color:var(--muted);font-size:13px;text-align:center;padding:10px;line-height:1.4">Изображение или видео<br>появится позже</div>${link?`<div class="row-actions" style="justify-content:flex-start;margin-top:10px">${link}</div>`:''}</div>`;}
 function renderLearn(){
  /* TODO: подключить библиотеку изображений упражнений. */
@@ -1026,6 +1054,7 @@ window.swapRec=function(want){const c=client(); window.pickType=want; window.pic
 
 function renderSection(id){const map={onboarding:renderOnboarding,dashboard:renderDashboard,profile:renderProfile,female:renderFemale,readiness:renderReadiness,programs:renderPrograms,today:renderToday,log:renderLog,sets:renderSets,progress:renderProgress,library:renderLibrary,pro:renderPro,report:renderReport,redflags:renderRedflags,data:renderData,more:renderMore,learn:renderLearn,plan:renderPlan}; if(map[id])map[id](); updateSide();}
 function renderAll(){const active=document.querySelector('.section.active')?.id||state.currentSection; if(active)renderSection(active); updateSide();}
+try{var _fl=StorageService.getLangPref(); if(_fl&&translations[_fl])state.language=_fl;}catch(e){}
 initNav(); updateSide(); show(state.currentSection || (client().onboardingDone?'today':'onboarding'));
 })();
 </script>
