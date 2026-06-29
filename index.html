@@ -282,14 +282,14 @@
   <div class="wrap row">
     <a class="brand" href="#top"><span class="mk">F</span> FemFit Diary</a>
     <nav class="links">
-      <a href="#for">Для кого</a>
-      <a href="#types">Тренировки</a>
-      <a href="#cycle">Цикл и менопауза</a>
-      <a href="#pilot">Пилот</a>
-      <a href="#faq">Вопросы</a>
+      <a href="#for" data-i18n="nav_for">Для кого</a>
+      <a href="#types" data-i18n="nav_types">Тренировки</a>
+      <a href="#cycle" data-i18n="nav_cycle">Цикл и менопауза</a>
+      <a href="#pilot" data-i18n="nav_pilot">Пилот</a>
+      <a href="#faq" data-i18n="nav_faq">Вопросы</a>
     </nav>
     <div class="lang-switch" id="landingLang" role="group" aria-label="Язык интерфейса"></div>
-    <a class="btn primary nav-cta" href="#pilot">Записаться в пилот</a>
+    <a class="btn primary nav-cta" href="#pilot" data-i18n="cta_pilot">Записаться в пилот</a>
   </div>
 </header>
 
@@ -298,17 +298,17 @@
   <section class="hero">
     <div class="wrap grid">
       <div>
-        <span class="eyebrow">FemFit Diary · пилот 12 недель</span>
-        <h1>Премиальный дневник тренировок для женщин</h1>
-        <p class="lead">FemFit Diary помогает планировать силовые, кардио, функциональные и восстановительные тренировки с учётом готовности, цикла, перименопаузы, постменопаузы, RPE/RIR, боли и восстановления.</p>
+        <span class="eyebrow" data-i18n="hero_eyebrow">FemFit Diary · пилот 12 недель</span>
+        <h1 data-i18n="hero_title">Премиальный дневник тренировок для женщин</h1>
+        <p class="lead" data-i18n="hero_lead">FemFit Diary помогает планировать силовые, кардио, функциональные и восстановительные тренировки с учётом готовности, цикла, перименопаузы, постменопаузы, RPE/RIR, боли и восстановления.</p>
         <div class="cta">
-          <a class="btn primary lg" href="#pilot" data-event="cta_pilot_click">Записаться в пилот</a>
-          <a class="btn lg" href="app.html" data-event="open_demo_click">Открыть демо-дневник</a>
+          <a class="btn primary lg" href="#pilot" data-event="cta_pilot_click" data-i18n="cta_pilot">Записаться в пилот</a>
+          <a class="btn lg" href="app.html" data-event="open_demo_click" data-i18n="cta_demo">Открыть демо-дневник</a>
         </div>
         <div class="audience">
-          <a href="#for">Я женщина</a>
-          <a href="#pro">Я тренер</a>
-          <a href="#pro">Я врач / клиника</a>
+          <a href="#for" data-i18n="aud_woman">Я женщина</a>
+          <a href="#pro" data-i18n="aud_coach">Я тренер</a>
+          <a href="#pro" data-i18n="aud_doctor">Я врач / клиника</a>
         </div>
         <p class="micro">Пилотная программа на 12 недель. Продукт не является медицинским изделием и не заменяет консультацию специалиста.</p>
       </div>
@@ -794,16 +794,24 @@ if ('serviceWorker' in navigator) {
 }
 </script>
 <script>
-/* Переключатель языка лендинга. Сохраняет выбор для дневника (общий ключ femfit_lang).
-   TODO: локализовать тексты лендинга (RU/KZ/EN); сейчас контролируется выбор языка интерфейса дневника. */
+/* Переключатель и перевод лендинга (RU / KZ / EN). Сохраняет выбор для дневника (общий ключ femfit_lang).
+   Переведена «верхняя» часть (шапка, hero, основные кнопки). 
+   TODO: перевести остальные секции лендинга и провести профессиональную редактуру KZ/EN. */
 (function(){
   var KEY='femfit_lang', cur='ru';
   try{ cur=localStorage.getItem(KEY)||'ru'; }catch(e){}
+  if(cur!=='ru'&&cur!=='kk'&&cur!=='en')cur='ru';
+  var L={
+    ru:{nav_for:"Для кого",nav_types:"Тренировки",nav_cycle:"Цикл и менопауза",nav_pilot:"Пилот",nav_faq:"Вопросы",cta_pilot:"Записаться в пилот",cta_demo:"Открыть демо-дневник",hero_eyebrow:"FemFit Diary · пилот 12 недель",hero_title:"Премиальный дневник тренировок для женщин",hero_lead:"FemFit Diary помогает планировать силовые, кардио, функциональные и восстановительные тренировки с учётом готовности, цикла, перименопаузы, постменопаузы, RPE/RIR, боли и восстановления.",aud_woman:"Я женщина",aud_coach:"Я тренер",aud_doctor:"Я врач / клиника"},
+    kk:{nav_for:"Кімге арналған",nav_types:"Жаттығулар",nav_cycle:"Цикл және менопауза",nav_pilot:"Пилот",nav_faq:"Сұрақтар",cta_pilot:"Пилотқа жазылу",cta_demo:"Демо-күнделікті ашу",hero_eyebrow:"FemFit Diary · 12 апталық пилот",hero_title:"Әйелдерге арналған премиум жаттығу күнделігі",hero_lead:"FemFit Diary күш, кардио, функционалдық және қалпына келтіру жаттығуларын дайындық, цикл, перименопауза, постменопауза, RPE/RIR, ауырсыну және қалпына келуді ескере отырып жоспарлауға көмектеседі.",aud_woman:"Мен әйелмін",aud_coach:"Мен жаттықтырушымын",aud_doctor:"Мен дәрігер / клиника"},
+    en:{nav_for:"Who it is for",nav_types:"Workouts",nav_cycle:"Cycle & menopause",nav_pilot:"Pilot",nav_faq:"FAQ",cta_pilot:"Join the pilot",cta_demo:"Open the demo diary",hero_eyebrow:"FemFit Diary - 12-week pilot",hero_title:"A premium training diary for women",hero_lead:"FemFit Diary helps you plan strength, cardio, functional and recovery workouts with readiness, cycle, perimenopause, postmenopause, RPE/RIR, pain and recovery in mind.",aud_woman:"I am a woman",aud_coach:"I am a coach",aud_doctor:"I am a doctor / clinic"}
+  };
   var box=document.getElementById('landingLang');
   function render(){ if(!box)return; box.innerHTML=['ru','kk','en'].map(function(l){
     return '<button type="button" class="'+(cur===l?'active':'')+'" data-l="'+l+'" aria-label="'+(l==='kk'?'Қазақша':l==='en'?'English':'Русский')+'">'+(l==='kk'?'KZ':l.toUpperCase())+'</button>'; }).join(''); }
-  render();
-  if(box) box.addEventListener('click', function(e){ var b=e.target.closest('button'); if(!b)return; cur=b.getAttribute('data-l'); try{localStorage.setItem(KEY,cur);}catch(e){} render(); });
+  function applyLang(){ var dict=L[cur]||L.ru; document.querySelectorAll('[data-i18n]').forEach(function(el){ var k=el.getAttribute('data-i18n'); var v=(dict&&dict[k])||L.ru[k]; if(v)el.textContent=v; }); document.documentElement.setAttribute('lang', cur); }
+  render(); applyLang();
+  if(box) box.addEventListener('click', function(e){ var b=e.target.closest('button'); if(!b)return; cur=b.getAttribute('data-l'); try{localStorage.setItem(KEY,cur);}catch(e){} render(); applyLang(); });
 })();
 </script>
 </body>
